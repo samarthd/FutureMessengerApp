@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/manage_presets"
+        android:title="@string/manage_presets" />
+    <item android:id="@+id/new_text_message"
+        android:title="@string/new_text_message" />
+    <item android:id="@+id/new_picture_message"
+        android:title="@string/new_picture_message" />
+</menu>

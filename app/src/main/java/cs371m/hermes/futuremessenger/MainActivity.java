@@ -4,12 +4,62 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import java.lang.reflect.Array;
 
 public class MainActivity extends AppCompatActivity {
+
+
+    // Define menu creation.
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = getMenuInflater();
+
+        switch (v.getId()) {
+            case R.id.scheduled_messages_list:
+                inflater.inflate(R.menu.message_menu, menu);
+                break;
+            case R.id.fab:
+                inflater.inflate(R.menu.creation_menu, menu);
+                break;
+        }
+    }
+
+    // Menu options for the message menu.
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            // The following cases apply to the message menu.
+            case R.id.edit:
+                return true;
+            case R.id.delete:
+                return true;
+            // The following cases apply to the creation menu.
+            case R.id.manage_presets:
+                return true;
+            case R.id.new_text_message:
+                return true;
+            case R.id.new_picture_message:
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,12 +68,29 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Create the ListView for all the scheduled messages
+        ListView scheduled_messages_view = (ListView) findViewById(R.id.scheduled_messages_list);
+
+        // This is a temporary adapter to get some messages. Change this to load entries from a database.
+        String[] test_array = {"Hello1", "Hello2", "Hello3", "Hello1", "Hello2", "Hello3", "Hello1", "Hello2", "Hello3", "Hello1", "Hello2", "Hello3", "Hello1", "Hello2", "Hello3", "Hello1", "Hello2", "Hello3"};
+        ArrayAdapter<String> test_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, test_array);
+        scheduled_messages_view.setAdapter(test_adapter);
+
+        // On each item click, open the context menu.
+        registerForContextMenu(scheduled_messages_view);
+        scheduled_messages_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                view.showContextMenu();
+            }
+        });
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        registerForContextMenu(fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                view.showContextMenu();
             }
         });
     }

@@ -9,12 +9,13 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="cs371m.hermes.futuremessenger.MainActivity"
-    tools:showIn="@layout/activity_main">
+    tools:context="cs371m.hermes.futuremessenger.EditTextMessageActivity"
+    tools:showIn="@layout/activity_edit_text_message">
 
-    <ListView
-        android:id="@+id/scheduled_messages_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </ListView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/recipients"/>
+
+
 </RelativeLayout>

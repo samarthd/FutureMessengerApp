@@ -1,5 +1,6 @@
 package cs371m.hermes.futuremessenger;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.manage_presets:
                 return true;
             case R.id.new_text_message:
+                sendSmsMessage();
                 return true;
             case R.id.new_picture_message:
                 return true;
@@ -115,5 +117,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void sendSmsMessage() {
+        Intent intent = new Intent(this, TextMessage.class);
+        startActivity(intent);
     }
 }

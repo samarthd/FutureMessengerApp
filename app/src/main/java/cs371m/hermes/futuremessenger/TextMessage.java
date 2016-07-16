@@ -29,6 +29,9 @@ public class TextMessage extends AppCompatActivity {
         final EditText contact_field = (EditText) findViewById(R.id.contact_field);
         final EditText message_field = (EditText) findViewById(R.id.editTextMultiline);
 
+        /* where did I come from! */
+        Intent intent = getIntent();
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,6 +88,7 @@ public class TextMessage extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Delivered", Toast.LENGTH_LONG).show();
                 }
             }, new IntentFilter("delivered"));
+            //TODO: Unregister these Recievers. In order to do that, we need instances of them
 
             SmsManager sms = SmsManager.getDefault();
             sms.sendTextMessage(phoneNumber, null, message, sentPI, deliverPI);

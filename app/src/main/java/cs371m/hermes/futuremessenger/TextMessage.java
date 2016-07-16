@@ -25,6 +25,8 @@ public class TextMessage extends AppCompatActivity {
         setContentView(R.layout.activity_text_message);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        // getActionBar().setDisplayHomeAsUpEnabled(true);
 
         final EditText contact_field = (EditText) findViewById(R.id.contact_field);
         final EditText message_field = (EditText) findViewById(R.id.editTextMultiline);

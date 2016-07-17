@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
          * and the Activity can grab that info to fill in their data
          */
         //TODO: make use of EditTextMessageActivity,
-        Intent intent = new Intent(this, TextMessage.class);
+        Intent intent = new Intent(this, EditTextMessageActivity.class);
         startActivity(intent);
     }
 

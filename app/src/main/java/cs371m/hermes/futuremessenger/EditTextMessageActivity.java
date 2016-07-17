@@ -28,6 +28,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
         _contact_field = (EditText) findViewById(R.id.recipients_field);
         _message_field = (EditText) findViewById(R.id.message_field);
 
+        /* TODO: Get data from main screen, if editing scheduled message */
         Intent intent = getIntent();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -36,6 +37,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Log.d("FabButton", "Message Send button pressed.");
 
+                /* TODO: add in sending of dates and time */
                 String phonenum = _contact_field.getText().toString();
                 String message = _message_field.getText().toString();
                 saveSMS(phonenum, null, null, message);
@@ -45,6 +47,12 @@ public class EditTextMessageActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * DO NOT USE: actually send the message
+     * Only kept as reference code for later
+     * @param phoneNum
+     * @param message
+     */
     private void sendSMS(String phoneNum, String message) {
         try {
             Log.d("sendSMS", phoneNum);
@@ -60,8 +68,18 @@ public class EditTextMessageActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Save the message into the database
+     * @param phoneNum number to send message to
+     * @param date date to send message on
+     * @param time time to send the message on
+     * @param message the message to send
+     */
     private void saveSMS(String phoneNum, String date, String time, String message) {
-        //TODO: implement saving of message
+        /* TODO: implement saving of message
+         * TODO: determine if message wants to be group, or individual
+         * TODO: figure out how to send to multiple contacts
+         */
         try {
             Log.d("saveSMS", phoneNum);
             Log.d("saveSMS", message);
@@ -75,7 +93,11 @@ public class EditTextMessageActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * returns to Main screen
+     */
     private void returnToMainActivity() {
+        //TODO: Determine if data needs to be sent back to the main screen
         Intent ret = new Intent(this, MainActivity.class);
         startActivity(ret);
     }

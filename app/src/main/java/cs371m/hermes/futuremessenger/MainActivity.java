@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             // The following cases apply to the message menu.
             case R.id.edit:
+                editScheduledMessage();
                 return true;
             case R.id.delete:
                 return true;
@@ -120,7 +121,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void sendSmsMessage() {
+        /* if I intend to edit a message, I should send that info into the intent
+         * and the Activity can grab that info to fill in their data
+         */
+        //TODO: make use of EditTextMessageActivity,
         Intent intent = new Intent(this, TextMessage.class);
+        startActivity(intent);
+    }
+
+    private void editScheduledMessage() {
+        //TODO: get actual data from scheduled messages
+        String phonenum = "0123456789";
+        String date = "01-01-1991";
+        String time = "12:00 PM";
+        String message = "This is a prefixed message";
+
+        Intent intent  = new Intent(this, EditTextMessageActivity.class);
+        intent.putExtra("num", phonenum);
+        intent.putExtra("date", date);
+        intent.putExtra("time", time);
+        intent.putExtra("message", message);
+
         startActivity(intent);
     }
 }

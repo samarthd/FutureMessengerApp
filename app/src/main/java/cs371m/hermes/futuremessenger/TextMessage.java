@@ -33,6 +33,11 @@ public class TextMessage extends AppCompatActivity {
 
         /* where did I come from! */
         Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            contact_field.setText(intent.getStringExtra("num"));
+            message_field.setText(intent.getStringExtra("message"));
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -43,8 +48,6 @@ public class TextMessage extends AppCompatActivity {
                 String phonenum = contact_field.getText().toString();
                 String message = message_field.getText().toString();
                 sendSMS(phonenum, message);
-//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
             }
         });
     }
@@ -96,7 +99,7 @@ public class TextMessage extends AppCompatActivity {
             sms.sendTextMessage(phoneNumber, null, message, sentPI, deliverPI);
         } catch (Exception ex) {
             Toast.makeText(getApplicationContext(),
-                    ex.getMessage().toString(), Toast.LENGTH_LONG).show();
+                    ex.getMessage(), Toast.LENGTH_LONG).show();
             ex.printStackTrace();
         }
     }

@@ -12,10 +12,79 @@
     tools:context="cs371m.hermes.futuremessenger.EditTextMessageActivity"
     tools:showIn="@layout/activity_edit_text_message">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout android:id="@+id/layout_recipients"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/recipients"/>
+        android:orientation="vertical" >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/recipients"
+            android:textSize="18sp"/>
+        <EditText android:id="@+id/recipients_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:hint="Enter a phone number"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp" />
+    </LinearLayout>
+    <LinearLayout android:id="@+id/layout_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/layout_recipients">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Date"
+            android:textSize="18sp" />
+        <EditText android:id="@+id/date_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:hint="Enter a date."
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp" />
+    </LinearLayout>
+    <LinearLayout android:id="@+id/layout_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/layout_date">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Time"
+            android:textSize="18sp"/>
+        <EditText android:id="@+id/time_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="time"
+            android:hint="Enter a time"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp" />
+    </LinearLayout>
+    <LinearLayout android:id="@+id/layout_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/layout_time">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Text"
+            android:textSize="18sp"/>
+        <EditText android:id="@+id/message_field"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="textMultiLine"
+            android:hint="Enter message"
+            android:layout_marginStart="20dp"
+            android:layout_marginLeft="20dp" />
+    </LinearLayout>
+
+
 
 
 </RelativeLayout>

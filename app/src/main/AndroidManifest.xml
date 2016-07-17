@@ -23,7 +23,8 @@
         <activity
             android:name=".EditTextMessageActivity"
             android:label="@string/title_activity_edit_text_message"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".TextMessage"
             android:label="@string/title_activity_text_message"

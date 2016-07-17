@@ -21,6 +21,8 @@ import java.lang.reflect.Array;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Future Messenger's database.
+    MessengerDatabaseHelper mDb;
 
     // Define menu creation.
     @Override
@@ -67,6 +69,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Create our database.
+        mDb = new MessengerDatabaseHelper(MainActivity.this);
+
 
         // Create the ListView for all the scheduled messages
         ListView scheduled_messages_view = (ListView) findViewById(R.id.scheduled_messages_list);

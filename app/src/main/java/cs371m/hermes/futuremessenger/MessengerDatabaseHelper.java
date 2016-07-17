@@ -1,6 +1,8 @@
 package cs371m.hermes.futuremessenger;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -13,7 +15,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class MessengerDatabaseHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "futuremessenger.db";
-
 
     //Names of columns in the Recipient table in the database.
     public static final String RECIPIENT_TABLE_NAME = "recipient_table";
@@ -34,26 +35,22 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
     public static final String RECEP_ID = "RECIPIENT_ID";
     public static final String MESS_ID = "MESSAGE_ID";
 
-    // Names of various columns in the Preset table in the database.
+ /*   // Names of various columns in the Preset table in the database.
     public static final String PRESET_TABLE_NAME = "preset_table";
     public static final String PRESET_ID = "ID";
     public static final String PRESET_NAME = "NAME";
-    public static final String PRESET_CONTENT = "CONTENT";
+    public static final String PRESET_CONTENT = "CONTENT";*/
 
 
     // Constructor.
-    public MessengerDatabaseHelper(Context context, String name,
-                                   SQLiteDatabase.CursorFactory factory, int version) {
-        super(context, name, factory, version);
-        SQLiteDatabase db = this.getWritableDatabase();
+    public MessengerDatabaseHelper(Context context) {
+        super(context, DATABASE_NAME, null, 1);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        /* Normally, we would place the datatypes of the columns in this string, but
-           it's unclear at the time what these types would be, so I'll leave it
-           just plain text for all of them at the moment.
+        /*
 
            Perhaps we also need a column to determine whether the message will be
            sent as a group or individually.
@@ -75,13 +72,13 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
                 MESSAGE_TXT_CONTENT + " TEXT," +
                 MESSAGE_IMG_PATH + " TEXT)");
 
-        // Create the Recipients_Messages table that will hold associations
-        // between Messages and Recipients. (A message can have many recipients
-        // and a recipient could have many associated messages.)
+         /* Create the Recipients_Messages table that will hold associations
+            between Messages and Recipients. (A message can have many recipients
+            and a recipient could have many associated messages.) */
         db.execSQL("create table " + REC_MESS_TABLE_NAME + "(" +
-                    RECEP_ID + " TEXT," +
-                    MESS_ID + " TEXT," +
-                    "PRIMARY KEY(" + RECEP_ID + ", " + MESS_ID + ")");
+                    RECEP_ID + " INTEGER NOT NULL," +
+                    MESS_ID + " INTEGER NOT NULL," +
+                    "PRIMARY KEY(" + RECEP_ID + ", " + MESS_ID + "))");
 
 /*        // Create the Preset table that will hold our presets.
         db.execSQL("create table " + PRESET_TABLE_NAME + "(" +
@@ -94,7 +91,75 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
         db.execSQL("DROP TABLE IF EXISTS " + RECIPIENT_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + MESSAGE_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + REC_MESS_TABLE_NAME);
         //db.execSQL("DROP TABLE IF EXISTS " + PRESET_TABLE_NAME);
         onCreate(db);
+    }
+
+    /* Store a new SMS message to be sent to one or more recipient phone numbers.
+     * Returns true on success, false on failure. */
+    public boolean storeNewSMS(String[] phoneNumbers, String dateTime, String message) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // Store the message in the database.
+        long message_id = storeNewMessage(dateTime, message);
+        if (message_id == -1)
+            return false;
+
+        for (String phoneNumber : phoneNumbers) {
+            //Store this recipient in the database.
+            long recipient_id = storeRecipient(phoneNumber);
+
+            //Store an association between this recipient and the message.
+            ContentValues assocContentValues = new ContentValues();
+            assocContentValues.put(RECEP_ID, recipient_id);
+            assocContentValues.put(MESS_ID, message_id);
+            long assoc_id = db.insert(REC_MESS_TABLE_NAME, null, assocContentValues);
+            if (assoc_id == -1) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /* This method takes data for a recipient, and attempts to insert that
+       recipient into the database. If the phone number for that recipient
+       already exists in a record, returns the existing recipient ID. Otherwise
+       it will store a new recipient in the database and return the newly
+       created recipient ID. If an error occurs, it will return -1.
+     */
+    private long storeRecipient(String phoneNumber) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        // Search for this phone number in our database.
+        Cursor cursor = db.query(RECIPIENT_TABLE_NAME, new String[] {RECIPIENT_PHONE_NUMBER},
+                RECIPIENT_PHONE_NUMBER + "=?", new String[] {phoneNumber},null, null, null);
+
+        // Variable used to store the current recipient id
+        long recipient_id;
+            /* If no matching phone number was found in our database, make a new entry
+             * in the recipient table. */
+        if (cursor.getCount() == 0) {
+            // make new recipient
+            ContentValues recipContentValues = new ContentValues();
+            recipContentValues.put(RECIPIENT_PHONE_NUMBER, phoneNumber);
+            recipient_id = db.insert(RECIPIENT_TABLE_NAME, null, recipContentValues);
+        }
+        else {
+            // The recipient exists, so we can just pull his id from the database
+            cursor.moveToFirst();
+            recipient_id = cursor.getLong(0);
+        }
+        return recipient_id;
+    }
+    /* Stores a new message in the database, and returns its message id. If
+       there was an error in storing the message, returns -1.
+     */
+    private long storeNewMessage(String dateTime, String message) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues msgContentValues = new ContentValues();
+        msgContentValues.put(MESSAGE_TXT_CONTENT, message);
+        msgContentValues.put(MESSAGE_DATETIME, dateTime);
+        return db.insert(MESSAGE_TABLE_NAME, null, msgContentValues);
     }
 }

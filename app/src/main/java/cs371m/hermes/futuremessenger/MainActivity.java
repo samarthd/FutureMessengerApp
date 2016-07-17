@@ -15,10 +15,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
                 editScheduledMessage();
                 return true;
             case R.id.delete:
+                deleteScheduledMessage(info);
                 return true;
             // The following cases apply to the creation menu.
             case R.id.manage_presets:
@@ -74,9 +77,17 @@ public class MainActivity extends AppCompatActivity {
         // Create the ListView for all the scheduled messages
         ListView scheduled_messages_view = (ListView) findViewById(R.id.scheduled_messages_list);
 
-        // This is a temporary adapter to get some messages. Change this to load entries from a database.
-        String[] test_array = {"Hello1", "Hello2", "Hello3", "Hello1", "Hello2", "Hello3", "Hello1", "Hello2", "Hello3", "Hello1", "Hello2", "Hello3", "Hello1", "Hello2", "Hello3", "Hello1", "Hello2", "Hello3"};
-        ArrayAdapter<String> test_adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, test_array);
+        // TODO: This is a temporary adapter to get some messages. Change this to load entries from a database.
+        ArrayList<String> test_array = new ArrayList<>();
+        test_array.add("Hello1");
+        test_array.add("Hello2");
+        test_array.add("Hello3");
+        test_array.add("Hello4");
+        test_array.add("Hello5");
+        test_array.add("Hello6");
+        test_array.add("Hello7");
+        test_array.add("Hello8");
+        ArrayAdapter<String> test_adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, test_array);
         scheduled_messages_view.setAdapter(test_adapter);
 
         // On each item click, open the context menu.
@@ -143,5 +154,15 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("message", message);
 
         startActivity(intent);
+    }
+
+    private void deleteScheduledMessage(AdapterView.AdapterContextMenuInfo info) {
+        //TODO: implement deletion of message
+        ListView scheduled_messages_view = (ListView) findViewById(R.id.scheduled_messages_list);
+        String where = "deleteMessage";
+        Log.d(where, Integer.toString(info.position));
+        ArrayAdapter<String> adapter = (ArrayAdapter<String>) scheduled_messages_view.getAdapter();
+        adapter.remove(adapter.getItem(info.position));
+        adapter.notifyDataSetChanged();
     }
 }

@@ -1,6 +1,7 @@
 package cs371m.hermes.futuremessenger;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import java.lang.reflect.Array;
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         mDb = new MessengerDatabaseHelper(MainActivity.this);
 
 
-        // Create the ListView for all the scheduled messages
+       /* // Create the ListView for all the scheduled messages
         ListView scheduled_messages_view = (ListView) findViewById(R.id.scheduled_messages_list);
 
         // TODO: This is a temporary adapter to get some messages. Change this to load entries from a database.
@@ -103,8 +105,9 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 view.showContextMenu();
             }
-        });
+        });*/
 
+        fillListView();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         registerForContextMenu(fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -113,6 +116,9 @@ public class MainActivity extends AppCompatActivity {
                 view.showContextMenu();
             }
         });
+
+
+
     }
 
     @Override
@@ -170,5 +176,21 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = (ArrayAdapter<String>) scheduled_messages_view.getAdapter();
         adapter.remove(adapter.getItem(info.position));
         adapter.notifyDataSetChanged();
+    }
+
+    private void fillListView() {
+
+        Cursor cursor = mDb.getAllScheduledMessages();
+        String[] fromColumns = {mDb.MESSAGE_ID, mDb.RECIPIENT_ID, mDb.RECIPIENT_PHONE_NUMBER,
+                                mDb.MESSAGE_TXT_CONTENT};
+
+        int[] toViews = new int[] {R.id.message_id_tv, R.id.recipient_id_tv,
+                                   R.id.recipient_phone_num_tv, R.id.message_txt_tv};
+        SimpleCursorAdapter adapter =
+                new SimpleCursorAdapter(getBaseContext(), R.layout.listed_message_layout, cursor,
+                                        fromColumns, toViews, 0);
+        ListView messagesListView = (ListView) findViewById(R.id.scheduled_messages_list);
+        messagesListView.setAdapter(adapter);
+
     }
 }

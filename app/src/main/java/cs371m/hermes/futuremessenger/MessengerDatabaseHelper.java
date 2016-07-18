@@ -18,13 +18,13 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
 
     //Names of columns in the Recipient table in the database.
     public static final String RECIPIENT_TABLE_NAME = "recipient_table";
-    public static final String RECIPIENT_ID = "ID";
+    public static final String RECIPIENT_ID = "RID";
     public static final String RECIPIENT_PHONE_NUMBER = "PHONE_NUMBER";
     public static final String RECIPIENT_NAME = "NAME";
 
     // Names of various columns in the Message Table in the database.
     public static final String MESSAGE_TABLE_NAME = "message_table";
-    public static final String MESSAGE_ID = "ID";
+    public static final String MESSAGE_ID = "MID";
     public static final String MESSAGE_DATETIME = "DATETIME";
     public static final String MESSAGE_TXT_CONTENT = "TEXT_CONTENT";
     public static final String MESSAGE_IMG_PATH = "IMAGE_PATH";
@@ -162,4 +162,29 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         msgContentValues.put(MESSAGE_DATETIME, dateTime);
         return db.insert(MESSAGE_TABLE_NAME, null, msgContentValues);
     }
+
+
+    public Cursor getAllScheduledMessages() {
+        SQLiteDatabase db = getWritableDatabase();
+        String sql_select = "SELECT M.*, R.* FROM " +
+                            MESSAGE_TABLE_NAME + " as M, " +
+                            RECIPIENT_TABLE_NAME + " as R, " +
+                            REC_MESS_TABLE_NAME + " as RM " +
+                            "WHERE M.MID = RM.MESSAGE_ID " +
+                            "AND R.RID = RM.RECIPIENT_ID";
+
+
+        // This will join the tables together and get many rows of messages, each that have a column
+        // that has all of the phone numbers separated by commas in one big string.
+        /*SELECT M.MID, M.MESSAGE_TXT_CONTENT, M.DATETIME, GROUP_CONCAT(R.RID) AS RECIPIENT_IDS,
+        GROUP_CONCAT(R.RECIPIENT_PHONENUMBER) AS RECIPIENT_NUMBERS
+        FROM MESSAGE_TABLE_NAME AS M, RECIPIENT_TABLE_NAME AS R, REC_MESS_TABLE_NAME AS RM
+        LEFT OUTER JOIN RM ON RM.MESSAGE_ID=M.MID
+        LEFT OUTER JOIN R ON RM.RECIPIENT_ID=R.RID
+        GROUP BY M.MID, M.MESSAGE_TXT_CONTENT, M.DATETIME;*/
+
+        return db.rawQuery(sql_select, null);
+    }
+
+
 }

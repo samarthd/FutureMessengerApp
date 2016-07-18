@@ -1,5 +1,6 @@
 package cs371m.hermes.futuremessenger;
 
+import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -9,12 +10,17 @@ import android.support.v7.widget.Toolbar;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 public class EditTextMessageActivity extends AppCompatActivity {
 
     private EditText _contact_field;
+    //TODO: Figure out how to set date for button on activity creation
+    private Button _date_button;
+    //TODO: Figure out how to set time for button on activity creation
+    private Button _time_button;
     private EditText _message_field;
 
     @Override
@@ -100,6 +106,16 @@ public class EditTextMessageActivity extends AppCompatActivity {
         //TODO: Determine if data needs to be sent back to the main screen
         Intent ret = new Intent(this, MainActivity.class);
         startActivity(ret);
+    }
+
+    public void showTimePickerDialog (View v) {
+        DialogFragment newFragment = new TimePickerFragment();
+        newFragment.show(getFragmentManager(), "timePicker");
+    }
+
+    public void showDatePickerDialog (View v) {
+        DialogFragment newFragment = new DatePickerFragment();
+        newFragment.show(getFragmentManager(), "datePicker");
     }
 
 }

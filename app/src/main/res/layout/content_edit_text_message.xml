@@ -29,47 +29,37 @@
             android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp" />
     </LinearLayout>
-    <LinearLayout android:id="@+id/layout_date"
+    <RelativeLayout android:id="@+id/layout_datetime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_below="@id/layout_recipients">
-        <TextView
+        <TextView android:id="@+id/textview_datetime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date"
+            android:text="Date &amp; Time"
             android:textSize="18sp" />
-        <EditText android:id="@+id/date_field"
-            android:layout_width="match_parent"
+        <Button android:id="@+id/button_date"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:inputType="date"
-            android:hint="Enter a date."
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp" />
-    </LinearLayout>
-    <LinearLayout android:id="@+id/layout_time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_below="@id/layout_date">
-        <TextView
-            android:layout_width="match_parent"
+            android:text="Sun 12/30/2000"
+            android:layout_below="@id/textview_datetime"
+            android:layout_marginLeft="18dp"
+            android:onClick="showDatePickerDialog" />
+        <Button android:id="@+id/button_time"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Time"
-            android:textSize="18sp"/>
-        <EditText android:id="@+id/time_field"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="time"
-            android:hint="Enter a time"
-            android:layout_marginStart="20dp"
-            android:layout_marginLeft="20dp" />
-    </LinearLayout>
+            android:text="12:00 PM"
+            android:layout_toRightOf="@id/button_date"
+            android:layout_toEndOf="@id/button_date"
+            android:layout_below="@id/textview_datetime"
+            android:onClick="showTimePickerDialog" />
+    </RelativeLayout>
     <LinearLayout android:id="@+id/layout_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_below="@id/layout_time">
+        android:layout_below="@id/layout_datetime">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

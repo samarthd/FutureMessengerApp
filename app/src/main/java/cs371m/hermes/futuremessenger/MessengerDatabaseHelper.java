@@ -181,7 +181,8 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         FROM MESSAGE_TABLE_NAME AS M, RECIPIENT_TABLE_NAME AS R, REC_MESS_TABLE_NAME AS RM
         LEFT OUTER JOIN RM ON RM.MESSAGE_ID=M.MID
         LEFT OUTER JOIN R ON RM.RECIPIENT_ID=R.RID
-        GROUP BY M.MID, M.MESSAGE_TXT_CONTENT, M.DATETIME;*/
+        GROUP BY M.MID, M.MESSAGE_TXT_CONTENT, M.DATETIME
+        ORDER BY M.DATETIME*/
 
         return db.rawQuery(sql_select, null);
     }

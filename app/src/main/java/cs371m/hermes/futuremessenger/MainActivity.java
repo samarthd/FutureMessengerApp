@@ -154,6 +154,10 @@ public class MainActivity extends AppCompatActivity {
         ListView scheduled_messages_view = (ListView) findViewById(R.id.scheduled_messages_list);
         String where = "deleteMessage";
         Log.d(where, Integer.toString(info.position));
+
+        //TODO: Instead of this code, make a call to a function that will delete the message from
+        //the database for you. It should also delete any attached recipients from the database
+        //if they have no other messages. This includes all association objects for that recipient.
         ArrayAdapter<String> adapter = (ArrayAdapter<String>) scheduled_messages_view.getAdapter();
         adapter.remove(adapter.getItem(info.position));
         adapter.notifyDataSetChanged();

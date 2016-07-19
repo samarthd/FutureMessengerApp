@@ -82,31 +82,6 @@ public class MainActivity extends AppCompatActivity {
         mDb = new MessengerDatabaseHelper(MainActivity.this);
 
 
-       /* // Create the ListView for all the scheduled messages
-        ListView scheduled_messages_view = (ListView) findViewById(R.id.scheduled_messages_list);
-
-        // TODO: This is a temporary adapter to get some messages. Change this to load entries from a database.
-        ArrayList<String> test_array = new ArrayList<>();
-        test_array.add("Hello1");
-        test_array.add("Hello2");
-        test_array.add("Hello3");
-        test_array.add("Hello4");
-        test_array.add("Hello5");
-        test_array.add("Hello6");
-        test_array.add("Hello7");
-        test_array.add("Hello8");
-        ArrayAdapter<String> test_adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, test_array);
-        scheduled_messages_view.setAdapter(test_adapter);
-
-        // On each item click, open the context menu.
-        registerForContextMenu(scheduled_messages_view);
-        scheduled_messages_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                view.showContextMenu();
-            }
-        });*/
-
         fillListView();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         registerForContextMenu(fab);
@@ -186,12 +161,12 @@ public class MainActivity extends AppCompatActivity {
     private void fillListView() {
 
         Cursor cursor = mDb.getAllScheduledMessages();
-        String[] fromColumns = {"_id", mDb.MESSAGE_TXT_CONTENT,
+        String[] fromColumns = {mDb.MESSAGE_TXT_CONTENT,
                                 mDb.MESSAGE_DATETIME, "RECIPIENT_IDS",
                                 "RECIPIENT_NUMBERS"};
 
-        int[] toViews = new int[] {R.id.message_id_tv, R.id.recipient_id_tv,
-                                   R.id.recipient_phone_num_tv, R.id.message_txt_tv};
+        int[] toViews = new int[] {R.id.message_txt_tv, R.id.datetime_tv,
+                                   R.id.recipient_id_tv, R.id.recipient_nums_tv};
         SimpleCursorAdapter adapter =
                 new SimpleCursorAdapter(getBaseContext(), R.layout.listed_message_layout, cursor,
                                         fromColumns, toViews, 0);

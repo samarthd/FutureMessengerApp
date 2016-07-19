@@ -94,7 +94,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
             mDb.storeNewSMS(phoneNumbers, dateTime, message);
             mDb.close();
 
-            
+
         } catch (Exception ex) {
             Toast.makeText(getApplicationContext(),
                     ex.getMessage(), Toast.LENGTH_LONG).show();

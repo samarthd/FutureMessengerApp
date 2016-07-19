@@ -3,7 +3,6 @@ package cs371m.hermes.futuremessenger;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -62,7 +61,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
      * @param message
      */
     private void setAlarm(String phoneNum, String message){
-        /* Set the alarm with the selected parameters */
+/*        *//* Set the alarm with the selected parameters *//*
         Intent alarmIntent = new Intent(EditTextMessageActivity.this, AlarmReceiver.class);
         Bundle bundle = new Bundle();
         bundle.putCharSequence("num", phoneNum);
@@ -72,11 +71,11 @@ public class EditTextMessageActivity extends AppCompatActivity {
         pendingIntent = PendingIntent.getService(EditTextMessageActivity.this, 0, alarmIntent, 0);
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
 
-        /* This is a hard-coded 10 second delay for testing */
+        *//* This is a hard-coded 10 second delay for testing *//*
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.add(Calendar.SECOND, 10);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);*/
 
     }
 

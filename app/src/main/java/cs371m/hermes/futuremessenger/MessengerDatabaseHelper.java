@@ -181,17 +181,8 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
     public Cursor getAllScheduledMessages() {
         SQLiteDatabase db = getWritableDatabase();
 
-
         // This will join the tables together and get many rows of messages, each that have a column
         // that has all of the phone numbers separated by commas in one big string.
-        /*SELECT M.MID, M.MESSAGE_TXT_CONTENT, M.DATETIME, GROUP_CONCAT(R.RID) AS RECIPIENT_IDS,
-        GROUP_CONCAT(R.RECIPIENT_PHONENUMBER) AS RECIPIENT_NUMBERS
-        FROM MESSAGE_TABLE_NAME AS M, RECIPIENT_TABLE_NAME AS R, REC_MESS_TABLE_NAME AS RM
-        LEFT OUTER JOIN RM ON RM.MESSAGE_ID=M.MID
-        LEFT OUTER JOIN R ON RM.RECIPIENT_ID=R.RID
-        GROUP BY M.MID, M.MESSAGE_TXT_CONTENT, M.DATETIME
-        ORDER BY M.DATETIME*/
-
         String sql_select = "SELECT M." + MESSAGE_ID + " AS _id, "+
                             "M." + MESSAGE_TXT_CONTENT + ", " +
                             "M." + MESSAGE_DATETIME + ", " +

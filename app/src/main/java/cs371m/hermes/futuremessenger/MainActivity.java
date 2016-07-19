@@ -27,7 +27,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     // Future Messenger's database.
-    MessengerDatabaseHelper mDb;
+    public MessengerDatabaseHelper mDb;
 
     // Define menu creation.
     @Override
@@ -117,8 +117,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-
     }
 
     @Override
@@ -142,6 +140,13 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mDb.close();
+    }
+
 
     private void sendSmsMessage() {
         /* if I intend to edit a message, I should send that info into the intent
@@ -181,8 +186,9 @@ public class MainActivity extends AppCompatActivity {
     private void fillListView() {
 
         Cursor cursor = mDb.getAllScheduledMessages();
-        String[] fromColumns = {mDb.MESSAGE_ID, mDb.RECIPIENT_ID, mDb.RECIPIENT_PHONE_NUMBER,
-                                mDb.MESSAGE_TXT_CONTENT};
+        String[] fromColumns = {"_id", mDb.MESSAGE_TXT_CONTENT,
+                                mDb.MESSAGE_DATETIME, "RECIPIENT_IDS",
+                                "RECIPIENT_NUMBERS"};
 
         int[] toViews = new int[] {R.id.message_id_tv, R.id.recipient_id_tv,
                                    R.id.recipient_phone_num_tv, R.id.message_txt_tv};

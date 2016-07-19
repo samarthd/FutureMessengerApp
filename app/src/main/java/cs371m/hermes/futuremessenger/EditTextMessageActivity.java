@@ -1,6 +1,7 @@
 package cs371m.hermes.futuremessenger;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -86,6 +87,14 @@ public class EditTextMessageActivity extends AppCompatActivity {
 //            SmsManager sms = SmsManager.getDefault();
 //            sms.sendTextMessage(phoneNum, null, message, null, null);
 
+            //Save the message
+            String[] phoneNumbers = new String[] {phoneNum};
+            String dateTime = date + time;
+            MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(EditTextMessageActivity.this);
+            mDb.storeNewSMS(phoneNumbers, dateTime, message);
+            mDb.close();
+
+            
         } catch (Exception ex) {
             Toast.makeText(getApplicationContext(),
                     ex.getMessage(), Toast.LENGTH_LONG).show();

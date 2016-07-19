@@ -118,6 +118,14 @@ public class EditTextMessageActivity extends AppCompatActivity {
 //            SmsManager sms = SmsManager.getDefault();
 //            sms.sendTextMessage(phoneNum, null, message, null, null);
 
+            //Save the message
+            String[] phoneNumbers = new String[] {phoneNum};
+            String dateTime = date + time;
+            MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(EditTextMessageActivity.this);
+            mDb.storeNewSMS(phoneNumbers, dateTime, message);
+            mDb.close();
+
+
         } catch (Exception ex) {
             Toast.makeText(getApplicationContext(),
                     ex.getMessage(), Toast.LENGTH_LONG).show();

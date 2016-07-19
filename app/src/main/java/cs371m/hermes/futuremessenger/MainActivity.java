@@ -1,6 +1,7 @@
 package cs371m.hermes.futuremessenger;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -17,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import java.lang.reflect.Array;
@@ -25,7 +27,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
 
     // Future Messenger's database.
-    MessengerDatabaseHelper mDb;
+    public MessengerDatabaseHelper mDb;
 
     // Define menu creation.
     @Override
@@ -80,31 +82,7 @@ public class MainActivity extends AppCompatActivity {
         mDb = new MessengerDatabaseHelper(MainActivity.this);
 
 
-        // Create the ListView for all the scheduled messages
-        ListView scheduled_messages_view = (ListView) findViewById(R.id.scheduled_messages_list);
-
-        // TODO: This is a temporary adapter to get some messages. Change this to load entries from a database.
-        ArrayList<String> test_array = new ArrayList<>();
-        test_array.add("Hello1");
-        test_array.add("Hello2");
-        test_array.add("Hello3");
-        test_array.add("Hello4");
-        test_array.add("Hello5");
-        test_array.add("Hello6");
-        test_array.add("Hello7");
-        test_array.add("Hello8");
-        ArrayAdapter<String> test_adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, test_array);
-        scheduled_messages_view.setAdapter(test_adapter);
-
-        // On each item click, open the context menu.
-        registerForContextMenu(scheduled_messages_view);
-        scheduled_messages_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                view.showContextMenu();
-            }
-        });
-
+        fillListView();
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         registerForContextMenu(fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -113,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 view.showContextMenu();
             }
         });
+
     }
 
     @Override
@@ -136,6 +115,13 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mDb.close();
+    }
+
 
     private void sendSmsMessage() {
         /* if I intend to edit a message, I should send that info into the intent
@@ -170,5 +156,22 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = (ArrayAdapter<String>) scheduled_messages_view.getAdapter();
         adapter.remove(adapter.getItem(info.position));
         adapter.notifyDataSetChanged();
+    }
+
+    private void fillListView() {
+
+        Cursor cursor = mDb.getAllScheduledMessages();
+        String[] fromColumns = {mDb.MESSAGE_TXT_CONTENT,
+                                mDb.MESSAGE_DATETIME, "RECIPIENT_IDS",
+                                "RECIPIENT_NUMBERS"};
+
+        int[] toViews = new int[] {R.id.message_txt_tv, R.id.datetime_tv,
+                                   R.id.recipient_id_tv, R.id.recipient_nums_tv};
+        SimpleCursorAdapter adapter =
+                new SimpleCursorAdapter(getBaseContext(), R.layout.listed_message_layout, cursor,
+                                        fromColumns, toViews, 0);
+        ListView messagesListView = (ListView) findViewById(R.id.scheduled_messages_list);
+        messagesListView.setAdapter(adapter);
+
     }
 }

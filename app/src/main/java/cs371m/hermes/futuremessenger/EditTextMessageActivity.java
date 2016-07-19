@@ -1,6 +1,8 @@
 package cs371m.hermes.futuremessenger;
 
 import android.app.DialogFragment;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +16,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
 public class EditTextMessageActivity extends AppCompatActivity {
 
     private EditText _contact_field;
@@ -22,6 +26,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
     //TODO: Figure out how to set time for button on activity creation
     private Button _time_button;
     private EditText _message_field;
+    private PendingIntent pendingIntent;
 
     private int _hour = 0;
     private int _minute = 0;
@@ -40,6 +45,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
         _time_button = (Button) findViewById(R.id.button_time);
 
         /* TODO: Get data from main screen, if editing scheduled message */
+        /* TODO: If editing scheduled message, cancel previous version first */
         Intent intent = getIntent();
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -52,10 +58,36 @@ public class EditTextMessageActivity extends AppCompatActivity {
                 String phonenum = _contact_field.getText().toString();
                 String message = _message_field.getText().toString();
                 saveSMS(phonenum, null, null, message);
+                setAlarm(phonenum, message);
 
                 returnToMainActivity();
             }
         });
+    }
+
+    /**
+     * Create Alarm
+     * NEED TO ADD DATE AND TIME PARAMETERS
+     * @param phoneNum
+     * @param message
+     */
+    private void setAlarm(String phoneNum, String message){
+        /* Set the alarm with the selected parameters */
+//        Intent alarmIntent = new Intent(EditTextMessageActivity.this, AlarmReceiver.class);
+//        Bundle bundle = new Bundle();
+//        bundle.putCharSequence("num", phoneNum);
+//        bundle.putCharSequence("message", message);
+//        alarmIntent.putExtras(bundle);
+//
+//        pendingIntent = PendingIntent.getService(EditTextMessageActivity.this, 0, alarmIntent, 0);
+//        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+//
+//        /* This is a hard-coded 10 second delay for testing */
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTimeInMillis(System.currentTimeMillis());
+//        calendar.add(Calendar.SECOND, 10);
+//        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+
     }
 
     /**

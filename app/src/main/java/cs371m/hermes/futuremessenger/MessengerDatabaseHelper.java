@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Created by Samarth on 7/11/2016.
@@ -18,13 +19,13 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
 
     //Names of columns in the Recipient table in the database.
     public static final String RECIPIENT_TABLE_NAME = "recipient_table";
-    public static final String RECIPIENT_ID = "ID";
+    public static final String RECIPIENT_ID = "RID";
     public static final String RECIPIENT_PHONE_NUMBER = "PHONE_NUMBER";
     public static final String RECIPIENT_NAME = "NAME";
 
     // Names of various columns in the Message Table in the database.
     public static final String MESSAGE_TABLE_NAME = "message_table";
-    public static final String MESSAGE_ID = "ID";
+    public static final String MESSAGE_ID = "MID";
     public static final String MESSAGE_DATETIME = "DATETIME";
     public static final String MESSAGE_TXT_CONTENT = "TEXT_CONTENT";
     public static final String MESSAGE_IMG_PATH = "IMAGE_PATH";
@@ -59,26 +60,39 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
 
            */
 
+
         // Create the Recipients table that will hold our recipients.
-        db.execSQL("create table " + RECIPIENT_TABLE_NAME + "(" +
-                    RECIPIENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    RECIPIENT_PHONE_NUMBER + " TEXT," +
-                    RECIPIENT_NAME + " TEXT)");
+        final String createRecipTable =
+                "create table " + RECIPIENT_TABLE_NAME + "(" +
+                RECIPIENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                RECIPIENT_PHONE_NUMBER + " TEXT," +
+                RECIPIENT_NAME + " TEXT)";
+        Log.d("CREATING RECIP TABLE", createRecipTable);
+        db.execSQL(createRecipTable);
+
 
         // Create the Message table that will hold our messages.
-        db.execSQL("create table " + MESSAGE_TABLE_NAME + "(" +
+        final String createMessTable =
+                "create table " + MESSAGE_TABLE_NAME + "(" +
                 MESSAGE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 MESSAGE_DATETIME + " TEXT," +
                 MESSAGE_TXT_CONTENT + " TEXT," +
-                MESSAGE_IMG_PATH + " TEXT)");
+                MESSAGE_IMG_PATH + " TEXT)";
+        Log.d("CREATING MESSAGE TABLE", createRecipTable);
+        db.execSQL(createMessTable);
 
          /* Create the Recipients_Messages table that will hold associations
             between Messages and Recipients. (A message can have many recipients
             and a recipient could have many associated messages.) */
-        db.execSQL("create table " + REC_MESS_TABLE_NAME + "(" +
-                    RECEP_ID + " INTEGER NOT NULL," +
-                    MESS_ID + " INTEGER NOT NULL," +
-                    "PRIMARY KEY(" + RECEP_ID + ", " + MESS_ID + "))");
+
+        final String createRecMessTable =
+                "create table " + REC_MESS_TABLE_NAME + "(" +
+                RECEP_ID + " INTEGER NOT NULL," +
+                MESS_ID + " INTEGER NOT NULL," +
+                "PRIMARY KEY(" + RECEP_ID + ", " + MESS_ID + "))";
+
+        Log.d("CREATING ASSOC TABLE", createRecipTable);
+        db.execSQL(createRecMessTable);
 
 /*        // Create the Preset table that will hold our presets.
         db.execSQL("create table " + PRESET_TABLE_NAME + "(" +
@@ -162,4 +176,29 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         msgContentValues.put(MESSAGE_DATETIME, dateTime);
         return db.insert(MESSAGE_TABLE_NAME, null, msgContentValues);
     }
+
+
+    public Cursor getAllScheduledMessages() {
+        SQLiteDatabase db = getWritableDatabase();
+
+        // This will join the tables together and get many rows of messages, each that have a column
+        // that has all of the phone numbers separated by commas in one big string.
+        String sql_select = "SELECT M." + MESSAGE_ID + " AS _id, "+
+                            "M." + MESSAGE_TXT_CONTENT + ", " +
+                            "M." + MESSAGE_DATETIME + ", " +
+                            "GROUP_CONCAT(" + "R." + RECIPIENT_ID + ") AS RECIPIENT_IDS, " +
+                            "GROUP_CONCAT(" + "R." + RECIPIENT_PHONE_NUMBER + ") AS RECIPIENT_NUMBERS " +
+                            "FROM " + MESSAGE_TABLE_NAME + " AS M" +
+                            " LEFT JOIN " + REC_MESS_TABLE_NAME + " AS RM ON RM." + MESS_ID + "=_id" +
+                            " LEFT JOIN " + RECIPIENT_TABLE_NAME + " AS R ON RM." + RECEP_ID + "=R." + RECIPIENT_ID +
+                            " GROUP BY _id, M." + MESSAGE_TXT_CONTENT + ", " +
+                            "M." + MESSAGE_DATETIME +
+                            " ORDER BY M." + MESSAGE_DATETIME;
+
+        Log.d("IN DB HELPER", sql_select);
+
+        return db.rawQuery(sql_select, null);
+    }
+
+
 }

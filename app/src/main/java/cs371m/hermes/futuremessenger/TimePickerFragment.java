@@ -32,15 +32,17 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
     }
 
     @Override
-    public void onTimeSet(TimePicker timePicker, int i, int i1) {
+    public void onTimeSet(TimePicker timePicker, int hour, int minute) {
         if (DateFormat.is24HourFormat(getActivity())) {
             //TODO: Set string based on 24 hour format
         } else {
-            String time = "" + (i % 12 == 0? "12" : Integer.toString(i%12) ) + ":"
-                             + (i1 < 10 ? "0" : "") + Integer.toString(i1)
-                             + (i < 12 ? " AM":" PM");
+            String time = "" + (hour % 12 == 0? "12" : Integer.toString(hour%12) ) + ":"
+                             + (minute < 10 ? "0" : "") + Integer.toString(minute)
+                             + (hour < 12 ? " AM":" PM");
             Log.d("onTimeSet", time);
             _time_button.setText(time);
+            //TODO: change this, feels hack-y
+            ((EditTextMessageActivity)getActivity()).setTimeFields(hour, minute);
         }
     }
 }

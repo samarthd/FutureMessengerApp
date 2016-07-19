@@ -23,6 +23,9 @@ public class EditTextMessageActivity extends AppCompatActivity {
     private Button _time_button;
     private EditText _message_field;
 
+    private int _hour = 0;
+    private int _minute = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +36,8 @@ public class EditTextMessageActivity extends AppCompatActivity {
 
         _contact_field = (EditText) findViewById(R.id.recipients_field);
         _message_field = (EditText) findViewById(R.id.message_field);
+        _date_button = (Button) findViewById(R.id.button_date);
+        _time_button = (Button) findViewById(R.id.button_time);
 
         /* TODO: Get data from main screen, if editing scheduled message */
         Intent intent = getIntent();
@@ -91,6 +96,11 @@ public class EditTextMessageActivity extends AppCompatActivity {
             Log.d("saveSMS", message);
 //            SmsManager sms = SmsManager.getDefault();
 //            sms.sendTextMessage(phoneNum, null, message, null, null);
+            String iso_date = _date_button.getText().toString();
+            String iso_time = (_hour < 10 ?"0":"") + Integer.toString(_hour)
+                              + (_minute < 10 ?":0":":") + Integer.toString(_minute)
+                              + ":00";
+            Log.d("saveSMS", iso_date + iso_time);
 
         } catch (Exception ex) {
             Toast.makeText(getApplicationContext(),
@@ -116,6 +126,11 @@ public class EditTextMessageActivity extends AppCompatActivity {
     public void showDatePickerDialog (View v) {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getFragmentManager(), "datePicker");
+    }
+
+    public void setTimeFields(int h, int m) {
+        _hour = h;
+        _minute = m;
     }
 
 }

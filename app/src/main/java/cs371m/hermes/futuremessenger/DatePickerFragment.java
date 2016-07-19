@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.DatePicker;
 
@@ -31,7 +32,12 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     }
 
     @Override
-    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
         //TODO: Change date on Button
+        String dateFormat = Integer.toString(year) + "-"
+                            + Integer.toString(month) + "-"
+                            + (dayOfMonth < 10 ? "0" : "") + Integer.toString(dayOfMonth) + " ";
+        Log.d("onDateSet", dateFormat);
+        _date_button.setText(dateFormat);
     }
 }

@@ -136,7 +136,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
 
             //Save the message
             String[] phoneNumbers = new String[] {phoneNum};
-            String dateTime = date + time;
+            String dateTime = iso_date + iso_time;
             MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(EditTextMessageActivity.this);
             mDb.storeNewSMS(phoneNumbers, dateTime, message);
             mDb.close();

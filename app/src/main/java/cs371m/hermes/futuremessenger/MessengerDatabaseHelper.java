@@ -7,6 +7,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created by Samarth on 7/11/2016.
  *
@@ -27,6 +32,7 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
     public static final String MESSAGE_TABLE_NAME = "message_table";
     public static final String MESSAGE_ID = "MID";
     public static final String MESSAGE_DATETIME = "DATETIME";
+    public static final String MESSAGE_FORMATTED_DT = "FORMATTED_DATETIME";
     public static final String MESSAGE_TXT_CONTENT = "TEXT_CONTENT";
     public static final String MESSAGE_IMG_PATH = "IMAGE_PATH";
 
@@ -76,6 +82,7 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
                 "create table " + MESSAGE_TABLE_NAME + "(" +
                 MESSAGE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 MESSAGE_DATETIME + " TEXT," +
+                MESSAGE_FORMATTED_DT + " TEXT," +
                 MESSAGE_TXT_CONTENT + " TEXT," +
                 MESSAGE_IMG_PATH + " TEXT)";
         Log.d("CREATING MESSAGE TABLE", createRecipTable);
@@ -146,7 +153,7 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getWritableDatabase();
 
         // Search for this phone number in our database.
-        Cursor cursor = db.query(RECIPIENT_TABLE_NAME, new String[] {RECIPIENT_PHONE_NUMBER},
+        Cursor cursor = db.query(RECIPIENT_TABLE_NAME, new String[] {RECIPIENT_ID},
                 RECIPIENT_PHONE_NUMBER + "=?", new String[] {phoneNumber},null, null, null);
 
         // Variable used to store the current recipient id
@@ -163,6 +170,7 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
             // The recipient exists, so we can just pull his id from the database
             cursor.moveToFirst();
             recipient_id = cursor.getLong(0);
+            Log.d("RECIPIENT EXISTS", "ID is " + recipient_id);
         }
         return recipient_id;
     }
@@ -174,6 +182,24 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         ContentValues msgContentValues = new ContentValues();
         msgContentValues.put(MESSAGE_TXT_CONTENT, message);
         msgContentValues.put(MESSAGE_DATETIME, dateTime);
+
+        //Format the datetime in a human-friendly manner.
+        SimpleDateFormat sourceDF = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        Date dateTime_obj;
+        String formattedString = "";
+        try {
+            dateTime_obj = sourceDF.parse(dateTime);
+            DateFormat resultDF = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
+            formattedString = resultDF.format(dateTime_obj);
+        }
+        catch (ParseException e) {
+            Log.d("EXCEPTION", "Parse Error");
+        }
+
+        Log.d("Result", formattedString);
+        msgContentValues.put(MESSAGE_FORMATTED_DT, formattedString);
+
+
         return db.insert(MESSAGE_TABLE_NAME, null, msgContentValues);
     }
 
@@ -185,7 +211,7 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         // that has all of the phone numbers separated by commas in one big string.
         String sql_select = "SELECT M." + MESSAGE_ID + " AS _id, "+
                             "M." + MESSAGE_TXT_CONTENT + ", " +
-                            "M." + MESSAGE_DATETIME + ", " +
+                            "M." + MESSAGE_FORMATTED_DT + ", " +
                             "GROUP_CONCAT(" + "R." + RECIPIENT_ID + ") AS RECIPIENT_IDS, " +
                             "GROUP_CONCAT(" + "R." + RECIPIENT_PHONE_NUMBER + ") AS RECIPIENT_NUMBERS " +
                             "FROM " + MESSAGE_TABLE_NAME + " AS M" +

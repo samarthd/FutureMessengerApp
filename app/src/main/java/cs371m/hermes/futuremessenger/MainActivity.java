@@ -167,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
 
         Cursor cursor = mDb.getAllScheduledMessages();
         String[] fromColumns = {mDb.MESSAGE_TXT_CONTENT,
-                                mDb.MESSAGE_DATETIME, "RECIPIENT_IDS",
+                                mDb.MESSAGE_FORMATTED_DT, "RECIPIENT_IDS",
                                 "RECIPIENT_NUMBERS"};
 
         int[] toViews = new int[] {R.id.message_txt_tv, R.id.datetime_tv,

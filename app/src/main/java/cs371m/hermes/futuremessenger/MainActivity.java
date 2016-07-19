@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void editScheduledMessage() {
         //TODO: get actual data from scheduled messages
+        //can call db method
         String phonenum = "0123456789";
         String date = "01-01-1991";
         String time = "12:00 PM";

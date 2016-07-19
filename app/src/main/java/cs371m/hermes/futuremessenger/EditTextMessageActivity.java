@@ -62,20 +62,20 @@ public class EditTextMessageActivity extends AppCompatActivity {
      */
     private void setAlarm(String phoneNum, String message){
         /* Set the alarm with the selected parameters */
-        Intent alarmIntent = new Intent(EditTextMessageActivity.this, AlarmReceiver.class);
-        Bundle bundle = new Bundle();
-        bundle.putCharSequence("num", phoneNum);
-        bundle.putCharSequence("message", message);
-        alarmIntent.putExtras(bundle);
-
-        pendingIntent = PendingIntent.getService(EditTextMessageActivity.this, 0, alarmIntent, 0);
-        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-
-        /* This is a hard-coded 10 second delay for testing */
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(Calendar.SECOND, 10);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+//        Intent alarmIntent = new Intent(EditTextMessageActivity.this, AlarmReceiver.class);
+//        Bundle bundle = new Bundle();
+//        bundle.putCharSequence("num", phoneNum);
+//        bundle.putCharSequence("message", message);
+//        alarmIntent.putExtras(bundle);
+//
+//        pendingIntent = PendingIntent.getService(EditTextMessageActivity.this, 0, alarmIntent, 0);
+//        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+//
+//        /* This is a hard-coded 10 second delay for testing */
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTimeInMillis(System.currentTimeMillis());
+//        calendar.add(Calendar.SECOND, 10);
+//        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 
     }
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Created by Samarth on 7/11/2016.
@@ -166,12 +167,6 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
 
     public Cursor getAllScheduledMessages() {
         SQLiteDatabase db = getWritableDatabase();
-        String sql_select = "SELECT M.*, R.* FROM " +
-                            MESSAGE_TABLE_NAME + " as M, " +
-                            RECIPIENT_TABLE_NAME + " as R, " +
-                            REC_MESS_TABLE_NAME + " as RM " +
-                            "WHERE M.MID = RM.MESSAGE_ID " +
-                            "AND R.RID = RM.RECIPIENT_ID";
 
 
         // This will join the tables together and get many rows of messages, each that have a column
@@ -183,6 +178,19 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         LEFT OUTER JOIN R ON RM.RECIPIENT_ID=R.RID
         GROUP BY M.MID, M.MESSAGE_TXT_CONTENT, M.DATETIME
         ORDER BY M.DATETIME*/
+
+        String sql_select = "SELECT M." + MESSAGE_ID + " AS _ID, "+
+                            "M." + MESSAGE_TXT_CONTENT + ", " +
+                            "M." + MESSAGE_DATETIME + ", " +
+                            "GROUP_CONCAT(R." + RECIPIENT_ID + ") AS RECIPIENT_IDS, " +
+                            "GROUP_CONCAT(R." + RECIPIENT_PHONE_NUMBER + ") AS RECIPIENT_NUMBERS " +
+                            "FROM " + MESSAGE_TABLE_NAME + " AS M, " + RECIPIENT_TABLE_NAME + " AS R, " +
+                            REC_MESS_TABLE_NAME +
+                            " LEFT OUTER JOIN " + REC_MESS_TABLE_NAME + " ON " + REC_MESS_TABLE_NAME + "." + MESS_ID + "=_ID" +
+                            " LEFT OUTER JOIN R ON " + REC_MESS_TABLE_NAME + "." + RECEP_ID + "=R." + RECIPIENT_ID +
+                            " GROUP BY _ID" + MESSAGE_ID + ", M." + MESSAGE_TXT_CONTENT + ", " +
+                            "M." + MESSAGE_DATETIME + " ORDER BY M." + MESSAGE_DATETIME;
+        Log.d("IN DB HELPER", sql_select);
 
         return db.rawQuery(sql_select, null);
     }

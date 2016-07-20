@@ -15,17 +15,14 @@ import java.util.Calendar;
  */
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 
-    private Button _date_button;
-
     @Override
     public Dialog onCreateDialog (Bundle savedInstanceState) {
-        _date_button = (Button) getActivity().findViewById(R.id.button_date);
+        EditTextMessageActivity activity = (EditTextMessageActivity) getActivity();
 
         // Use the current date as the default date in the picker
-        final Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
+        int year = activity.get_year();
+        int month = activity.get_month();
+        int day = activity.get_dayOfMonth();
 
         // Create a new instance of DatePickerDialog and return it
         return new DatePickerDialog(getActivity(), this, year, month, day);
@@ -34,10 +31,6 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
         //TODO: Change date on Button
-        String dateFormat = Integer.toString(year) + "-"
-                            + Integer.toString(month) + "-"
-                            + (dayOfMonth < 10 ? "0" : "") + Integer.toString(dayOfMonth) + " ";
-        Log.d("onDateSet", dateFormat);
-        _date_button.setText(dateFormat);
+        ((EditTextMessageActivity)getActivity()).setDateButton(year, month, dayOfMonth);
     }
 }

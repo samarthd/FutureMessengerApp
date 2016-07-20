@@ -257,7 +257,7 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
             String[] dateTimeSplit = dateTime.split(" ");
             String date = dateTimeSplit[0];
             String time = dateTimeSplit[1];
-            String[] result = new String[] {phoneNumbers, date, time, message};
+            String[] result = new String[] {phoneNumbers, date, time, message, dateTime};
             resultCursor.close();
             return result;
         }
@@ -311,6 +311,14 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
             Log.d(TAG, "Deleted message: " + message_id);
             return true;
         }
+    }
+
+    /* This method will delete the message with the given ID and create a new one with the
+    *  new values. Before calling this method, make sure you've updated/cancelled the existing
+    *  alarm used to schedule it. */
+    public boolean updateTextMessage(long message_id, String[] phoneNumbers, String dateTime, String message) {
+        deleteMessage(message_id);
+        return storeNewSMS(phoneNumbers, dateTime, message);
     }
 
 

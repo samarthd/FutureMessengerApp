@@ -47,6 +47,14 @@ public class EditTextMessageActivity extends AppCompatActivity {
         /* TODO: Get data from main screen, if editing scheduled message */
         /* TODO: If editing scheduled message, cancel previous version first */
         Intent intent = getIntent();
+        Bundle extras = intent.getExtras();
+        if (extras != null) {
+            _contact_field.setText(intent.getStringExtra("num"));
+            _date_button.setText(intent.getStringExtra("date"));
+            _time_button.setText(intent.getStringExtra("time"));
+            _message_field.setText(intent.getStringExtra("message"));
+        }
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -60,6 +68,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
                 saveSMS(phonenum, null, null, message);
                 setAlarm(phonenum, message);
 
+                sendSMS(phonenum, message);
                 returnToMainActivity();
             }
         });
@@ -172,5 +181,10 @@ public class EditTextMessageActivity extends AppCompatActivity {
         _hour = h;
         _minute = m;
     }
+
+//    private String[] parseStringAsManyPhoneNumbers(String num) {
+//        String[] numbers;
+//        return numbers;
+//    }
 
 }

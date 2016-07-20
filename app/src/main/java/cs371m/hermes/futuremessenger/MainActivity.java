@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -15,21 +13,22 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     // Future Messenger's database.
     public MessengerDatabaseHelper mDb;
 
-    // Define menu creation.
+    //ID of the message in the ListView that was clicked last.
+    private long last_clicked_message_id;
+
+    /*
+     *  Determine which context menu should be inflated: FAB's context menu, or
+     *  the individual message edit/delete menu.
+     *  */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
@@ -46,17 +45,16 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // Menu options for the message menu.
+    // Menu options.
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         switch (item.getItemId()) {
             // The following cases apply to the message menu.
             case R.id.edit:
-                editScheduledMessage();
+                editScheduledMessage(last_clicked_message_id);
                 return true;
             case R.id.delete:
-                deleteScheduledMessage(info);
+                deleteScheduledMessage(last_clicked_message_id);
                 return true;
             // The following cases apply to the creation menu.
             case R.id.manage_presets:
@@ -81,8 +79,10 @@ public class MainActivity extends AppCompatActivity {
         // Create our database.
         mDb = new MessengerDatabaseHelper(MainActivity.this);
 
-
+        // Populate the listview from the database.
         fillListView();
+        registerForContextMenu(findViewById(R.id.scheduled_messages_list));
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         registerForContextMenu(fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        // Close the database connection.
         mDb.close();
     }
 
@@ -132,37 +133,32 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void editScheduledMessage() {
-        //TODO: get actual data from scheduled messages
-        //can call db method
-        String phonenum = "0123456789";
-        String date = "01-01-1991";
-        String time = "12:00 PM";
-        String message = "This is a prefixed message";
-
+    /* Edit a currently scheduled message. */
+    private void editScheduledMessage(long message_id) {
+        // Get the message's data.
+        String[] message_info = mDb.getScheduledMessageData(message_id);
+        String phonenums = message_info[0];
+        String date = message_info[1];
+        String time = message_info[2];
+        String message = message_info[3];
+        // Place the data in an intent.
         Intent intent  = new Intent(this, EditTextMessageActivity.class);
-        intent.putExtra("num", phonenum);
+        intent.putExtra("num", phonenums);
         intent.putExtra("date", date);
         intent.putExtra("time", time);
         intent.putExtra("message", message);
-
+        // Start the edit message activity through this intent.
         startActivity(intent);
     }
 
-    private void deleteScheduledMessage(AdapterView.AdapterContextMenuInfo info) {
-        //TODO: implement deletion of message
-        ListView scheduled_messages_view = (ListView) findViewById(R.id.scheduled_messages_list);
-        String where = "deleteMessage";
-        Log.d(where, Integer.toString(info.position));
-
-        //TODO: Instead of this code, make a call to a function that will delete the message from
-        //the database for you. It should also delete any attached recipients from the database
-        //if they have no other messages. This includes all association objects for that recipient.
-        ArrayAdapter<String> adapter = (ArrayAdapter<String>) scheduled_messages_view.getAdapter();
-        adapter.remove(adapter.getItem(info.position));
-        adapter.notifyDataSetChanged();
+    /* Delete a currently scheduled message. */
+    private void deleteScheduledMessage(long last_clicked_message_id) {
+        mDb.deleteMessage(last_clicked_message_id);
+        // Force a recreation of the activity so that the changes will be reflected in the ListView.
+        this.recreate();
     }
 
+    /* Populate the ListView from our database with all of the currently scheduled messages. */
     private void fillListView() {
 
         Cursor cursor = mDb.getAllScheduledMessages();
@@ -178,5 +174,16 @@ public class MainActivity extends AppCompatActivity {
         ListView messagesListView = (ListView) findViewById(R.id.scheduled_messages_list);
         messagesListView.setAdapter(adapter);
 
+        //Any time the message is long pressed, we should save its ID so it can be passed
+        //to the editScheduledMessage() method.
+        messagesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+                                           int pos, long id) {
+                last_clicked_message_id = id;
+                Log.d("Long Click", "Last clicked message id just set to " + last_clicked_message_id);
+                return false;
+            }
+        });
     }
 }

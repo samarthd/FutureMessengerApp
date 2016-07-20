@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Populate the listview from the database.
         fillListView();
-        registerForContextMenu(findViewById(R.id.scheduled_messages_list));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         registerForContextMenu(fab);
@@ -154,13 +153,12 @@ public class MainActivity extends AppCompatActivity {
     /* Delete a currently scheduled message. */
     private void deleteScheduledMessage(long last_clicked_message_id) {
         mDb.deleteMessage(last_clicked_message_id);
-        // Force a recreation of the activity so that the changes will be reflected in the ListView.
-        this.recreate();
+        // Force a refresh of the listView so that the changes will be reflected in the ListView.
+        fillListView();
     }
 
     /* Populate the ListView from our database with all of the currently scheduled messages. */
     private void fillListView() {
-
         Cursor cursor = mDb.getAllScheduledMessages();
         String[] fromColumns = {mDb.MESSAGE_TXT_CONTENT,
                                 mDb.MESSAGE_FORMATTED_DT, "RECIPIENT_IDS",
@@ -185,5 +183,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+        registerForContextMenu(findViewById(R.id.scheduled_messages_list));
     }
 }

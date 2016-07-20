@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
          */
         //TODO: make use of EditTextMessageActivity,
         Intent intent = new Intent(this, EditTextMessageActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 1);
     }
 
     /* Edit a currently scheduled message. */
@@ -140,14 +140,17 @@ public class MainActivity extends AppCompatActivity {
         String date = message_info[1];
         String time = message_info[2];
         String message = message_info[3];
+        String dateTime = message_info[4];
         // Place the data in an intent.
         Intent intent  = new Intent(this, EditTextMessageActivity.class);
         intent.putExtra("num", phonenums);
         intent.putExtra("date", date);
         intent.putExtra("time", time);
         intent.putExtra("message", message);
+        intent.putExtra("message_id", message_id);
+        intent.putExtra("message_datetime", dateTime);
         // Start the edit message activity through this intent.
-        startActivity(intent);
+        startActivityForResult(intent, 1);
     }
 
     /* Delete a currently scheduled message. */
@@ -184,5 +187,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         registerForContextMenu(findViewById(R.id.scheduled_messages_list));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            if(resultCode == MainActivity.RESULT_OK) {
+                fillListView();
+            }
+        }
     }
 }

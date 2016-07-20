@@ -257,7 +257,7 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
             String[] dateTimeSplit = dateTime.split(" ");
             String date = dateTimeSplit[0];
             String time = dateTimeSplit[1];
-            String[] result = new String[] {phoneNumbers, date, time, message};
+            String[] result = new String[] {phoneNumbers, date, time, message, dateTime};
             resultCursor.close();
             return result;
         }
@@ -317,7 +317,6 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
     *  new values. Before calling this method, make sure you've updated/cancelled the existing
     *  alarm used to schedule it. */
     public boolean updateTextMessage(long message_id, String[] phoneNumbers, String dateTime, String message) {
-        SQLiteDatabase db = getWritableDatabase();
         deleteMessage(message_id);
         return storeNewSMS(phoneNumbers, dateTime, message);
     }

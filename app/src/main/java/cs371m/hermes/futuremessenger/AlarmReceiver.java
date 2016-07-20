@@ -23,7 +23,7 @@ public class AlarmReceiver extends Service {
 
     @Override
     public void onCreate(){
-        Toast.makeText(this, "onCreate", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "onCreate", Toast.LENGTH_SHORT).show();
     }
 
     @Override

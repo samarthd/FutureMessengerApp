@@ -16,8 +16,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.Calendar;
-
 public class EditTextMessageActivity extends AppCompatActivity {
 
     private EditText _contact_field;
@@ -30,6 +28,10 @@ public class EditTextMessageActivity extends AppCompatActivity {
 
     private int _hour = 0;
     private int _minute = 0;
+
+    // Are we making a brand new message?
+    // If we're editing an existing message, store the ID of it here. Otherwise it will be -1.
+    private long id_of_message_to_edit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,13 +50,17 @@ public class EditTextMessageActivity extends AppCompatActivity {
         /* TODO: If editing scheduled message, cancel previous version first */
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
+        // If these extras aren't null, then we're editing an existing message.
         if (extras != null) {
+            id_of_message_to_edit = intent.getLongExtra("message_id", -1);
             _contact_field.setText(intent.getStringExtra("num"));
             _date_button.setText(intent.getStringExtra("date"));
             _time_button.setText(intent.getStringExtra("time"));
             _message_field.setText(intent.getStringExtra("message"));
         }
-
+        else {
+            id_of_message_to_edit = -1;
+        }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -65,10 +71,14 @@ public class EditTextMessageActivity extends AppCompatActivity {
                 /* TODO: add in sending of dates and time */
                 String phonenum = _contact_field.getText().toString();
                 String message = _message_field.getText().toString();
-                saveSMS(phonenum, null, null, message);
+                if (id_of_message_to_edit == -1) {
+                    saveSMS(phonenum, null, null, message);
+                }
+                else {
+                    updateSMS(phonenum, message);
+                }
                 setAlarm(phonenum, message);
 
-                sendSMS(phonenum, message);
                 returnToMainActivity();
             }
         });
@@ -128,8 +138,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
      * @param message the message to send
      */
     private void saveSMS(String phoneNum, String date, String time, String message) {
-        /* TODO: implement saving of message
-         * TODO: determine if message wants to be group, or individual
+        /* TODO: determine if message wants to be group, or individual
          * TODO: figure out how to send to multiple contacts
          */
         try {
@@ -137,15 +146,10 @@ public class EditTextMessageActivity extends AppCompatActivity {
             Log.d("saveSMS", message);
 //            SmsManager sms = SmsManager.getDefault();
 //            sms.sendTextMessage(phoneNum, null, message, null, null);
-            String iso_date = _date_button.getText().toString();
-            String iso_time = (_hour < 10 ?"0":"") + Integer.toString(_hour)
-                              + (_minute < 10 ?":0":":") + Integer.toString(_minute)
-                              + ":00";
-            Log.d("saveSMS", iso_date + iso_time);
 
             //Save the message
             String[] phoneNumbers = new String[] {phoneNum};
-            String dateTime = iso_date + iso_time;
+            String dateTime = getDateTimeFromButtons();
             MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(EditTextMessageActivity.this);
             mDb.storeNewSMS(phoneNumbers, dateTime, message);
             mDb.close();
@@ -158,13 +162,36 @@ public class EditTextMessageActivity extends AppCompatActivity {
         }
     }
 
+    // Update an existing SMS
+    private void updateSMS(String phoneNum, String message) {
+        //TODO: Add code to cancel and make a new alarm.
+        Log.d("updateSMS", phoneNum);
+        Log.d("updateSMS", message);
+
+        //Save the message
+        String dateTime = getDateTimeFromButtons();
+        String[] phoneNumbers = new String[] {phoneNum};
+        MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(EditTextMessageActivity.this);
+        mDb.updateTextMessage(id_of_message_to_edit, phoneNumbers, dateTime, message);
+        mDb.close();
+    }
+
+    private String getDateTimeFromButtons() {
+        String iso_date = _date_button.getText().toString();
+        String iso_time = (_hour < 10 ?"0":"") + Integer.toString(_hour)
+                + (_minute < 10 ?":0":":") + Integer.toString(_minute)
+                + ":00";
+        Log.d("getDateTimeFromButtons", iso_date + iso_time);
+        return iso_date + iso_time;
+    }
     /**
      * returns to Main screen
      */
     private void returnToMainActivity() {
         //TODO: Determine if data needs to be sent back to the main screen
         Intent ret = new Intent(this, MainActivity.class);
-        startActivity(ret);
+        setResult(MainActivity.RESULT_OK, ret);
+        finish();
     }
 
     public void showTimePickerDialog (View v) {
@@ -181,10 +208,5 @@ public class EditTextMessageActivity extends AppCompatActivity {
         _hour = h;
         _minute = m;
     }
-
-//    private String[] parseStringAsManyPhoneNumbers(String num) {
-//        String[] numbers;
-//        return numbers;
-//    }
 
 }

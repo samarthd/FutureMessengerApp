@@ -16,6 +16,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
 public class EditTextMessageActivity extends AppCompatActivity {
 
     private EditText _contact_field;
@@ -103,17 +105,18 @@ public class EditTextMessageActivity extends AppCompatActivity {
 
         String date = _date_button.getText().toString();
         String dates[] = date.split("-");
-        dates[1].replace(" ", ""); //trim space that was somehow attached to end of month.
+        //dates[1].replace(" ", ""); //trim space that was somehow attached to end of month.
 
-        int year = Integer.parseInt(dates[0]);
-        int month = Integer.parseInt(dates[1])+1;
-        int day = Integer.parseInt(dates[2]);
+        //int year = Integer.parseInt(dates[0]);
+        //int month = Integer.parseInt(dates[1])+1;
+        //int day = Integer.parseInt(dates[2]);
 
         /* Set calendar dates */
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.clear();
-        calendar.set(year, month, day, _hour, _minute);
+        //calendar.set(year, month, day, _hour, _minute);
+        calendar.set(2016, Calendar.JULY, 20, 4, 20);
         //calendar.add(Calendar.SECOND, 10);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 

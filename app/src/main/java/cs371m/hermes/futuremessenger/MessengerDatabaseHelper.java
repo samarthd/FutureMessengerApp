@@ -313,5 +313,14 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    /* This method will delete the message with the given ID and create a new one with the
+    *  new values. Before calling this method, make sure you've updated/cancelled the existing
+    *  alarm used to schedule it. */
+    public boolean updateTextMessage(long message_id, String[] phoneNumbers, String dateTime, String message) {
+        SQLiteDatabase db = getWritableDatabase();
+        deleteMessage(message_id);
+        return storeNewSMS(phoneNumbers, dateTime, message);
+    }
+
 
 }

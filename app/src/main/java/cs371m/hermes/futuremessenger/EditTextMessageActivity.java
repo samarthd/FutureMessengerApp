@@ -16,18 +16,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
 public class EditTextMessageActivity extends AppCompatActivity {
 
     private EditText _contact_field;
-    //TODO: Figure out how to set date for button on activity creation
     private Button _date_button;
-    //TODO: Figure out how to set time for button on activity creation
     private Button _time_button;
     private EditText _message_field;
     private PendingIntent pendingIntent;
 
     private int _hour = 0;
     private int _minute = 0;
+    private int _year = 0;
+    // January = 0, Februrary = 1, ...
+    private int _month = 0;
+    private int _dayOfMonth = 0;
 
     // Are we making a brand new message?
     // If we're editing an existing message, store the ID of it here. Otherwise it will be -1.
@@ -46,7 +50,6 @@ public class EditTextMessageActivity extends AppCompatActivity {
         _date_button = (Button) findViewById(R.id.button_date);
         _time_button = (Button) findViewById(R.id.button_time);
 
-        /* TODO: Get data from main screen, if editing scheduled message */
         /* TODO: If editing scheduled message, cancel previous version first */
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -54,13 +57,28 @@ public class EditTextMessageActivity extends AppCompatActivity {
         if (extras != null) {
             id_of_message_to_edit = intent.getLongExtra("message_id", -1);
             _contact_field.setText(intent.getStringExtra("num"));
-            _date_button.setText(intent.getStringExtra("date"));
-            _time_button.setText(intent.getStringExtra("time"));
+            // _date_button.setText(intent.getStringExtra("date"));
+            // _time_button.setText(intent.getStringExtra("time"));
             _message_field.setText(intent.getStringExtra("message"));
+            String[] timeParsed = intent.getStringExtra("time").split(":");
+            String[] dateParsed = intent.getStringExtra("date").split("-");
+            setTimeButton(Integer.parseInt(timeParsed[0]), Integer.parseInt(timeParsed[1]));
+            setDateButton(Integer.parseInt(dateParsed[0]), Integer.parseInt(dateParsed[1]) - 1, Integer.parseInt(dateParsed[2]));
         }
         else {
             id_of_message_to_edit = -1;
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+            setDateButton(year, month, day);
+            Log.d("onCreate", "Today's month is " + Integer.toString(month));
+            setTimeButton(hour, minute);
         }
+
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -181,14 +199,14 @@ public class EditTextMessageActivity extends AppCompatActivity {
         String iso_time = (_hour < 10 ?"0":"") + Integer.toString(_hour)
                 + (_minute < 10 ?":0":":") + Integer.toString(_minute)
                 + ":00";
-        Log.d("getDateTimeFromButtons", iso_date + iso_time);
-        return iso_date + iso_time;
+        Log.d("getDateTimeFromButtons", iso_date + " " + iso_time);
+        return iso_date + " " + iso_time;
     }
+
     /**
      * returns to Main screen
      */
     private void returnToMainActivity() {
-        //TODO: Determine if data needs to be sent back to the main screen
         Intent ret = new Intent(this, MainActivity.class);
         setResult(MainActivity.RESULT_OK, ret);
         finish();
@@ -204,9 +222,41 @@ public class EditTextMessageActivity extends AppCompatActivity {
         newFragment.show(getFragmentManager(), "datePicker");
     }
 
-    public void setTimeFields(int h, int m) {
+    public void setTimeButton(int h, int m) {
         _hour = h;
         _minute = m;
+        _time_button.setText(buildTimeString(h, m));
+    }
+
+    public void setDateButton(int y, int m, int d) {
+        _year = y;
+        _month = m;
+        _dayOfMonth = d;
+        _date_button.setText(buildDateString(y, m, d));
+    }
+
+    public int get_hour() { return _hour; }
+
+    public int get_minute() { return _minute; }
+
+    public int get_year() { return _year; }
+
+    public int get_month() { return _month; }
+
+    public int get_dayOfMonth() { return _dayOfMonth; };
+
+    private String buildDateString (int y, int m, int d) {
+        String date = Integer.toString(y);
+        date = date + (m + 1 < 10?"-0":"-") + Integer.toString(m + 1);
+        date = date + (d < 10?"-0":"-") + Integer.toString(d);
+        return date;
+    }
+
+    private String buildTimeString (int h, int m) {
+        String time = (h % 12 == 0? "12" : Integer.toString(h%12) ) + ":"
+                + (m < 10 ? "0" : "") + Integer.toString(m)
+                + (h < 12 ? " AM":" PM");
+        return time;
     }
 
 }

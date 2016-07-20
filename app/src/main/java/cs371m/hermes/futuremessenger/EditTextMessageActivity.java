@@ -95,7 +95,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
                 else {
                     updateSMS(phonenum, message);
                 }
-                setAlarm(phonenum, message);
+                setAlarm(phonenum, message, _year, _month, _dayOfMonth, _hour, _minute);
 
                 returnToMainActivity();
             }
@@ -108,7 +108,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
      * @param phoneNum
      * @param message
      */
-    private void setAlarm(String phoneNum, String message){
+    private void setAlarm(String phoneNum, String message, int year, int month, int day, int hour, int minute){
         /* Set the alarm with the selected parameters */
         Intent alarmIntent = new Intent(EditTextMessageActivity.this, AlarmReceiver.class);
         Bundle bundle = new Bundle();
@@ -119,24 +119,19 @@ public class EditTextMessageActivity extends AppCompatActivity {
         pendingIntent = PendingIntent.getService(EditTextMessageActivity.this, 0, alarmIntent, 0);
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
 
-        String date = _date_button.getText().toString();
-        String dates[] = date.split("-");
-        //dates[1].replace(" ", ""); //trim space that was somehow attached to end of month.
+        //String date = _date_button.getText().toString();
 
-        //int year = Integer.parseInt(dates[0]);
-        //int month = Integer.parseInt(dates[1])+1;
-        //int day = Integer.parseInt(dates[2]);
 
         /* Set calendar dates */
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.clear();
-        //calendar.set(year, month, day, _hour, _minute);
-        calendar.set(2016, Calendar.JULY, 20, 4, 20);
+        calendar.set(year, month, day, hour, minute);
+        //calendar.set(2016, Calendar.JULY, 20, 4, 20);
         //calendar.add(Calendar.SECOND, 10);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 
-        Toast.makeText(EditTextMessageActivity.this, "Date string: " + date, Toast.LENGTH_LONG).show();
+        //Toast.makeText(EditTextMessageActivity.this, "Date string: " + , Toast.LENGTH_LONG).show();
         Toast.makeText(EditTextMessageActivity.this, "Start Alarm", Toast.LENGTH_LONG).show();
     }
 

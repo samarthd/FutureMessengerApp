@@ -82,12 +82,23 @@ public class EditTextMessageActivity extends AppCompatActivity {
         pendingIntent = PendingIntent.getService(EditTextMessageActivity.this, 0, alarmIntent, 0);
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
 
-        /* This is a hard-coded 10 second delay for testing */
+        String date = _date_button.getText().toString();
+        String dates[] = date.split("-");
+        dates[1].replace(" ", ""); //trim space that was somehow attached to end of month.
+
+        int year = Integer.parseInt(dates[0]);
+        int month = Integer.parseInt(dates[1])+1;
+        int day = Integer.parseInt(dates[2]);
+
+        /* Set calendar dates */
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(Calendar.SECOND, 10);
+        calendar.clear();
+        calendar.set(year, month, day, _hour, _minute);
+        //calendar.add(Calendar.SECOND, 10);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 
+        Toast.makeText(EditTextMessageActivity.this, "Date string: " + date, Toast.LENGTH_LONG).show();
         Toast.makeText(EditTextMessageActivity.this, "Start Alarm", Toast.LENGTH_LONG).show();
     }
 

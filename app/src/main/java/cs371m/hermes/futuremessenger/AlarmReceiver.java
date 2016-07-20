@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.ActivityCompat;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.EditText;
@@ -48,6 +49,7 @@ public class AlarmReceiver extends Service {
         message = (String) bundle.getCharSequence("message");
         Toast.makeText(this, "onStart, trying to send message", Toast.LENGTH_LONG).show();
         Toast.makeText(this, "number: "+phoneNum+"\nmessage: "+message, Toast.LENGTH_LONG).show();
+
         sendSMS(phoneNum, message);
 
     }

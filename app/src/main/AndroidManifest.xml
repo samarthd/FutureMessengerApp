@@ -3,6 +3,7 @@
     package="cs371m.hermes.futuremessenger">
 
     <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission-sdk-23 android:name="android.permission.SEND_SMS"/>
 
     <application
         android:allowBackup="true"

@@ -76,8 +76,46 @@ public class AlarmReceiver extends Service {
             Log.d("sendSMS", phoneNum);
             Log.d("sendSMS", message);
 
+            /* Create pending intents */
+            Intent sentIntent = new Intent("sent");
+            PendingIntent sentPI = PendingIntent.getBroadcast(getApplicationContext(), 0, sentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            Intent deliveryIntent = new Intent("delivered");
+            PendingIntent deliverPI = PendingIntent.getBroadcast(getApplicationContext(), 0, deliveryIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        /* Register for SMS send action */
+            registerReceiver(new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    String result = "";
+                    switch (getResultCode()) {
+                        case Activity.RESULT_OK:
+                            result = "Transmission successful";
+                            break;
+                        case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
+                            result = "Transmission failed";
+                            break;
+                        case SmsManager.RESULT_ERROR_RADIO_OFF:
+                            result = "Radio off";
+                            break;
+                        case SmsManager.RESULT_ERROR_NULL_PDU:
+                            result = "No PDU defined";
+                            break;
+                        case SmsManager.RESULT_ERROR_NO_SERVICE:
+                            result = "No service";
+                            break;
+                    }
+                    Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+                }
+            }, new IntentFilter("sent"));
+
+            registerReceiver(new BroadcastReceiver() {
+                @Override
+                public void onReceive(Context context, Intent intent) {
+                    Toast.makeText(getApplicationContext(), "Delivered", Toast.LENGTH_LONG).show();
+                }
+            }, new IntentFilter("delivered"));
+
             SmsManager sms = SmsManager.getDefault();
-            sms.sendTextMessage(phoneNum, null, message, null, null);
+            sms.sendTextMessage(phoneNum, null, message, sentPI, deliverPI);
 
         } catch (Exception ex) {
             ex.printStackTrace();

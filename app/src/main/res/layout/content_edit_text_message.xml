@@ -68,7 +68,8 @@
         <EditText android:id="@+id/message_field"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="textMultiLine"
+            android:inputType="textImeMultiLine"
+            android:imeOptions="actionDone"
             android:hint="Enter message"
             android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp" />

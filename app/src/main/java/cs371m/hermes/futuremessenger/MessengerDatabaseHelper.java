@@ -119,14 +119,14 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
     }
 
     /* Store a new SMS message to be sent to one or more recipient phone numbers.
-     * Returns true on success, false on failure. */
-    public boolean storeNewSMS(String[] phoneNumbers, String dateTime, String message) {
+     * Returns ID of the message on success, -1 on failure. */
+    public long storeNewSMS(String[] phoneNumbers, String dateTime, String message) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         // Store the message in the database.
         long message_id = storeNewMessage(dateTime, message);
         if (message_id == -1)
-            return false;
+            return -1;
 
         for (String phoneNumber : phoneNumbers) {
             //Store this recipient in the database.
@@ -138,10 +138,10 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
             assocContentValues.put(MESS_ID, message_id);
             long assoc_id = db.insert(REC_MESS_TABLE_NAME, null, assocContentValues);
             if (assoc_id == -1) {
-                return false;
+                return -1;
             }
         }
-        return true;
+        return message_id;
     }
 
     /* This method takes data for a recipient, and attempts to insert that
@@ -314,9 +314,9 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
     }
 
     /* This method will delete the message with the given ID and create a new one with the
-    *  new values. Before calling this method, make sure you've updated/cancelled the existing
-    *  alarm used to schedule it. */
-    public boolean updateTextMessage(long message_id, String[] phoneNumbers, String dateTime, String message) {
+    *  new values and return its ID. Before calling this method, make sure you've updated/cancelled
+    *  the existing alarm used to schedule it. */
+    public long updateTextMessage(long message_id, String[] phoneNumbers, String dateTime, String message) {
         deleteMessage(message_id);
         return storeNewSMS(phoneNumbers, dateTime, message);
     }

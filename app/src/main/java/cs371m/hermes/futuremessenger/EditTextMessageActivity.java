@@ -163,11 +163,14 @@ public class EditTextMessageActivity extends AppCompatActivity {
      * @param date date to send message on
      * @param time time to send the message on
      * @param message the message to send
+     *
+     * Returns the ID of the saved message.
      */
-    private void saveSMS(String phoneNum, String date, String time, String message) {
+    private long saveSMS(String phoneNum, String date, String time, String message) {
         /* TODO: determine if message wants to be group, or individual
          * TODO: figure out how to send to multiple contacts
          */
+        long result = -1;
         try {
             Log.d("saveSMS", phoneNum);
             Log.d("saveSMS", message);
@@ -178,20 +181,21 @@ public class EditTextMessageActivity extends AppCompatActivity {
             String[] phoneNumbers = new String[] {phoneNum};
             String dateTime = getDateTimeFromButtons();
             MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(EditTextMessageActivity.this);
-            mDb.storeNewSMS(phoneNumbers, dateTime, message);
+            result = mDb.storeNewSMS(phoneNumbers, dateTime, message);
             mDb.close();
-
 
         } catch (Exception ex) {
             Toast.makeText(getApplicationContext(),
                     ex.getMessage(), Toast.LENGTH_LONG).show();
             ex.printStackTrace();
         }
+        return result;
     }
 
-    // Update an existing SMS
-    private void updateSMS(String phoneNum, String message) {
-        //TODO: Add code to cancel and make a new alarm.
+    // Delete the existing copy of the user-chosen message, and return the ID of the
+    // new, updated version.
+    private long updateSMS(String phoneNum, String message) {
+        //TODO: Add code to cancel the existing alarm of the message..
         Log.d("updateSMS", phoneNum);
         Log.d("updateSMS", message);
 
@@ -199,8 +203,9 @@ public class EditTextMessageActivity extends AppCompatActivity {
         String dateTime = getDateTimeFromButtons();
         String[] phoneNumbers = new String[] {phoneNum};
         MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(EditTextMessageActivity.this);
-        mDb.updateTextMessage(id_of_message_to_edit, phoneNumbers, dateTime, message);
+        long result = mDb.updateTextMessage(id_of_message_to_edit, phoneNumbers, dateTime, message);
         mDb.close();
+        return result;
     }
 
     private String getDateTimeFromButtons() {

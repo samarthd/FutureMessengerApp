@@ -130,6 +130,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
         //calendar.set(2016, Calendar.JULY, 20, 4, 20);
         //calendar.add(Calendar.SECOND, 10);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        Log.d("setAlarm", calendar.toString());
 
         //Toast.makeText(EditTextMessageActivity.this, "Date string: " + , Toast.LENGTH_LONG).show();
         Toast.makeText(EditTextMessageActivity.this, "Start Alarm", Toast.LENGTH_LONG).show();

@@ -25,11 +25,13 @@ public class AlarmReceiver extends Service {
     @Override
     public void onCreate(){
         //Toast.makeText(this, "onCreate", Toast.LENGTH_SHORT).show();
+        Log.d("AlarmReciever: onCreate", "Creating AlarmReceiver");
     }
 
     @Override
     public IBinder onBind(Intent intent){
         Toast.makeText(this, "onBind", Toast.LENGTH_LONG).show();
+        Log.d("AlarmReciever: onBind", "");
         return null;
     }
 
@@ -37,6 +39,7 @@ public class AlarmReceiver extends Service {
     @Override
     public void onDestroy(){
         Toast.makeText(this, "onDestroy", Toast.LENGTH_LONG).show();
+        Log.d("AlarmReciever: Destroy", "Destroying");
         super.onDestroy();
     }
     /* Need to do this to get bundled extras, since Service won't allow getIntent.getExtras() */
@@ -49,6 +52,7 @@ public class AlarmReceiver extends Service {
         message = (String) bundle.getCharSequence("message");
         Toast.makeText(this, "onStart, trying to send message", Toast.LENGTH_LONG).show();
         Toast.makeText(this, "number: "+phoneNum+"\nmessage: "+message, Toast.LENGTH_LONG).show();
+        Log.d("AlarmReciever: onStart", "About to send SMS");
 
         sendSMS(phoneNum, message);
 
@@ -57,6 +61,7 @@ public class AlarmReceiver extends Service {
     @Override
     public boolean onUnbind(Intent intent){
         Toast.makeText(this, "onUnbind", Toast.LENGTH_LONG).show();
+        Log.d("AlarmReciever: onUnbind", "");
         return super.onUnbind(intent);
     }
 
@@ -75,8 +80,7 @@ public class AlarmReceiver extends Service {
 
     private void sendSMS(String phoneNum, String message) {
         try {
-            Log.d("sendSMS", phoneNum);
-            Log.d("sendSMS", message);
+            Log.d("sendSMS", phoneNum + " " + message);
 
             /* Create pending intents */
             Intent sentIntent = new Intent("sent");
@@ -118,7 +122,7 @@ public class AlarmReceiver extends Service {
 
             SmsManager sms = SmsManager.getDefault();
             sms.sendTextMessage(phoneNum, null, message, sentPI, deliverPI);
-
+            Log.d("sendSMS", "Text sent?");
         } catch (Exception ex) {
             ex.printStackTrace();
         }

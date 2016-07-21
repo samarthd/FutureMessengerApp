@@ -31,6 +31,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
         if (DateFormat.is24HourFormat(getActivity())) {
             //TODO: Set string based on 24 hour format
+            ((EditTextMessageActivity)getActivity()).setTimeButton(hour, minute);
         } else {
             //TODO: change this, feels hack-y
             ((EditTextMessageActivity)getActivity()).setTimeButton(hour, minute);

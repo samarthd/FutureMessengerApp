@@ -163,11 +163,10 @@ public class MainActivity extends AppCompatActivity {
     private void fillListView() {
         Cursor cursor = mDb.getAllScheduledMessages();
         String[] fromColumns = {mDb.MESSAGE_TXT_CONTENT,
-                                mDb.MESSAGE_FORMATTED_DT, "RECIPIENT_IDS",
+                                mDb.MESSAGE_FORMATTED_DT,
                                 "RECIPIENT_NUMBERS"};
 
-        int[] toViews = new int[] {R.id.message_txt_tv, R.id.datetime_tv,
-                                   R.id.recipient_id_tv, R.id.recipient_nums_tv};
+        int[] toViews = new int[] {R.id.message_txt_tv, R.id.datetime_tv, R.id.recipient_nums_tv};
         SimpleCursorAdapter adapter =
                 new SimpleCursorAdapter(getBaseContext(), R.layout.listed_message_layout, cursor,
                                         fromColumns, toViews, 0);

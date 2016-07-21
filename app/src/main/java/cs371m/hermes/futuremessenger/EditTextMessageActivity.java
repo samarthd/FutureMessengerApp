@@ -116,7 +116,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
         bundle.putCharSequence("message", message);
         alarmIntent.putExtras(bundle);
 
-        pendingIntent = PendingIntent.getService(EditTextMessageActivity.this, 0, alarmIntent, 0);
+        pendingIntent = PendingIntent.getService(EditTextMessageActivity.this, 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
 
         //String date = _date_button.getText().toString();

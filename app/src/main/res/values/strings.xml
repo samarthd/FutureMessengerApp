@@ -12,4 +12,6 @@
     <string name="message">Message:&#160;</string>
     <string name="date_and_time">Date &#038; Time to Send:&#160;</string>
     <string name="recipients_lv">Recipients:&#160;</string>
+    <string name="recipient_ids">Recipient ID in database:&#160;</string>
+    <string name="currently_scheduled_tv">Currently Scheduled Messages:</string>
 </resources>

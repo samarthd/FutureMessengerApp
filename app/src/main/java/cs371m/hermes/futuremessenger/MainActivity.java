@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -58,11 +59,13 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             // The following cases apply to the creation menu.
             case R.id.manage_presets:
+                Toast.makeText(this, "Beta feature!", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.new_text_message:
                 sendSmsMessage();
                 return true;
             case R.id.new_picture_message:
+                Toast.makeText(this, "Beta feature!", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onContextItemSelected(item);

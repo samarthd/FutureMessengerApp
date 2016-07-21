@@ -42,7 +42,10 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
     public static final String RECIP_ID = "RECIPIENT_ID";
     public static final String MESS_ID = "MESSAGE_ID";
 
- /*   // Names of various columns in the Preset table in the database.
+ /* TODO:
+    Table column names for beta.
+
+    // Names of various columns in the Preset table in the database.
     public static final String PRESET_TABLE_NAME = "preset_table";
     public static final String PRESET_ID = "ID";
     public static final String PRESET_NAME = "NAME";
@@ -50,6 +53,7 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
 
 
     private static final String TAG = "IN DATABASE HELPER";
+
     // Constructor.
     public MessengerDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -58,15 +62,9 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        /*
-
-           Perhaps we also need a column to determine whether the message will be
-           sent as a group or individually.
-
-           SHOULD BE FIXED LATER
-
-           */
-
+        /* TODO:
+           For beta, we also need a column to determine whether the message will be
+           sent as a group or individually.*/
 
         // Create the Recipients table that will hold our recipients.
         final String createRecipTable =
@@ -102,7 +100,9 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         Log.d(TAG, "CREATING ASSOC TABLE: " + createRecMessTable);
         db.execSQL(createRecMessTable);
 
-/*        // Create the Preset table that will hold our presets.
+/*     TODO:
+       In beta, create the preset table.
+       // Create the Preset table that will hold our presets.
         db.execSQL("create table " + PRESET_TABLE_NAME + "(" +
                 PRESET_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 PRESET_NAME + " TEXT," +
@@ -114,6 +114,7 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + RECIPIENT_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + MESSAGE_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + REC_MESS_TABLE_NAME);
+        //TODO: Add this line in beta for presets.
         //db.execSQL("DROP TABLE IF EXISTS " + PRESET_TABLE_NAME);
         onCreate(db);
     }
@@ -202,15 +203,13 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         return db.insert(MESSAGE_TABLE_NAME, null, msgContentValues);
     }
 
-
     /* Retrieve all scheduled messages and some associated data in a Cursor. This will be
-    *  passed to a SimpleCursorAdapter that will then populate the ListView with this data. */
+     * passed to a SimpleCursorAdapter that will then populate the ListView with this data. */
     public Cursor getAllScheduledMessages() {
         SQLiteDatabase db = getWritableDatabase();
-
-        // This will join the tables together and get many rows of messages, each that have a column
-        // that has all of the phone numbers separated by commas in one big string, and a formatted
-        // version of the date and time string.
+        /* This will join the tables together and get many rows of messages, each that have a column
+         * that has all of the phone numbers separated by commas in one big string, and a formatted
+         * version of the date and time string. */
         String sql_select = "SELECT M." + MESSAGE_ID + " AS _id, "+
                             "M." + MESSAGE_TXT_CONTENT + ", " +
                             "M." + MESSAGE_FORMATTED_DT + ", " +
@@ -296,8 +295,8 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
                 // how many messages is this recipient attached to?
                 int numMessagesAttachedTo = countRecip.getInt(0);
                 Log.d(TAG, "Count of recip's messages" + numMessagesAttachedTo);
-                // If the number is 1, then this message is the only one that recipient
-                // is attached to. Delete the recipient from our records.
+                /* If the number is 1, then this message is the only one that recipient
+                 * is attached to. Delete the recipient from our records. */
                 if (numMessagesAttachedTo == 1) {
                     db.delete(RECIPIENT_TABLE_NAME, RECIPIENT_ID + "=?", new String[] {thisRecipient});
                     Log.d(TAG, "Deleting recipient: " + thisRecipient);

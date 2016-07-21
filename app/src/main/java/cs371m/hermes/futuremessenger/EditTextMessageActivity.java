@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.SmsManager;
@@ -24,8 +23,9 @@ public class EditTextMessageActivity extends AppCompatActivity {
     private Button _date_button;
     private Button _time_button;
     private EditText _message_field;
-    // private PendingIntent pendingIntent;
 
+    /* These variables hold the scheduling information that is
+     * given to the button/taken from the button. */
     private int _hour = 0;
     private int _minute = 0;
     private int _year = 0;
@@ -33,9 +33,10 @@ public class EditTextMessageActivity extends AppCompatActivity {
     private int _month = 0;
     private int _dayOfMonth = 0;
 
-    // Are we making a brand new message?
-    // If we're editing an existing message, store the ID of it here. Otherwise it will be -1.
-    private long id_of_message_to_edit;
+    /* Are we making a brand new message?
+     * If we're editing/deleting an existing message, store the ID of it here.
+     * Otherwise it will be -1. */
+    private long last_clicked_message_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,10 +56,8 @@ public class EditTextMessageActivity extends AppCompatActivity {
         Bundle extras = intent.getExtras();
         // If these extras aren't null, then we're editing an existing message.
         if (extras != null) {
-            id_of_message_to_edit = intent.getLongExtra("message_id", -1);
+            last_clicked_message_id = intent.getLongExtra("message_id", -1);
             _contact_field.setText(intent.getStringExtra("num"));
-            // _date_button.setText(intent.getStringExtra("date"));
-            // _time_button.setText(intent.getStringExtra("time"));
             _message_field.setText(intent.getStringExtra("message"));
             String[] timeParsed = intent.getStringExtra("time").split(":");
             String[] dateParsed = intent.getStringExtra("date").split("-");
@@ -66,7 +65,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
             setDateButton(Integer.parseInt(dateParsed[0]), Integer.parseInt(dateParsed[1]) - 1, Integer.parseInt(dateParsed[2]));
         }
         else {
-            id_of_message_to_edit = -1;
+            last_clicked_message_id = -1;
             final Calendar c = Calendar.getInstance();
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
@@ -78,8 +77,6 @@ public class EditTextMessageActivity extends AppCompatActivity {
             setTimeButton(hour, minute);
         }
 
-
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +87,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
                 String phonenum = _contact_field.getText().toString();
                 String message = _message_field.getText().toString();
                 long id;
-                if (id_of_message_to_edit == -1) {
+                if (last_clicked_message_id == -1) {
                     id = saveSMS(phonenum, null, null, message);
                 }
                 else {
@@ -105,7 +102,6 @@ public class EditTextMessageActivity extends AppCompatActivity {
 
     /**
      * Create Alarm
-     * NEED TO ADD DATE AND TIME PARAMETERS
      * @param phoneNum
      * @param message
      */
@@ -118,49 +114,24 @@ public class EditTextMessageActivity extends AppCompatActivity {
         bundle.putCharSequence("message", message);
         alarmIntent.putExtras(bundle);
 
-        // int bar = toIntExact(id);
-        PendingIntent pendingIntent = PendingIntent.getService(EditTextMessageActivity.this, (int) id, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getService(EditTextMessageActivity.this,
+                                      (int) id, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-
-        //String date = _date_button.getText().toString();
 
         /* Set calendar dates */
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.clear();
         calendar.set(year, month, day, hour, minute);
-        //calendar.set(2016, Calendar.JULY, 20, 4, 20);
-        //calendar.add(Calendar.SECOND, 10);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         Log.d("setAlarm", "Message id = " + Long.toString(id));
 
-        // Toast.makeText(EditTextMessageActivity.this, "Date string: " + , Toast.LENGTH_LONG).show();
-        // Toast.makeText(EditTextMessageActivity.this, "Start Alarm", Toast.LENGTH_LONG).show();
+        Toast.makeText(EditTextMessageActivity.this, "Saved your message!", Toast.LENGTH_SHORT).show();
     }
 
-    /**
-     * DO NOT USE: actually send the message
-     * Only kept as reference code for later
-     * @param phoneNum
-     * @param message
-     */
-    private void sendSMS(String phoneNum, String message) {
-        try {
-            Log.d("sendSMS", phoneNum);
-            Log.d("sendSMS", message);
-
-            SmsManager sms = SmsManager.getDefault();
-            sms.sendTextMessage(phoneNum, null, message, null, null);
-
-        } catch (Exception ex) {
-            Toast.makeText(getApplicationContext(),
-                    ex.getMessage(), Toast.LENGTH_LONG).show();
-            ex.printStackTrace();
-        }
-    }
 
     /**
-     * Save the message into the database
+     * Save the new message into the database
      * @param phoneNum number to send message to
      * @param date date to send message on
      * @param time time to send the message on
@@ -176,8 +147,6 @@ public class EditTextMessageActivity extends AppCompatActivity {
         try {
             Log.d("saveSMS", phoneNum);
             Log.d("saveSMS", message);
-//            SmsManager sms = SmsManager.getDefault();
-//            sms.sendTextMessage(phoneNum, null, message, null, null);
 
             //Save the message
             String[] phoneNumbers = new String[] {phoneNum};
@@ -205,7 +174,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
         String dateTime = getDateTimeFromButtons();
         String[] phoneNumbers = new String[] {phoneNum};
         MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(EditTextMessageActivity.this);
-        long result = mDb.updateTextMessage(id_of_message_to_edit, phoneNumbers, dateTime, message);
+        long result = mDb.updateTextMessage(last_clicked_message_id, phoneNumbers, dateTime, message);
         mDb.close();
         return result;
     }
@@ -220,7 +189,8 @@ public class EditTextMessageActivity extends AppCompatActivity {
     }
 
     /**
-     * returns to Main screen
+     * Because this activity was started for a result, return to
+     * the MainActivity and send it an "OK" result code.
      */
     private void returnToMainActivity() {
         Intent ret = new Intent(this, MainActivity.class);
@@ -250,6 +220,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
         _dayOfMonth = d;
         _date_button.setText(buildDateString(y, m, d));
     }
+
 
     public int get_hour() { return _hour; }
 

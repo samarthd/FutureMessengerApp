@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Beta feature!", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.new_text_message:
-                sendSmsMessage();
+                createTextMessage();
                 return true;
             case R.id.new_picture_message:
                 Toast.makeText(this, "Beta feature!", Toast.LENGTH_SHORT).show();
@@ -84,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Populate the listview from the database.
         fillListView();
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         registerForContextMenu(fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -112,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Toast.makeText(this, "Beta feature!", Toast.LENGTH_SHORT).show();
             return true;
         }
 
@@ -126,11 +126,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void sendSmsMessage() {
-        /* if I intend to edit a message, I should send that info into the intent
-         * and the Activity can grab that info to fill in their data
-         */
-        //TODO: make use of EditTextMessageActivity,
+    private void createTextMessage() {
         Intent intent = new Intent(this, EditTextMessageActivity.class);
         startActivityForResult(intent, 1);
     }
@@ -204,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        // Force a refresh on the ListView
         fillListView();
     }
 }

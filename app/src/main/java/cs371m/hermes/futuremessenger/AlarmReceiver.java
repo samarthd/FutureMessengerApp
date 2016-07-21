@@ -9,10 +9,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.v4.app.ActivityCompat;
 import android.telephony.SmsManager;
 import android.util.Log;
-import android.widget.EditText;
 import android.widget.Toast;
 
 /**
@@ -24,7 +22,6 @@ public class AlarmReceiver extends Service {
 
     @Override
     public void onCreate(){
-        //Toast.makeText(this, "onCreate", Toast.LENGTH_SHORT).show();
         Log.d("AlarmReciever: onCreate", "Creating AlarmReceiver");
     }
 
@@ -35,12 +32,11 @@ public class AlarmReceiver extends Service {
         return null;
     }
 
-    //not needed
+
     @Override
     public void onDestroy(){
-        Toast.makeText(this, "onDestroy", Toast.LENGTH_LONG).show();
-        Log.d("AlarmReciever: Destroy", "Destroying");
         super.onDestroy();
+        Log.d("AlarmReciever: Destroy", "Destroying");
     }
     /* Need to do this to get bundled extras, since Service won't allow getIntent.getExtras() */
     @Override
@@ -51,8 +47,6 @@ public class AlarmReceiver extends Service {
         long message_id = bundle.getLong("message_id");
         phoneNum = (String) bundle.getCharSequence("num");
         message = (String) bundle.getCharSequence("message");
-        // Toast.makeText(this, "onStart, trying to send message", Toast.LENGTH_LONG).show();
-        // Toast.makeText(this, "number: "+phoneNum+"\nmessage: "+message, Toast.LENGTH_LONG).show();
         Log.d("AlarmReciever: onStart", Long.toString(message_id));
         Log.d("AlarmReciever: onStart", "About to send SMS");
 
@@ -69,6 +63,7 @@ public class AlarmReceiver extends Service {
         return super.onUnbind(intent);
     }
 
+    //TODO: Determine whether this method needs to be used in order to use BroadCast Receivers
     /*
     @Override
     public void onReceive(Context context, Intent intent){
@@ -91,7 +86,7 @@ public class AlarmReceiver extends Service {
             PendingIntent sentPI = PendingIntent.getBroadcast(getApplicationContext(), 0, sentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             Intent deliveryIntent = new Intent("delivered");
             PendingIntent deliverPI = PendingIntent.getBroadcast(getApplicationContext(), 0, deliveryIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-        /* Register for SMS send action */
+            /* Register for SMS send action */
             registerReceiver(new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
@@ -131,8 +126,5 @@ public class AlarmReceiver extends Service {
             ex.printStackTrace();
         }
     }
-
-
-
 
 }

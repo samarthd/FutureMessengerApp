@@ -48,10 +48,12 @@ public class AlarmReceiver extends Service {
         super.onStart(intent, startId);
 
         Bundle bundle = intent.getExtras();
+        long message_id = bundle.getLong("message_id");
         phoneNum = (String) bundle.getCharSequence("num");
         message = (String) bundle.getCharSequence("message");
-        Toast.makeText(this, "onStart, trying to send message", Toast.LENGTH_LONG).show();
-        Toast.makeText(this, "number: "+phoneNum+"\nmessage: "+message, Toast.LENGTH_LONG).show();
+        // Toast.makeText(this, "onStart, trying to send message", Toast.LENGTH_LONG).show();
+        // Toast.makeText(this, "number: "+phoneNum+"\nmessage: "+message, Toast.LENGTH_LONG).show();
+        Log.d("AlarmReciever: onStart", Long.toString(message_id));
         Log.d("AlarmReciever: onStart", "About to send SMS");
 
         sendSMS(phoneNum, message);

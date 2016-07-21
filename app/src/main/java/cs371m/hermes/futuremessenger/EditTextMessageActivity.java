@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.Calendar;
+// import java.lang.Math.toIntExact;
 
 public class EditTextMessageActivity extends AppCompatActivity {
 
@@ -89,13 +90,14 @@ public class EditTextMessageActivity extends AppCompatActivity {
                 /* TODO: add in sending of dates and time */
                 String phonenum = _contact_field.getText().toString();
                 String message = _message_field.getText().toString();
+                long id;
                 if (id_of_message_to_edit == -1) {
-                    saveSMS(phonenum, null, null, message);
+                    id = saveSMS(phonenum, null, null, message);
                 }
                 else {
-                    updateSMS(phonenum, message);
+                    id = updateSMS(phonenum, message);
                 }
-                setAlarm(phonenum, message, _year, _month, _dayOfMonth, _hour, _minute);
+                setAlarm(id, phonenum, message, _year, _month, _dayOfMonth, _hour, _minute);
 
                 returnToMainActivity();
             }
@@ -108,14 +110,16 @@ public class EditTextMessageActivity extends AppCompatActivity {
      * @param phoneNum
      * @param message
      */
-    private void setAlarm(String phoneNum, String message, int year, int month, int day, int hour, int minute){
+    private void setAlarm(long id, String phoneNum, String message, int year, int month, int day, int hour, int minute){
         /* Set the alarm with the selected parameters */
         Intent alarmIntent = new Intent(EditTextMessageActivity.this, AlarmReceiver.class);
         Bundle bundle = new Bundle();
+        bundle.putLong("message_id", id);
         bundle.putCharSequence("num", phoneNum);
         bundle.putCharSequence("message", message);
         alarmIntent.putExtras(bundle);
 
+        // int bar = toIntExact(id);
         pendingIntent = PendingIntent.getService(EditTextMessageActivity.this, 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
 

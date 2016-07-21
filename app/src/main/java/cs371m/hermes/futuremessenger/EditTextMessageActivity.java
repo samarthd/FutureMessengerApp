@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.SmsManager;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -17,7 +18,7 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 
-public class EditTextMessageActivity extends AppCompatActivity {
+public class EditTextMessageActivity extends AppCompatActivity implements DatePickerFragment.DatePickerListener, TimePickerFragment.TimePickerListener {
 
     private EditText _contact_field;
     private Button _date_button;
@@ -29,8 +30,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
     private int _hour = 0;
     private int _minute = 0;
     private int _year = 0;
-    // January = 0, Februrary = 1, ...
-    private int _month = 0;
+    private int _month = 0; // January = 0, February = 1, ...
     private int _dayOfMonth = 0;
 
     /* Are we making a brand new message?
@@ -203,9 +203,33 @@ public class EditTextMessageActivity extends AppCompatActivity {
         newFragment.show(getFragmentManager(), "timePicker");
     }
 
+    /**
+     * Implement the TimePickerListener method
+     * @param hour the hour selected
+     * @param minute the minute selected
+     */
+    @Override
+    public void onTimeSelected (int hour, int minute) {
+        setTimeButton(hour, minute);
+    }
+
     public void showDatePickerDialog (View v) {
         DialogFragment newFragment = new DatePickerFragment();
         newFragment.show(getFragmentManager(), "datePicker");
+    }
+
+    /**
+     * Implement the DatePickerFragment method
+     * @param year the year selected
+     * @param month the month selected
+     * @param dayOfMonth the day of month selected
+     */
+    @Override
+    public void onDateSelected(int year, int month, int dayOfMonth) {
+        // setDateButton does exactly what this should do,
+        // but that function gets used outside of the Fragment
+        // so we simply use that
+        setDateButton(year, month, dayOfMonth);
     }
 
     public void setTimeButton(int h, int m) {
@@ -214,11 +238,11 @@ public class EditTextMessageActivity extends AppCompatActivity {
         _time_button.setText(buildTimeString(h, m));
     }
 
-    public void setDateButton(int y, int m, int d) {
-        _year = y;
-        _month = m;
-        _dayOfMonth = d;
-        _date_button.setText(buildDateString(y, m, d));
+    public void setDateButton(int year, int month, int dayOfMonth) {
+        _year = year;
+        _month = month;
+        _dayOfMonth = dayOfMonth;
+        _date_button.setText(buildDateString(year, month, dayOfMonth));
     }
 
 
@@ -240,9 +264,15 @@ public class EditTextMessageActivity extends AppCompatActivity {
     }
 
     private String buildTimeString (int h, int m) {
-        String time = (h % 12 == 0? "12" : Integer.toString(h%12) ) + ":"
-                + (m < 10 ? "0" : "") + Integer.toString(m)
-                + (h < 12 ? " AM":" PM");
+        String time = "";
+        if (DateFormat.is24HourFormat(this)) {
+            time = (h < 10 ? "0": "") + Integer.toString(h)
+                    + (m < 10 ? "0": "") + Integer.toString(m);
+        } else {
+            time = (h % 12 == 0? "12" : Integer.toString(h%12) ) + ":"
+                    + (m < 10 ? "0" : "") + Integer.toString(m)
+                    + (h < 12 ? " AM":" PM");
+        }
         return time;
     }
 

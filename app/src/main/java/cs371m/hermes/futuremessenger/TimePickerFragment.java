@@ -1,25 +1,26 @@
 package cs371m.hermes.futuremessenger;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.text.format.DateFormat;
-import android.util.Log;
-import android.widget.Button;
 import android.widget.TimePicker;
-
-import java.util.Calendar;
 
 /**
  * Created by dob on 7/17/2016.
  */
 public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
+    TimePickerListener mListener;
+    public interface TimePickerListener {
+        void onTimeSelected (int hour, int minute);
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+        // TODO: Find better way to get currently set stuff
         EditTextMessageActivity activity = (EditTextMessageActivity) getActivity();
-
         int hour = activity.get_hour();
         int minute = activity.get_minute();
 
@@ -27,14 +28,26 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         return new TimePickerDialog(getActivity(), this, hour, minute, DateFormat.is24HourFormat(getActivity()));
     }
 
+    /**
+     * called when the user has chosen the time in the picker
+     * @param timePicker
+     * @param hour the hour selected
+     * @param minute the minute selected
+     */
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
-        if (DateFormat.is24HourFormat(getActivity())) {
-            //TODO: Set string based on 24 hour format
-            ((EditTextMessageActivity)getActivity()).setTimeButton(hour, minute);
-        } else {
-            //TODO: change this, feels hack-y
-            ((EditTextMessageActivity)getActivity()).setTimeButton(hour, minute);
+        mListener.onTimeSelected(hour, minute);
+        //((EditTextMessageActivity)getActivity()).setTimeButton(hour, minute);
+    }
+
+    @Override
+    public void onAttach (Activity activity) {
+        super.onAttach(activity);
+
+        try {
+            mListener = (TimePickerListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException((activity.toString() + " must implement TimePickerListener"));
         }
     }
 }

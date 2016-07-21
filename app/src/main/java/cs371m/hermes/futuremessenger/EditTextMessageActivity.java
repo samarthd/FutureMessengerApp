@@ -24,7 +24,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
     private Button _date_button;
     private Button _time_button;
     private EditText _message_field;
-    private PendingIntent pendingIntent;
+    // private PendingIntent pendingIntent;
 
     private int _hour = 0;
     private int _minute = 0;
@@ -119,7 +119,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
         alarmIntent.putExtras(bundle);
 
         // int bar = toIntExact(id);
-        pendingIntent = PendingIntent.getService(EditTextMessageActivity.this, (int) id, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getService(EditTextMessageActivity.this, (int) id, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
 
         //String date = _date_button.getText().toString();
@@ -132,10 +132,10 @@ public class EditTextMessageActivity extends AppCompatActivity {
         //calendar.set(2016, Calendar.JULY, 20, 4, 20);
         //calendar.add(Calendar.SECOND, 10);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-        Log.d("setAlarm", calendar.toString());
+        Log.d("setAlarm", "Message id = " + Long.toString(id));
 
-        //Toast.makeText(EditTextMessageActivity.this, "Date string: " + , Toast.LENGTH_LONG).show();
-        Toast.makeText(EditTextMessageActivity.this, "Start Alarm", Toast.LENGTH_LONG).show();
+        // Toast.makeText(EditTextMessageActivity.this, "Date string: " + , Toast.LENGTH_LONG).show();
+        // Toast.makeText(EditTextMessageActivity.this, "Start Alarm", Toast.LENGTH_LONG).show();
     }
 
     /**

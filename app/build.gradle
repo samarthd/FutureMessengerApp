@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "cs371m.hermes.futuremessenger"
         minSdkVersion 15
-        targetSdkVersion 24
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }

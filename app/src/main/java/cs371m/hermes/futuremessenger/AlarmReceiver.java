@@ -57,7 +57,9 @@ public class AlarmReceiver extends Service {
         Log.d("AlarmReciever: onStart", "About to send SMS");
 
         sendSMS(phoneNum, message);
-
+        MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
+        mDb.deleteMessage(message_id);
+        mDb.close();
     }
 
     @Override

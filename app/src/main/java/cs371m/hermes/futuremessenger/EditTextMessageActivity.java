@@ -17,7 +17,6 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.Calendar;
-// import java.lang.Math.toIntExact;
 
 public class EditTextMessageActivity extends AppCompatActivity {
 
@@ -120,11 +119,10 @@ public class EditTextMessageActivity extends AppCompatActivity {
         alarmIntent.putExtras(bundle);
 
         // int bar = toIntExact(id);
-        pendingIntent = PendingIntent.getService(EditTextMessageActivity.this, 0, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
+        pendingIntent = PendingIntent.getService(EditTextMessageActivity.this, (int) id, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
 
         //String date = _date_button.getText().toString();
-
 
         /* Set calendar dates */
         Calendar calendar = Calendar.getInstance();

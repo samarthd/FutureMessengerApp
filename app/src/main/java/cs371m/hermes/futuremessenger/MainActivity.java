@@ -17,6 +17,8 @@ import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,45 +29,25 @@ public class MainActivity extends AppCompatActivity {
     private long last_clicked_message_id;
 
     /*
-     *  Determine which context menu should be inflated: FAB's context menu, or
-     *  the individual message edit/delete menu.
+     *  Inflate the individual message edit/delete menu.
      *  */
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
-
-        switch (v.getId()) {
-            case R.id.scheduled_messages_list:
-                inflater.inflate(R.menu.message_menu, menu);
-                break;
-            case R.id.fab:
-                inflater.inflate(R.menu.creation_menu, menu);
-                break;
-        }
+        inflater.inflate(R.menu.message_menu, menu);
     }
 
-    // Menu options.
+    // Message context menu options.
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // The following cases apply to the message menu.
             case R.id.edit:
                 editScheduledMessage(last_clicked_message_id);
                 return true;
             case R.id.delete:
                 deleteScheduledMessage(last_clicked_message_id);
-                return true;
-            // The following cases apply to the creation menu.
-            case R.id.manage_presets:
-                Toast.makeText(this, "Beta feature!", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.new_text_message:
-                createTextMessage();
-                return true;
-            case R.id.new_picture_message:
-                Toast.makeText(this, "Beta feature!", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -84,12 +66,41 @@ public class MainActivity extends AppCompatActivity {
 
         // Populate the listview from the database.
         fillListView();
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        registerForContextMenu(fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+
+        // Initalize the floating actions menu.
+
+        final FloatingActionsMenu main_menu = (FloatingActionsMenu) findViewById(R.id.main_menu);
+
+        com.getbase.floatingactionbutton.FloatingActionButton preset_button =
+                (com.getbase.floatingactionbutton.FloatingActionButton) findViewById(R.id.create_preset_button);
+        preset_button.setIconDrawable(getResources().getDrawable(R.drawable.preset_icon));
+        preset_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                view.showContextMenu();
+                Toast.makeText(MainActivity.this, "Beta feature!", Toast.LENGTH_SHORT).show();
+                main_menu.collapse();
+            }
+        });
+
+        com.getbase.floatingactionbutton.FloatingActionButton text_button =
+                (com.getbase.floatingactionbutton.FloatingActionButton) findViewById(R.id.new_text_button);
+        text_button.setIconDrawable(getResources().getDrawable(R.drawable.text_icon));
+        text_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                main_menu.collapse();
+                createTextMessage();
+            }
+        });
+
+        com.getbase.floatingactionbutton.FloatingActionButton pic_button =
+                (com.getbase.floatingactionbutton.FloatingActionButton) findViewById(R.id.new_pic_button);
+        pic_button.setIconDrawable(getResources().getDrawable(R.drawable.picture_icon));
+        pic_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                main_menu.collapse();
+                Toast.makeText(MainActivity.this, "Beta feature!", Toast.LENGTH_SHORT).show();
             }
         });
 

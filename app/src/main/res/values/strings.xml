@@ -5,7 +5,7 @@
     <string name="delete_message">Delete Message</string>
     <string name="title_activity_edit_text_message">Edit Text Message</string>
     <string name="recipients">Recipient</string>
-    <string name="manage_presets">Create/Manage Presets</string>
+    <string name="create_manage_presets">Create/Manage Presets</string>
     <string name="new_text_message">New Text Message</string>
     <string name="new_picture_message">New Picture Message</string>
     <string name="title_activity_text_message">Text Message</string>

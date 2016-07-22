@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         fillListView();
 
         // Initalize the floating actions menu.
-
         final FloatingActionsMenu main_menu = (FloatingActionsMenu) findViewById(R.id.main_menu);
 
         com.getbase.floatingactionbutton.FloatingActionButton preset_button =

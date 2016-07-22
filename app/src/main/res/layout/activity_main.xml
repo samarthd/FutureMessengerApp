@@ -46,7 +46,6 @@
             android:layout_height="wrap_content"
             app:fab_colorNormal="@color/menuOption"
             app:fab_colorPressed="@color/pressedMenuOption"
-            app:fab_size="mini"
             app:fab_title="@string/create_manage_presets"/>
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/new_text_button"
@@ -54,7 +53,6 @@
             android:layout_height="wrap_content"
             app:fab_colorNormal="@color/menuOption"
             app:fab_colorPressed="@color/pressedMenuOption"
-            app:fab_size="mini"
             app:fab_title="@string/new_text_message"/>
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/new_pic_button"
@@ -62,7 +60,6 @@
             android:layout_height="wrap_content"
             app:fab_colorNormal="@color/menuOption"
             app:fab_colorPressed="@color/pressedMenuOption"
-            app:fab_size="mini"
             app:fab_title="@string/new_picture_message"/>
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 

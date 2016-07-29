@@ -1,5 +1,6 @@
 package cs371m.hermes.futuremessenger;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.Menu;
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.currently_scheduled_tv);
 
         // Create our database.
         mDb = new MessengerDatabaseHelper(MainActivity.this);
@@ -183,8 +186,24 @@ public class MainActivity extends AppCompatActivity {
         ListView messagesListView = (ListView) findViewById(R.id.scheduled_messages_list);
         messagesListView.setAdapter(adapter);
 
-        //Any time the message is long pressed, we should save its ID so it can be passed
-        //to the editScheduledMessage() method.
+
+
+
+        /* Make the list items clickable for their context menu */
+        registerForContextMenu(findViewById(R.id.scheduled_messages_list));
+
+        // Allow short clicks to open the context menu
+        messagesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
+                last_clicked_message_id = id;
+                openContextMenu(findViewById(R.id.scheduled_messages_list));
+                Log.d("Short Click", "Last clicked message id just set to " + last_clicked_message_id);
+            }
+        });
+
+
+        // Allow long clicks to open the context menu.
         messagesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
@@ -194,7 +213,6 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
-        registerForContextMenu(findViewById(R.id.scheduled_messages_list));
     }
 
     @Override

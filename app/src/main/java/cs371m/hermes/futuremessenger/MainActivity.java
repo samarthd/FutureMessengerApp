@@ -1,15 +1,16 @@
 package cs371m.hermes.futuremessenger;
 
-import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
-import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.Menu;
@@ -27,8 +28,20 @@ public class MainActivity extends AppCompatActivity {
     // Future Messenger's database.
     public MessengerDatabaseHelper mDb;
 
-    //ID of the message in the ListView that was clicked last.
+    // ID of the message in the ListView that was clicked last.
     private long last_clicked_message_id;
+
+    // When a message gets sent, the alarm receiver will broadcast this action to refresh
+    // the ListView.
+    private static final String REFRESH_LV_ACTION = "cs371m.hermes.futuremessenger.refreshlv";
+
+    // Receiver for refresh list view broadcasts
+    BroadcastReceiver refreshLVReceiver =  new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            fillListView();
+        }
+    };
 
     /*
      *  Inflate the individual message edit/delete menu.
@@ -70,7 +83,26 @@ public class MainActivity extends AppCompatActivity {
         // Populate the listview from the database.
         fillListView();
 
-        // Initalize the floating actions menu.
+        initializeFloatingMenu();
+        registerRefreshReceiver();
+
+
+    }
+
+    // Registers a receiver to update the list view if a message gets sent off and deleted
+    // while the activity is open.
+    private void registerRefreshReceiver() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                refreshLVReceiver, new IntentFilter (REFRESH_LV_ACTION));
+    }
+
+    // Unregister the refreshLV receiver
+    private void unregisterRefreshReceiver() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(refreshLVReceiver);
+    }
+
+    // Initalize the floating actions menu.
+    private void initializeFloatingMenu() {
         final FloatingActionsMenu main_menu = (FloatingActionsMenu) findViewById(R.id.main_menu);
 
         com.getbase.floatingactionbutton.FloatingActionButton preset_button =
@@ -105,8 +137,8 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Beta feature!", Toast.LENGTH_SHORT).show();
             }
         });
-
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -136,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         // Close the database connection.
         mDb.close();
+        unregisterRefreshReceiver();
     }
 
 
@@ -229,5 +262,18 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         // Force a refresh on the ListView
         fillListView();
+        registerRefreshReceiver();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterRefreshReceiver();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterRefreshReceiver();
     }
 }

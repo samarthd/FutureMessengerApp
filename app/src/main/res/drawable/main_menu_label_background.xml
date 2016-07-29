@@ -3,9 +3,9 @@
     <solid android:color="@color/menuOption"/>
     <padding
         android:left="16dp"
-        android:top="4dp"
+        android:top="8dp"
         android:right="16dp"
-        android:bottom="4dp"/>
+        android:bottom="8dp"/>
     <corners
         android:radius="2dp"/>
 </shape>

@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
@@ -19,6 +20,13 @@ import android.widget.Toast;
 public class AlarmReceiver extends Service {
     String phoneNum, message;
 
+    // Action to broadcast for refreshing listview
+    private static final String REFRESH_LV_ACTION = "cs371m.hermes.futuremessenger.refreshlv";
+
+    // Broadcast to the MainActivity that the message list has been updated
+    private void broadcastRefreshLV() {
+        LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent (REFRESH_LV_ACTION));
+    }
 
     @Override
     public void onCreate(){
@@ -54,6 +62,10 @@ public class AlarmReceiver extends Service {
         MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
         mDb.deleteMessage(message_id);
         mDb.close();
+        broadcastRefreshLV();
+        //Update the MainActivity to have the right value.
+
+
     }
 
     @Override

@@ -23,12 +23,46 @@
 
     <include layout="@layout/content_main" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/main_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginEnd="16dp"
+        app:fab_expandDirection="up"
+        app:fab_addButtonColorNormal="@color/colorAccent"
+        app:fab_addButtonColorPressed="@color/pressedAccent"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/ic_dialog_email" />
+        app:fab_labelsPosition="left"
+        app:fab_labelStyle="@style/main_menu_labels_style">
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/create_preset_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/menuOption"
+            app:fab_colorPressed="@color/pressedMenuOption"
+            app:fab_title="@string/create_manage_presets"/>
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/new_text_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/menuOption"
+            app:fab_colorPressed="@color/pressedMenuOption"
+            app:fab_title="@string/new_text_message"/>
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/new_pic_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_colorNormal="@color/menuOption"
+            app:fab_colorPressed="@color/pressedMenuOption"
+            app:fab_title="@string/new_picture_message"/>
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
+
 
 </android.support.design.widget.CoordinatorLayout>

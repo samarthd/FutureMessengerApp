@@ -2,8 +2,8 @@
 <resources>
     <color name="colorPrimary">#00BCD4</color>
     <color name="colorPrimaryDark">#00ACC1</color>
-    <color name="colorAccent">#AEEA00</color>
-    <color name="pressedAccent">#C6FF00</color>
+    <color name="colorAccent">#f4c245</color>
+    <color name="pressedAccent">#f4d589</color>
     <color name="menuOption">#00BCD4</color>
     <color name="pressedMenuOption">#80DEEA</color>
     <color name="plain_white">#FFFFFF</color>

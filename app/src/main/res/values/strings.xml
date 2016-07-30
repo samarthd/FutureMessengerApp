@@ -14,4 +14,9 @@
     <string name="recipients_lv">Recipients:&#160;</string>
     <string name="recipient_ids">Recipient ID in database:&#160;</string>
     <string name="currently_scheduled_tv">Scheduled Messages</string>
+    <string name="title_activity_multimedia_message">MultimediaMessageActivity</string>
+    <string name="hint_recipients">Enter recipients</string>
+    <string name="hint_message">Enter message</string>
+    <string name="header_datetime">Date &amp; Time</string>
+    <string name="error">ERROR</string>
 </resources>

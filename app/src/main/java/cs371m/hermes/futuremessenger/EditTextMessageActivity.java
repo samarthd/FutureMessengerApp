@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 
+//TODO: Have these activities extend an MessageActivity, to remove duplicate code
 public class EditTextMessageActivity extends AppCompatActivity implements DatePickerFragment.DatePickerListener, TimePickerFragment.TimePickerListener {
 
     private EditText _contact_field;
@@ -46,10 +47,10 @@ public class EditTextMessageActivity extends AppCompatActivity implements DatePi
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        _contact_field = (EditText) findViewById(R.id.recipients_field);
-        _message_field = (EditText) findViewById(R.id.message_field);
-        _date_button = (Button) findViewById(R.id.button_date);
-        _time_button = (Button) findViewById(R.id.button_time);
+        _contact_field = (EditText) findViewById(R.id.sms_recipients_field);
+        _message_field = (EditText) findViewById(R.id.sms_message_field);
+        _date_button = (Button) findViewById(R.id.sms_button_date);
+        _time_button = (Button) findViewById(R.id.sms_button_time);
 
         /* TODO: If editing scheduled message, cancel previous version first */
         Intent intent = getIntent();

@@ -134,7 +134,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 main_menu.collapse();
-                Toast.makeText(MainActivity.this, "Beta feature!", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(MainActivity.this, "Beta feature!", Toast.LENGTH_SHORT).show();
+                createPictureMessage();
             }
         });
     }
@@ -174,6 +175,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void createTextMessage() {
         Intent intent = new Intent(this, EditTextMessageActivity.class);
+        startActivityForResult(intent, 1);
+    }
+
+    private void createPictureMessage() {
+        Intent intent = new Intent(this, MultimediaMessageActivity.class);
         startActivityForResult(intent, 1);
     }
 

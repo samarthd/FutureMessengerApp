@@ -65,9 +65,11 @@ public class AlarmReceiver extends Service {
         broadcastRefreshLV();
         //Update the MainActivity to have the right value.
 
-
     }
 
+    public void onStartCommand(){
+
+    }
     @Override
     public boolean onUnbind(Intent intent){
         Toast.makeText(this, "onUnbind", Toast.LENGTH_LONG).show();

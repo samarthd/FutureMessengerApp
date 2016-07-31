@@ -1,5 +1,7 @@
 package cs371m.hermes.futuremessenger;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -200,9 +202,19 @@ public class MainActivity extends AppCompatActivity {
 
     /* Delete a currently scheduled message. */
     private void deleteScheduledMessage(long last_clicked_message_id) {
+        stopAlarm(last_clicked_message_id);
         mDb.deleteMessage(last_clicked_message_id);
         // Force a refresh of the listView so that the changes will be reflected in the ListView.
         fillListView();
+    }
+
+    public void stopAlarm(long message_id){
+        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(),
+                (int) message_id, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
+        Log.d("Alarm", "Alarm canceled");
     }
 
     /* Populate the ListView from our database with all of the currently scheduled messages. */

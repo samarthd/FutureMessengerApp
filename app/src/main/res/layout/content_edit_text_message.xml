@@ -20,12 +20,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/recipients"
-            android:textSize="18sp"/>
-        <EditText android:id="@+id/recipients_field"
+            android:textSize="18sp"
+            android:padding="10dp"/>
+        <ListView
+            android:id="@+id/selected_contacts_list"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </ListView>
+
+        <Button
+            android:id="@+id/choose_contact_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/choose_contacts"/>
+        <EditText android:id="@+id/recipients_field"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="phone"
-            android:hint="Enter a phone number"
+            android:hint="@string/enter_phone_number"
             android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp" />
     </LinearLayout>
@@ -37,7 +49,7 @@
         <TextView android:id="@+id/textview_datetime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date &amp; Time"
+            android:text="@string/date_and_time"
             android:textSize="18sp" />
         <Button android:id="@+id/button_date"
             android:layout_width="wrap_content"

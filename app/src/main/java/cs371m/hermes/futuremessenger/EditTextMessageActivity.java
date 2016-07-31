@@ -4,18 +4,25 @@ import android.app.DialogFragment;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class EditTextMessageActivity extends AppCompatActivity {
 
@@ -38,6 +45,15 @@ public class EditTextMessageActivity extends AppCompatActivity {
      * Otherwise it will be -1. */
     private long last_clicked_message_id;
 
+    // Request code for starting the contact picker activity
+    private static final int CONTACT_PICKER_REQUEST = 9999;
+
+    // List that holds the currently selected contacts
+    private ArrayList<Contact> currently_selected_contacts;
+
+    // Adapter to populated currently selected contacts list
+    private ContactListAdapter contactAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +61,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         _contact_field = (EditText) findViewById(R.id.recipients_field);
         _message_field = (EditText) findViewById(R.id.message_field);
@@ -56,6 +73,9 @@ public class EditTextMessageActivity extends AppCompatActivity {
         Bundle extras = intent.getExtras();
         // If these extras aren't null, then we're editing an existing message.
         if (extras != null) {
+
+            //TODO: Initialize currently selected contacts to have all the existing contacts.
+
             last_clicked_message_id = intent.getLongExtra("message_id", -1);
             _contact_field.setText(intent.getStringExtra("num"));
             _message_field.setText(intent.getStringExtra("message"));
@@ -65,6 +85,13 @@ public class EditTextMessageActivity extends AppCompatActivity {
             setDateButton(Integer.parseInt(dateParsed[0]), Integer.parseInt(dateParsed[1]) - 1, Integer.parseInt(dateParsed[2]));
         }
         else {
+
+            // brand new contacts list
+            currently_selected_contacts = new ArrayList<>();
+            contactAdapter = new ContactListAdapter(this, currently_selected_contacts);
+            ListView contactsLV = (ListView) findViewById(R.id.selected_contacts_list);
+            contactsLV.setAdapter(contactAdapter);
+
             last_clicked_message_id = -1;
             final Calendar c = Calendar.getInstance();
             int year = c.get(Calendar.YEAR);
@@ -76,6 +103,20 @@ public class EditTextMessageActivity extends AppCompatActivity {
             Log.d("onCreate", "Today's month is " + Integer.toString(month));
             setTimeButton(hour, minute);
         }
+
+
+        // When the contact button is clicked, launch the contact picker.
+        Button choose_contact = (Button) findViewById(R.id.choose_contact_button);
+        choose_contact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent contactPickerIntent =
+                        new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                contactPickerIntent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
+                startActivityForResult(contactPickerIntent, CONTACT_PICKER_REQUEST);
+
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +139,72 @@ public class EditTextMessageActivity extends AppCompatActivity {
                 returnToMainActivity();
             }
         });
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case CONTACT_PICKER_REQUEST:
+                    updateSelectedContactsList(data);
+                    break;
+            }
+        }
+        else {
+            Log.w("CONTACT PICKER RESULT", "NOT OK");
+        }
+    }
+
+    // Update the selected contacts list
+    private void updateSelectedContactsList(Intent data) {
+
+        boolean showErrorToast = false;
+        Uri contact_uri = data.getData();
+
+
+        // Get the contact's name.
+        Cursor cursor = getContentResolver()
+                .query(contact_uri, null,
+                null, null, null);
+
+        String name = "";
+
+        if (cursor.moveToFirst()) {
+            int nameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
+            name = cursor.getString(nameIndex);
+        }
+        else {
+            showErrorToast = true;
+        }
+
+        // Get the contact's phone number.
+        String phoneNumber = "";
+        String contact_ID = contact_uri.getLastPathSegment();
+
+        Cursor num_cursor = getContentResolver()
+                            .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                                   ContactsContract.CommonDataKinds.Phone._ID + "=?" ,
+                                   new String[] { contact_ID }, null);
+        if (num_cursor.moveToFirst()){
+            int phoneIndex = num_cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DATA);
+            phoneNumber = num_cursor.getString(phoneIndex);
+        }
+        else {
+            showErrorToast = true;
+        }
+
+        if (showErrorToast)
+            Toast.makeText(this, "Something went wrong with that contact.", Toast.LENGTH_SHORT).show();
+        else {
+            Toast.makeText(this, "Got these phone numbers for " + name + ": " + phoneNumber, Toast.LENGTH_SHORT).show();
+            Contact current_contact = new Contact(name, phoneNumber);
+            currently_selected_contacts.add(current_contact);
+            contactAdapter.notifyDataSetChanged();
+        }
+
+
     }
 
     /**

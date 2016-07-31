@@ -17,12 +17,20 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         void onTimeSelected (int hour, int minute);
     }
 
+    static TimePickerFragment newInstance(int hour, int minute) {
+        TimePickerFragment f = new TimePickerFragment();
+        Bundle args = new Bundle();
+        args.putInt("hour", hour);
+        args.putInt("minute", minute);
+        f.setArguments(args);
+
+        return f;
+    }
+
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        // TODO: Find better way to get currently set stuff
-        EditTextMessageActivity activity = (EditTextMessageActivity) getActivity();
-        int hour = activity.get_hour();
-        int minute = activity.get_minute();
+        int hour = getArguments().getInt("hour");
+        int minute = getArguments().getInt("minute");
 
         // Create a new instance of TimePickerDialog and return it
         return new TimePickerDialog(getActivity(), this, hour, minute, DateFormat.is24HourFormat(getActivity()));

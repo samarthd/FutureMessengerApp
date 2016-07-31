@@ -200,7 +200,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements DatePi
     }
 
     public void showTimePickerDialog (View v) {
-        DialogFragment newFragment = new TimePickerFragment();
+        DialogFragment newFragment = TimePickerFragment.newInstance(_hour, _minute);
         newFragment.show(getFragmentManager(), "timePicker");
     }
 
@@ -215,7 +215,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements DatePi
     }
 
     public void showDatePickerDialog (View v) {
-        DialogFragment newFragment = new DatePickerFragment();
+        DialogFragment newFragment = DatePickerFragment.newInstance(_year, _month, _dayOfMonth);
         newFragment.show(getFragmentManager(), "datePicker");
     }
 

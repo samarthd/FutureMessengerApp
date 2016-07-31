@@ -16,14 +16,22 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         void onDateSelected (int year, int month, int dayOfMonth);
     }
 
+    static DatePickerFragment newInstance(int year, int month, int day) {
+        DatePickerFragment f = new DatePickerFragment();
+        Bundle args = new Bundle();
+        args.putInt("year", year);
+        args.putInt("month", month);
+        args.putInt("day", day);
+        f.setArguments(args);
+
+        return f;
+    }
+
     @Override
     public Dialog onCreateDialog (Bundle savedInstanceState) {
-        // TODO: Find better way to get currently set stuff
-        EditTextMessageActivity activity = (EditTextMessageActivity) getActivity();
-        // Use the current date as the default date in the picker
-        int year = activity.get_year();
-        int month = activity.get_month();
-        int day = activity.get_dayOfMonth();
+        int year = getArguments().getInt("year");
+        int month = getArguments().getInt("month");
+        int day = getArguments().getInt("day");
 
         // Create a new instance of DatePickerDialog and return it
         return new DatePickerDialog(getActivity(), this, year, month, day);

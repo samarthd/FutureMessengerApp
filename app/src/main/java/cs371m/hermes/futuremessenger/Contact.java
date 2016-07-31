@@ -20,4 +20,14 @@ public class Contact {
     public String getPhoneNum() {
         return phoneNum;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        boolean result = false;
+        if (obj != null && obj instanceof Contact) {
+            result = (((Contact) obj).getName().equals(this.name)) &&
+                    (((Contact) obj).getPhoneNum().equals(this.phoneNum));
+        }
+        return result;
+    }
 }

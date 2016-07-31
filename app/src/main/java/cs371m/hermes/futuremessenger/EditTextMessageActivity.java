@@ -142,6 +142,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
     }
 
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -198,10 +199,15 @@ public class EditTextMessageActivity extends AppCompatActivity {
         if (showErrorToast)
             Toast.makeText(this, "Something went wrong with that contact.", Toast.LENGTH_SHORT).show();
         else {
-            Toast.makeText(this, "Got these phone numbers for " + name + ": " + phoneNumber, Toast.LENGTH_SHORT).show();
             Contact current_contact = new Contact(name, phoneNumber);
-            currently_selected_contacts.add(current_contact);
-            contactAdapter.notifyDataSetChanged();
+            // Only add this new contact if we haven't already added it.
+            if (!currently_selected_contacts.contains(current_contact)) {
+                currently_selected_contacts.add(current_contact);
+                contactAdapter.notifyDataSetChanged();
+            }
+            else {
+                Toast.makeText(this, "That contact is already a recipient!", Toast.LENGTH_SHORT).show();
+            }
         }
 
 

@@ -208,6 +208,9 @@ public class MainActivity extends AppCompatActivity {
         fillListView();
     }
 
+    /* Delete a currently scheduled alarm (called from deleteScheduledMessage())
+    * For alarm cancel to work, pending intent MUST match the
+    * pending intent used to create the alarm */
     public void stopAlarm(long message_id){
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(),

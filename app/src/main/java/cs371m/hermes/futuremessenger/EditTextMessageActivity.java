@@ -166,8 +166,9 @@ public class EditTextMessageActivity extends AppCompatActivity {
     // Delete the existing copy of the user-chosen message, and return the ID of the
     // new, updated version.
     private long updateSMS(String phoneNum, String message) {
-        //TODO: Add code to cancel the existing alarm of the message..
+        //cancel the previous alarm
         cancelAlarm();
+
         Log.d("updateSMS", phoneNum);
         Log.d("updateSMS", message);
 
@@ -186,7 +187,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
                 (int) last_clicked_message_id, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
-        Log.d("Alarm", "Alarm canceled");
+        Log.d("Alarm", "Old alarm canceled");
     }
     private String getDateTimeFromButtons() {
         String iso_date = _date_button.getText().toString();

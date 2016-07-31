@@ -255,7 +255,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements DatePi
 
     public int get_month() { return _month; }
 
-    public int get_dayOfMonth() { return _dayOfMonth; };
+    public int get_dayOfMonth() { return _dayOfMonth; }
 
     private String buildDateString (int y, int m, int d) {
         String date = Integer.toString(y);

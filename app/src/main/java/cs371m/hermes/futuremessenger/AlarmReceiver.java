@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
@@ -53,40 +54,52 @@ public class AlarmReceiver extends Service {
     @Override
     public void onStart(Intent intent, int startId){
         super.onStart(intent, startId);
+        //check if extras even exist; this suppresses null pointer exceptions that happen
+        //due to checking for null extras.
+        try {
+            Bundle bundle = intent.getExtras();
+            messageID = bundle.getLong("message_id");
+            phoneNum = (String) bundle.getCharSequence("num");
+            message = (String) bundle.getCharSequence("message");
+        }catch(NullPointerException e){
+            Log.d("Alarm", "NullPointerException");
+        }
 
-        Bundle bundle = intent.getExtras();
-        long message_id = bundle.getLong("message_id");
-        messageID = message_id;
-        phoneNum = (String) bundle.getCharSequence("num");
-        message = (String) bundle.getCharSequence("message");
-        Log.d("AlarmReciever: onStart", Long.toString(message_id));
+        Log.d("AlarmReciever: onStart", Long.toString(messageID));
         Log.d("AlarmReciever: onStart", "About to send SMS");
 
         sendSMS(phoneNum, message);
         MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
-        mDb.deleteMessage(message_id);
+        mDb.deleteMessage(messageID);
         mDb.close();
         broadcastRefreshLV();
         //Update the MainActivity to have the right value.
 
     }
 
+
     public void sendNotification(String result){
         //TODO: change notification icon and customize text to display message
-        NotificationCompat.Builder  mBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.notification_icon)
-                .setContentTitle("Future Messenger")
-                .setContentText(result);
-
         //this intent defines where the user goes after they click the notification
         Intent resultIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendInt = PendingIntent.getActivity(this, 0, resultIntent, 0);
 
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        NotificationCompat.Builder  mBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle("Future Messenger")//title of the notification
+                .setContentText(result)//actual notification content
+                .setContentIntent(pendInt)
+                .setAutoCancel(true)//clears notification after user clicks on it
+                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
+
+        //DO NOT REMOVE THIS CODE
+        /*TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addNextIntent(resultIntent);
 
         PendingIntent resultPendingIntent = stackBuilder
                 .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(resultPendingIntent);
+        mBuilder.setContentIntent(resultPendingIntent);*/
+
         NotificationManager notification =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         //notification ids are the same as the message ids

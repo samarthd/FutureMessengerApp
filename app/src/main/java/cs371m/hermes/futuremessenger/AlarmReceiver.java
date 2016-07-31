@@ -1,6 +1,7 @@
 package cs371m.hermes.futuremessenger;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -9,6 +10,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -19,7 +22,7 @@ import android.widget.Toast;
  */
 public class AlarmReceiver extends Service {
     String phoneNum, message;
-
+    long messageID;
     // Action to broadcast for refreshing listview
     private static final String REFRESH_LV_ACTION = "cs371m.hermes.futuremessenger.refreshlv";
 
@@ -53,6 +56,7 @@ public class AlarmReceiver extends Service {
 
         Bundle bundle = intent.getExtras();
         long message_id = bundle.getLong("message_id");
+        messageID = message_id;
         phoneNum = (String) bundle.getCharSequence("num");
         message = (String) bundle.getCharSequence("message");
         Log.d("AlarmReciever: onStart", Long.toString(message_id));
@@ -67,8 +71,26 @@ public class AlarmReceiver extends Service {
 
     }
 
-    public void onStartCommand(){
+    public void sendNotification(String result){
+        //TODO: change notification icon and customize text to display message
+        NotificationCompat.Builder  mBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle("Future Messenger")
+                .setContentText(result);
 
+        //this intent defines where the user goes after they click the notification
+        Intent resultIntent = new Intent(this, MainActivity.class);
+
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addNextIntent(resultIntent);
+
+        PendingIntent resultPendingIntent = stackBuilder
+                .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        mBuilder.setContentIntent(resultPendingIntent);
+        NotificationManager notification =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        //notification ids are the same as the message ids
+        notification.notify((int)messageID, mBuilder.build());
     }
     @Override
     public boolean onUnbind(Intent intent){
@@ -107,10 +129,10 @@ public class AlarmReceiver extends Service {
                     String result = "";
                     switch (getResultCode()) {
                         case Activity.RESULT_OK:
-                            result = "Transmission successful";
+                            result = "Message successfully sent.";
                             break;
                         case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                            result = "Transmission failed";
+                            result = "Message failed to send.";
                             break;
                         case SmsManager.RESULT_ERROR_RADIO_OFF:
                             result = "Radio off";
@@ -122,7 +144,8 @@ public class AlarmReceiver extends Service {
                             result = "No service";
                             break;
                     }
-                    Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
+                    sendNotification(result);
                 }
             }, new IntentFilter("sent"));
 

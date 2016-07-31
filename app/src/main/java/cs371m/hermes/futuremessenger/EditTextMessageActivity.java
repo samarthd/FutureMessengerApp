@@ -167,6 +167,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
     // new, updated version.
     private long updateSMS(String phoneNum, String message) {
         //TODO: Add code to cancel the existing alarm of the message..
+        cancelAlarm();
         Log.d("updateSMS", phoneNum);
         Log.d("updateSMS", message);
 
@@ -179,6 +180,14 @@ public class EditTextMessageActivity extends AppCompatActivity {
         return result;
     }
 
+    private void cancelAlarm(){
+        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(),
+                (int) last_clicked_message_id, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
+        Log.d("Alarm", "Alarm canceled");
+    }
     private String getDateTimeFromButtons() {
         String iso_date = _date_button.getText().toString();
         String iso_time = (_hour < 10 ?"0":"") + Integer.toString(_hour)

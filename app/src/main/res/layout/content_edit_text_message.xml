@@ -51,8 +51,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/error"
-            android:layout_toRightOf="@id/button_date"
-            android:layout_toEndOf="@id/button_date"
+            android:layout_toRightOf="@id/sms_button_date"
+            android:layout_toEndOf="@id/sms_button_date"
             android:layout_below="@id/sms_textview_datetime"
             android:onClick="showTimePickerDialog" />
     </RelativeLayout>

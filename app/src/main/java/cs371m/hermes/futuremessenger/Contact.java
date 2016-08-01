@@ -30,4 +30,9 @@ public class Contact {
         }
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Name: " + name + "\nNumber: " + phoneNum;
+    }
 }

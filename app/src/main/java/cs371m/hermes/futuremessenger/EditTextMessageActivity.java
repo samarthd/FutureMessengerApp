@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberUtils;
 import android.util.Log;
@@ -23,9 +24,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class EditTextMessageActivity extends AppCompatActivity {
+public class EditTextMessageActivity extends AppCompatActivity
+        implements EnterPhoneNumberDialogFragment.EnterPhoneNumberListener {
 
-    private EditText _contact_field;
+    private EditText _phonenum_field;
     private Button _date_button;
     private Button _time_button;
     private EditText _message_field;
@@ -61,7 +63,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        _contact_field = (EditText) findViewById(R.id.recipients_field);
+        _phonenum_field = (EditText) findViewById(R.id.recipients_field);
         _message_field = (EditText) findViewById(R.id.message_field);
         _date_button = (Button) findViewById(R.id.button_date);
         _time_button = (Button) findViewById(R.id.button_time);
@@ -73,7 +75,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
         if (extras != null) {
             //TODO: Initialize currently selected contacts to have all the existing contacts.
             last_clicked_message_id = intent.getLongExtra("message_id", -1);
-            _contact_field.setText(intent.getStringExtra("num"));
+            _phonenum_field.setText(intent.getStringExtra("num"));
             _message_field.setText(intent.getStringExtra("message"));
             String[] timeParsed = intent.getStringExtra("time").split(":");
             String[] dateParsed = intent.getStringExtra("date").split("-");
@@ -100,13 +102,14 @@ public class EditTextMessageActivity extends AppCompatActivity {
         }
 
         initializeContactChooserButton();
+        initializePhoneNumberButton();
         initializeScheduleButton();
 
     }
 
     // When the contact button is clicked, launch the contact picker.
     private void initializeContactChooserButton() {
-        Button choose_contact = (Button) findViewById(R.id.choose_contact_button);
+        CardView choose_contact = (CardView) findViewById(R.id.choose_contact_button);
         choose_contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,7 +117,19 @@ public class EditTextMessageActivity extends AppCompatActivity {
                         new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
                 contactPickerIntent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
                 startActivityForResult(contactPickerIntent, CONTACT_PICKER_REQUEST);
+            }
+        });
+    }
 
+    // When the phone number button is clicked, launch the phone number input fragment.
+    private void initializePhoneNumberButton() {
+        CardView add_number = (CardView) findViewById(R.id.enter_number_button);
+        add_number.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                EnterPhoneNumberDialogFragment enterNumFragment =
+                        new EnterPhoneNumberDialogFragment();
+                enterNumFragment.show(getFragmentManager(), "Enter Phone Number");
             }
         });
     }
@@ -128,7 +143,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
                 Log.d("FabButton", "Message Send button pressed.");
 
                 /* TODO: add in sending of dates and time */
-                String phonenum = _contact_field.getText().toString();
+                String phonenum = _phonenum_field.getText().toString();
                 String message = _message_field.getText().toString();
                 long id;
                 if (last_clicked_message_id == -1) {
@@ -151,7 +166,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case CONTACT_PICKER_REQUEST:
-                    updateSelectedContactsList(data);
+                    receiveContactAndAddToList(data);
                     break;
             }
         }
@@ -161,7 +176,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
     }
 
     // Update the selected contacts list
-    private void updateSelectedContactsList(Intent data) {
+    private void receiveContactAndAddToList(Intent data) {
 
         boolean showErrorToast = false;
         Uri contact_uri = data.getData();
@@ -200,29 +215,44 @@ public class EditTextMessageActivity extends AppCompatActivity {
             Toast.makeText(this, "Something went wrong with that contact.", Toast.LENGTH_SHORT).show();
         else {
             Contact current_contact = new Contact(name, phoneNumber);
-            ListView contactsLV = (ListView) findViewById(R.id.selected_contacts_list);
-            // Only add this new contact if we haven't already added it.
-            if (!currently_selected_contacts.contains(current_contact)) {
-                currently_selected_contacts.add(current_contact);
+            addContactToRecipientList(current_contact);
+        }
+    }
+
+    // Adds a new contact to the recipient list. Ensures no duplicates are added.
+    private void addContactToRecipientList (Contact new_contact) {
+        ListView contactsLV = (ListView) findViewById(R.id.selected_contacts_list);
+        // Only add this new contact if we haven't already added it.
+        if (!currently_selected_contacts.contains(new_contact)) {
+            currently_selected_contacts.add(new_contact);
                 /* If the size of the list is now greater than 3, restrict the ListView height
                    This solution was found on:
                    http://stackoverflow.com/questions/5487552/limit-height-of-listview-on-android
                    http://stackoverflow.com/questions/14020859/change-height-of-a-listview-dynamicallyandroid */
-                if (currently_selected_contacts.size() > 3) {
-                    RelativeLayout.LayoutParams list = (RelativeLayout.LayoutParams) contactsLV.getLayoutParams();
-                    View item = contactAdapter.getView(0, null, contactsLV);
-                    item.measure(0,0);
-                    list.height = (int) (3.5 * item.getMeasuredHeight());
-                    contactsLV.setLayoutParams(list);
-                }
-                contactAdapter.notifyDataSetChanged();
-                // Make sure the most recently added item is in view by scrolling to the bottom.
-                contactsLV.setSelection(contactAdapter.getCount() - 1);
+            if (currently_selected_contacts.size() > 3) {
+                RelativeLayout.LayoutParams list = (RelativeLayout.LayoutParams) contactsLV.getLayoutParams();
+                View item = contactAdapter.getView(0, null, contactsLV);
+                item.measure(0,0);
+                list.height = (int) (3.5 * item.getMeasuredHeight());
+                contactsLV.setLayoutParams(list);
             }
-            else {
-                Toast.makeText(this, "That contact is already a recipient!", Toast.LENGTH_SHORT).show();
-            }
+            contactAdapter.notifyDataSetChanged();
+            // Make sure the most recently added item is in view by scrolling to the bottom.
+            contactsLV.setSelection(contactAdapter.getCount() - 1);
         }
+        else {
+            Toast.makeText(this, R.string.already_recipient, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onFinishEnterPhoneNum(String phoneNum) {
+        addPhoneNumToRecipientList(phoneNum);
+    }
+
+    private void addPhoneNumToRecipientList(String phoneNum) {
+        Contact new_contact = new Contact("", phoneNum);
+        addContactToRecipientList(new_contact);
     }
 
     /**

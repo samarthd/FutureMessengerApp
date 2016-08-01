@@ -1,16 +1,13 @@
 package cs371m.hermes.futuremessenger;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -65,7 +62,6 @@ public class ContactListAdapter extends ArrayAdapter<Contact> {
                 }
             }
         });
-
 
         // Return the completed view to render on screen
         return convertView;

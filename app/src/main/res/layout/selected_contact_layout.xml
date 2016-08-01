@@ -52,7 +52,7 @@
                 android:layout_gravity="center_vertical"
                 android:scaleType="fitXY"
                 android:padding="3dp"
-                android:background="@android:color/transparent"
+                android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/delete_icon" />
     </LinearLayout>
 

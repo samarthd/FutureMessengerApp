@@ -4,7 +4,7 @@
     <string name="edit_message">Edit Message</string>
     <string name="delete_message">Delete Message</string>
     <string name="title_activity_edit_text_message">Edit Text Message</string>
-    <string name="recipients">Recipient</string>
+    <string name="recipients">Recipient(s)</string>
     <string name="create_manage_presets">Create/Manage Presets</string>
     <string name="new_text_message">New Text Message</string>
     <string name="new_picture_message">New Picture Message</string>
@@ -14,6 +14,14 @@
     <string name="recipients_lv">Recipients:&#160;</string>
     <string name="recipient_ids">Recipient ID in database:&#160;</string>
     <string name="currently_scheduled_tv">Scheduled Messages</string>
+    <string name="add_phone_number">ADD A PHONE NUMBER</string>
+    <string name="enter_phone_number">Enter a phone number</string>
+    <string name="choose_contacts">ADD FROM CONTACTS</string>
+    <string name="enter_message">Enter message</string>
+    <string name="cancel">Cancel</string>
+    <string name="add">Add</string>
+    <string name="empty_number">Enter a number</string>
+    <string name="already_recipient">Already a recipient!</string>
     <string name="title_activity_multimedia_message">MultimediaMessageActivity</string>
     <string name="hint_recipients">Enter recipients</string>
     <string name="hint_message">Enter message</string>

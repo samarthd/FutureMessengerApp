@@ -14,4 +14,10 @@
     <string name="recipients_lv">Recipients:&#160;</string>
     <string name="recipient_ids">Recipient ID in database:&#160;</string>
     <string name="currently_scheduled_tv">Scheduled Messages</string>
+    <string name="title_activity_manage_presets">ManagePresets</string>
+    <string name="title_activity_edit_preset">Edit Preset</string>
+    <string name="preset_header_name">Preset Name</string>
+    <string name="preset_header_message">Preset Message</string>
+    <string name="hint_preset_name">Enter a name for preset</string>
+    <string name="hint_preset_message">Enter a message</string>
 </resources>

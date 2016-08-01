@@ -22,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -34,18 +35,16 @@ public class EditTextMessageActivity extends AppCompatActivity
     private Button _time_button;
     private EditText _message_field;
 
+    /**
+     * _calendar holds the Date that the Buttons are displaying
+     */
     Calendar _calendar;
+    /**
+     * some common DateFormat objects we will use
+     */
     private final DateFormat DF_DATE     = DateFormat.getDateInstance(DateFormat.MEDIUM);
     private final DateFormat DF_TIME     = DateFormat.getTimeInstance(DateFormat.SHORT);
     private final DateFormat DF_DATETIME = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-    /* These variables hold the scheduling information that is
-     * given to the button/taken from the button. */
-    private int _hour = 0;
-    private int _minute = 0;
-    private int _year = 0;
-    // January = 0, Februrary = 1, ...
-    private int _month = 0;
-    private int _dayOfMonth = 0;
 
     /* Are we making a brand new message?
      * If we're editing/deleting an existing message, store the ID of it here.
@@ -83,10 +82,16 @@ public class EditTextMessageActivity extends AppCompatActivity
             last_clicked_message_id = intent.getLongExtra("message_id", -1);
             _phonenum_field.setText(intent.getStringExtra("num"));
             _message_field.setText(intent.getStringExtra("message"));
-            String[] timeParsed = intent.getStringExtra("time").split(":");
-            String[] dateParsed = intent.getStringExtra("date").split("-");
-            setTimeButton(Integer.parseInt(timeParsed[0]), Integer.parseInt(timeParsed[1]));
-            setDateButton(Integer.parseInt(dateParsed[0]), Integer.parseInt(dateParsed[1]) - 1, Integer.parseInt(dateParsed[2]));
+            //TODO: Intent should send in date & time as one string
+            String datetime = intent.getStringExtra("date") + " " + intent.getStringExtra("time");
+            Log.d("editing text", datetime);
+            try {
+                _calendar.setTime(DF_DATETIME.parse(datetime));
+            } catch (ParseException e) {
+                //TODO: Major error if this is run, need to do something
+                Log.e("onCreate", "Attempt to parse failed: " + datetime);
+                e.printStackTrace();
+            }
         }
         else {
             // brand new contacts list
@@ -96,15 +101,9 @@ public class EditTextMessageActivity extends AppCompatActivity
             contactsLV.setAdapter(contactAdapter);
 
             last_clicked_message_id = -1;
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-            int hour = c.get(Calendar.HOUR_OF_DAY);
-            int minute = c.get(Calendar.MINUTE);
-            setDateButton(year, month, day);
-            Log.d("onCreate", "Today's month is " + Integer.toString(month));
-            setTimeButton(hour, minute);
+            _calendar = Calendar.getInstance();
+            updateDateButtonText();
+            updateTimeButtonText();
         }
 
         initializeContactChooserButton();
@@ -158,7 +157,14 @@ public class EditTextMessageActivity extends AppCompatActivity
                 else {
                     id = updateSMS(phonenum, message);
                 }
-                setAlarm(id, phonenum, message, _year, _month, _dayOfMonth, _hour, _minute);
+
+                int year = _calendar.get(Calendar.YEAR);
+                int month = _calendar.get(Calendar.MONTH);
+                int day = _calendar.get(Calendar.DAY_OF_MONTH);
+                int hour = _calendar.get(Calendar.HOUR_OF_DAY);
+                int minute = _calendar.get(Calendar.MINUTE);
+                //TODO: Change header?
+                setAlarm(id, phonenum, message, year, month, day, hour, minute);
 
                 returnToMainActivity();
             }
@@ -302,7 +308,7 @@ public class EditTextMessageActivity extends AppCompatActivity
      */
     private long saveSMS(String phoneNum, String date, String time, String message) {
         /* TODO: determine if message wants to be group, or individual
-         * TODO: figure out how to send to multiple contacts
+         * TODO: save numbers as "5554;5556;5558;..."
          */
         long result = -1;
         try {
@@ -340,13 +346,9 @@ public class EditTextMessageActivity extends AppCompatActivity
         return result;
     }
 
+    //TODO: Remove (if not used often), or change name to be more descriptive of what it does
     private String getDateTimeFromButtons() {
-        String iso_date = _date_button.getText().toString();
-        String iso_time = (_hour < 10 ?"0":"") + Integer.toString(_hour)
-                + (_minute < 10 ?":0":":") + Integer.toString(_minute)
-                + ":00";
-        Log.d("getDateTimeFromButtons", iso_date + " " + iso_time);
-        return iso_date + " " + iso_time;
+        return DF_DATETIME.format(_calendar.getTime());
     }
 
     /**
@@ -360,75 +362,54 @@ public class EditTextMessageActivity extends AppCompatActivity
     }
 
     public void showTimePickerDialog (View v) {
-        DialogFragment newFragment = TimePickerFragment.newInstance(_hour, _minute);
+        int hr = _calendar.get(Calendar.HOUR_OF_DAY);
+        int min = _calendar.get(Calendar.MINUTE);
+
+        DialogFragment newFragment = TimePickerFragment.newInstance(hr, min);
         newFragment.show(getFragmentManager(), "timePicker");
     }
 
-    /**
-     * Implement the TimePickerListener method
-     * @param hour the hour selected
-     * @param minute the minute selected
-     */
-    @Override
-    public void onTimeSelected (int hour, int minute) {
-        setTimeButton(hour, minute);
-    }
-
     public void showDatePickerDialog (View v) {
-        DialogFragment newFragment = DatePickerFragment.newInstance(_year, _month, _dayOfMonth);
+        int y = _calendar.get(Calendar.YEAR);
+        int m = _calendar.get(Calendar.MONTH);
+        int d = _calendar.get(Calendar.DAY_OF_MONTH);
+        DialogFragment newFragment = DatePickerFragment.newInstance(y, m, d);
         newFragment.show(getFragmentManager(), "datePicker");
     }
 
     /**
-     * Implement the DatePickerFragment method
+     * Method called by DatePickerDialogFragment, once user has selected the date
      * @param year the year selected
      * @param month the month selected
      * @param dayOfMonth the day of month selected
      */
     @Override
     public void onDateSelected(int year, int month, int dayOfMonth) {
-        // setDateButton does exactly what this should do,
-        // but that function gets used outside of the Fragment
-        // so we simply use that
-        setDateButton(year, month, dayOfMonth);
+        _calendar.set(Calendar.YEAR, year);
+        _calendar.set(Calendar.MONTH, month);
+        _calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        updateDateButtonText();
     }
 
-    public void setTimeButton(int h, int m) {
-        _hour = h;
-        _minute = m;
-        _time_button.setText(buildTimeString(h, m));
+    /**
+     * Method called by TimePickerDialogFragment, once user has selected the time
+     * @param hour the hour selected
+     * @param minute the minute selected
+     */
+    @Override
+    public void onTimeSelected (int hour, int minute) {
+        _calendar.set(Calendar.HOUR_OF_DAY, hour);
+        _calendar.set(Calendar.MINUTE, minute);
+        updateTimeButtonText();
+        // setTimeButton(hour, minute);
     }
 
-    public void setDateButton(int y, int m, int d) {
-        _year = y;
-        _month = m;
-        _dayOfMonth = d;
-        _date_button.setText(buildDateString(y, m, d));
+    private void updateTimeButtonText() {
+        _time_button.setText(DF_TIME.format(_calendar.getTime()));
     }
 
-
-    public int get_hour() { return _hour; }
-
-    public int get_minute() { return _minute; }
-
-    public int get_year() { return _year; }
-
-    public int get_month() { return _month; }
-
-    public int get_dayOfMonth() { return _dayOfMonth; };
-
-    private String buildDateString (int y, int m, int d) {
-        String date = Integer.toString(y);
-        date = date + (m + 1 < 10?"-0":"-") + Integer.toString(m + 1);
-        date = date + (d < 10?"-0":"-") + Integer.toString(d);
-        return date;
-    }
-
-    private String buildTimeString (int h, int m) {
-        String time = (h % 12 == 0? "12" : Integer.toString(h%12) ) + ":"
-                + (m < 10 ? "0" : "") + Integer.toString(m)
-                + (h < 12 ? " AM":" PM");
-        return time;
+    private void updateDateButtonText() {
+        _date_button.setText(DF_DATE.format(_calendar.getTime()));
     }
 
 }

@@ -31,7 +31,6 @@
             android:name=".EditTextMessageActivity"
             android:label="@string/title_activity_edit_text_message"
             android:windowSoftInputMode="adjustPan|stateHidden"
-            android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />

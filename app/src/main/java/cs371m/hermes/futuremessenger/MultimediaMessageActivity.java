@@ -38,8 +38,8 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        LinearLayout ib = (LinearLayout) findViewById(R.id.layout_attachment);
-        ib.setVisibility(View.VISIBLE);
+        LinearLayout layout_ib = (LinearLayout) findViewById(R.id.layout_attachment);
+        layout_ib.setVisibility(View.VISIBLE);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -124,7 +124,7 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
                     try {
                         InputStream imageStream = getContentResolver().openInputStream(selectedImage);
                         Bitmap yourSelectedImage = BitmapFactory.decodeStream(imageStream);
-                        ImageButton ib = (ImageButton) findViewById(R.id.mms_image_button);
+                        ImageButton ib = (ImageButton) findViewById(R.id.button_attachment);
                         ib.setImageBitmap(yourSelectedImage);
                     } catch (FileNotFoundException e) {
                         Log.d("onActivityResult", "FILE NOT FOUND");

@@ -24,6 +24,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 //TODO: Have these activities extend an MessageActivity, to remove duplicate code
 public class MultimediaMessageActivity extends AppCompatActivity implements DatePickerFragment.DatePickerListener, TimePickerFragment.TimePickerListener {
@@ -36,13 +42,11 @@ public class MultimediaMessageActivity extends AppCompatActivity implements Date
     private EditText _message_field;
     private Uri _image_uri;
 
-    /* These variables hold the scheduling information that is
-     * given to the button/taken from the button. */
-    private int _hour = 0;
-    private int _minute = 0;
-    private int _year = 0;
-    private int _month = 0; // January = 0, February = 1, ...
-    private int _dayOfMonth = 0;
+    /* Calendar which by the buttons */
+    private Calendar _calendar;
+    private final DateFormat df_date     = new SimpleDateFormat("EEE, MMM dd, yyyy", Locale.US); //TODO: replace with DateFormat.getDateInstance(DateFormat.MEDIUM) ?
+    private final DateFormat df_time     = new SimpleDateFormat("h:mm a", Locale.US); //TODO: replace with DateFormat.getTimeInstance(DateFormat.SHORT) ?
+    private final DateFormat df_datetime = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 
     /* Are we making a brand new message?
      * If we're editing/deleting an existing message, store the ID of it here.
@@ -57,6 +61,10 @@ public class MultimediaMessageActivity extends AppCompatActivity implements Date
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        _calendar = Calendar.getInstance();
+        setDateButtonText();
+        setTimeButtonText();
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +74,19 @@ public class MultimediaMessageActivity extends AppCompatActivity implements Date
                 if (_image_uri != null) {
                     copyImage();
                 }
+
+                //TODO: Keep as reference for now, but remove this later
+//                _calendar.set(Calendar.SECOND, 0);
+//                Log.d("Click", df_datetime.format(_calendar.getTime()));
+//                String temp_datetime = "2020-12-31 03:59:00";
+//                try {
+//                    Date date = df_datetime.parse(temp_datetime);
+//                    Calendar c = (Calendar) _calendar.clone();
+//                    c.setTime(date);
+//                    printCalendar(c);
+//                } catch (ParseException e) {
+//                    e.printStackTrace();
+//                }
             }
         });
 
@@ -191,5 +212,24 @@ public class MultimediaMessageActivity extends AppCompatActivity implements Date
             }
         }
         return result;
+    }
+
+    public void setDateButtonText() {
+        Button b = (Button) findViewById(R.id.mms_button_date);
+
+        Log.d("Date", df_date.format(_calendar.getTime()) );
+        b.setTransformationMethod(null);
+        b.setText(df_date.format(_calendar.getTime()));
+    }
+
+    public void setTimeButtonText() {
+        Button b = (Button) findViewById(R.id.mms_button_time);
+
+        Log.d("Date", df_time.format(_calendar.getTime()) );
+        b.setText(df_time.format(_calendar.getTime()));
+    }
+
+    private void printCalendar(Calendar c, DateFormat df) {
+        Log.d("print", df.format(c.getTime()));
     }
 }

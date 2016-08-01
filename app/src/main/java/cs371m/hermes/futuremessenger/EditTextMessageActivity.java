@@ -21,6 +21,8 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -32,6 +34,10 @@ public class EditTextMessageActivity extends AppCompatActivity
     private Button _time_button;
     private EditText _message_field;
 
+    Calendar _calendar;
+    private final DateFormat DF_DATE     = DateFormat.getDateInstance(DateFormat.MEDIUM);
+    private final DateFormat DF_TIME     = DateFormat.getTimeInstance(DateFormat.SHORT);
+    private final DateFormat DF_DATETIME = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     /* These variables hold the scheduling information that is
      * given to the button/taken from the button. */
     private int _hour = 0;

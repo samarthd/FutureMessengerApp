@@ -120,11 +120,32 @@
             android:layout_below="@id/textview_datetime"
             android:onClick="showTimePickerDialog" />
     </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/layout_attachment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_below="@id/layout_datetime"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Image"
+            android:textSize="18sp"/>
+        <ImageButton android:id="@+id/button_attachment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:scaleType="fitCenter"
+            android:maxHeight="60dp"
+            android:src="@drawable/picture_icon"
+            android:onClick="selectAttachment"/>
+    </LinearLayout>
     <LinearLayout android:id="@+id/layout_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_below="@id/layout_datetime">
+        android:layout_below="@id/layout_attachment">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

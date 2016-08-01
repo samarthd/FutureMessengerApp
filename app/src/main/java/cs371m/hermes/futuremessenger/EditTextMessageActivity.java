@@ -272,7 +272,7 @@ public class EditTextMessageActivity extends AppCompatActivity
      * @param phoneNum
      * @param message
      */
-    private void setAlarm(long id, String phoneNum, String message, int year, int month, int day, int hour, int minute){
+    protected void setAlarm(long id, String phoneNum, String message, int year, int month, int day, int hour, int minute){
         /* Set the alarm with the selected parameters */
         Intent alarmIntent = new Intent(EditTextMessageActivity.this, AlarmReceiver.class);
         Bundle bundle = new Bundle();
@@ -355,7 +355,7 @@ public class EditTextMessageActivity extends AppCompatActivity
      * Because this activity was started for a result, return to
      * the MainActivity and send it an "OK" result code.
      */
-    private void returnToMainActivity() {
+    protected void returnToMainActivity() {
         Intent ret = new Intent(this, MainActivity.class);
         setResult(MainActivity.RESULT_OK, ret);
         finish();
@@ -404,11 +404,11 @@ public class EditTextMessageActivity extends AppCompatActivity
         // setTimeButton(hour, minute);
     }
 
-    private void updateTimeButtonText() {
+    protected void updateTimeButtonText() {
         _time_button.setText(DF_TIME.format(_calendar.getTime()));
     }
 
-    private void updateDateButtonText() {
+    protected void updateDateButtonText() {
         _date_button.setText(DF_DATE.format(_calendar.getTime()));
     }
 

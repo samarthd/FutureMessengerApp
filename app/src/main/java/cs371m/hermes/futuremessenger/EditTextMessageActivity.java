@@ -11,18 +11,17 @@ import android.provider.ContactsContract;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.telephony.SmsManager;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 public class EditTextMessageActivity extends AppCompatActivity {
 
@@ -62,7 +61,6 @@ public class EditTextMessageActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
         _contact_field = (EditText) findViewById(R.id.recipients_field);
         _message_field = (EditText) findViewById(R.id.message_field);
         _date_button = (Button) findViewById(R.id.button_date);
@@ -73,9 +71,7 @@ public class EditTextMessageActivity extends AppCompatActivity {
         Bundle extras = intent.getExtras();
         // If these extras aren't null, then we're editing an existing message.
         if (extras != null) {
-
             //TODO: Initialize currently selected contacts to have all the existing contacts.
-
             last_clicked_message_id = intent.getLongExtra("message_id", -1);
             _contact_field.setText(intent.getStringExtra("num"));
             _message_field.setText(intent.getStringExtra("message"));
@@ -85,7 +81,6 @@ public class EditTextMessageActivity extends AppCompatActivity {
             setDateButton(Integer.parseInt(dateParsed[0]), Integer.parseInt(dateParsed[1]) - 1, Integer.parseInt(dateParsed[2]));
         }
         else {
-
             // brand new contacts list
             currently_selected_contacts = new ArrayList<>();
             contactAdapter = new ContactListAdapter(this, currently_selected_contacts);
@@ -104,8 +99,13 @@ public class EditTextMessageActivity extends AppCompatActivity {
             setTimeButton(hour, minute);
         }
 
+        initializeContactChooserButton();
+        initializeScheduleButton();
 
-        // When the contact button is clicked, launch the contact picker.
+    }
+
+    // When the contact button is clicked, launch the contact picker.
+    private void initializeContactChooserButton() {
         Button choose_contact = (Button) findViewById(R.id.choose_contact_button);
         choose_contact.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,7 +117,10 @@ public class EditTextMessageActivity extends AppCompatActivity {
 
             }
         });
+    }
 
+    // Initialize the schedule button.
+    private void initializeScheduleButton() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,7 +145,6 @@ public class EditTextMessageActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -164,14 +166,11 @@ public class EditTextMessageActivity extends AppCompatActivity {
         boolean showErrorToast = false;
         Uri contact_uri = data.getData();
 
-
         // Get the contact's name.
         Cursor cursor = getContentResolver()
                 .query(contact_uri, null,
                 null, null, null);
-
         String name = "";
-
         if (cursor.moveToFirst()) {
             int nameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
             name = cursor.getString(nameIndex);
@@ -183,7 +182,6 @@ public class EditTextMessageActivity extends AppCompatActivity {
         // Get the contact's phone number.
         String phoneNumber = "";
         String contact_ID = contact_uri.getLastPathSegment();
-
         Cursor num_cursor = getContentResolver()
                             .query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
                                    ContactsContract.CommonDataKinds.Phone._ID + "=?" ,
@@ -191,26 +189,40 @@ public class EditTextMessageActivity extends AppCompatActivity {
         if (num_cursor.moveToFirst()){
             int phoneIndex = num_cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DATA);
             phoneNumber = num_cursor.getString(phoneIndex);
+            phoneNumber = PhoneNumberUtils.formatNumber(phoneNumber);
         }
         else {
             showErrorToast = true;
         }
 
+
         if (showErrorToast)
             Toast.makeText(this, "Something went wrong with that contact.", Toast.LENGTH_SHORT).show();
         else {
             Contact current_contact = new Contact(name, phoneNumber);
+            ListView contactsLV = (ListView) findViewById(R.id.selected_contacts_list);
             // Only add this new contact if we haven't already added it.
             if (!currently_selected_contacts.contains(current_contact)) {
                 currently_selected_contacts.add(current_contact);
+                /* If the size of the list is now greater than 3, restrict the ListView height
+                   This solution was found on:
+                   http://stackoverflow.com/questions/5487552/limit-height-of-listview-on-android
+                   http://stackoverflow.com/questions/14020859/change-height-of-a-listview-dynamicallyandroid */
+                if (currently_selected_contacts.size() > 3) {
+                    RelativeLayout.LayoutParams list = (RelativeLayout.LayoutParams) contactsLV.getLayoutParams();
+                    View item = contactAdapter.getView(0, null, contactsLV);
+                    item.measure(0,0);
+                    list.height = (int) (3.5 * item.getMeasuredHeight());
+                    contactsLV.setLayoutParams(list);
+                }
                 contactAdapter.notifyDataSetChanged();
+                // Make sure the most recently added item is in view by scrolling to the bottom.
+                contactsLV.setSelection(contactAdapter.getCount() - 1);
             }
             else {
                 Toast.makeText(this, "That contact is already a recipient!", Toast.LENGTH_SHORT).show();
             }
         }
-
-
     }
 
     /**

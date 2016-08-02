@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -54,10 +55,18 @@ public class ContactListAdapter extends ArrayAdapter<Contact> {
                 remove(getItem(index.intValue()));
                 // Resize the list view height if the size has just decreased below the
                 // threshold of 4.
-                if (sizeBeforeDelete == 4) {
-                    RelativeLayout.LayoutParams param =
-                            (RelativeLayout.LayoutParams) parent.getLayoutParams();
-                    param.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
+                if (sizeBeforeDelete <= 4) {
+                    LinearLayout.LayoutParams param =
+                            (LinearLayout.LayoutParams) parent.getLayoutParams();
+
+                    int numRows = getCount();
+                    int sumHeight = 0;
+                    for (int i = 0; i < numRows; i++) {
+                        View item = getView(i, null, parent);
+                        item.measure(0, 0);
+                        sumHeight += item.getMeasuredHeight();
+                    }
+                    param.height = sumHeight;
                     parent.setLayoutParams(param);
                 }
             }

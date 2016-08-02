@@ -18,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -124,9 +125,11 @@ public class EditTextMessageActivity extends AppCompatActivity
         contactsLV.setAdapter(contactAdapter);
         adjustListHeight(contactsLV);
 
+        preventEditTextTouchIntercept();
         initializeContactChooserButton();
         initializePhoneNumberButton();
         initializeScheduleButton();
+
 
     }
 
@@ -206,6 +209,20 @@ public class EditTextMessageActivity extends AppCompatActivity
                 currently_selected_contacts.add(new_contact);
             }
         }
+    }
+
+    // The entire activity is in a ScrollView, so it intercepts other scrollable items.
+    // This enables the message edittext to be scrolled.
+    private void preventEditTextTouchIntercept() {
+        EditText textContentInput = (EditText) findViewById(R.id.message_field);
+        textContentInput.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+
     }
 
 
@@ -289,13 +306,23 @@ public class EditTextMessageActivity extends AppCompatActivity
        http://stackoverflow.com/questions/5487552/limit-height-of-listview-on-android
        http://stackoverflow.com/questions/14020859/change-height-of-a-listview-dynamicallyandroid */
     private void adjustListHeight(ListView contactsLV) {
-        if (currently_selected_contacts.size() > 3) {
-            RelativeLayout.LayoutParams list = (RelativeLayout.LayoutParams) contactsLV.getLayoutParams();
+        LinearLayout.LayoutParams list = (LinearLayout.LayoutParams) contactsLV.getLayoutParams();
+        int numRows = contactAdapter.getCount();
+        if (numRows > 3) {
             View item = contactAdapter.getView(0, null, contactsLV);
             item.measure(0,0);
             list.height = (int) (3.5 * item.getMeasuredHeight());
-            contactsLV.setLayoutParams(list);
         }
+        else {
+            int sumHeight = 0;
+            for (int i = 0; i < numRows; i++) {
+                View item = contactAdapter.getView(i, null, contactsLV);
+                item.measure(0, 0);
+                sumHeight += item.getMeasuredHeight();
+            }
+            list.height = sumHeight;
+        }
+        contactsLV.setLayoutParams(list);
     }
 
     @Override

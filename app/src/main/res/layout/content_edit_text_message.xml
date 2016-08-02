@@ -16,38 +16,41 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context="cs371m.hermes.futuremessenger.EditTextMessageActivity"
         tools:showIn="@layout/activity_edit_text_message">
-
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/layout_recipients"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
-            <TextView
-                android:id="@+id/recipients_tv"
+            <LinearLayout
+                android:id="@+id/recipients_list_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/recipients"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:paddingTop="8dp" />
-            <ListView
-                android:id="@+id/selected_contacts_list"
-                android:layout_below="@id/recipients_tv"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:transcriptMode="alwaysScroll"
-                android:divider="@null"
-                android:dividerHeight="0dp">
-            </ListView>
+                android:paddingTop="8dp"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/recipients_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/recipients"
+                    android:textStyle="bold"
+                    android:textSize="18sp" />
+                <ListView
+                    android:id="@+id/selected_contacts_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:transcriptMode="alwaysScroll"
+                    android:divider="@null"
+                    android:dividerHeight="0dp">
+                </ListView>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/input_buttons_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:orientation="horizontal"
-                android:layout_below="@id/selected_contacts_list">
+                android:orientation="horizontal">
                 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/choose_contact_button"
@@ -63,9 +66,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:textColor="@color/plain_white"
+                        android:text="@string/choose_contacts"
                         android:padding="10dp"
                         android:gravity="center"
-                        android:text="@string/choose_contacts"
+                        android:textSize="15sp"
                         android:textStyle="bold"/>
                 </android.support.v7.widget.CardView>
 
@@ -85,6 +89,7 @@
                         android:layout_height="match_parent"
                         android:textColor="@color/plain_white"
                         android:text="@string/add_phone_number"
+                        android:textSize="15sp"
                         android:gravity="center"
                         android:textStyle="bold"
                         android:padding="10dp" />
@@ -95,12 +100,11 @@
                 android:id="@+id/recipients_field"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/input_buttons_layout"
                 android:inputType="phone"
                 android:hint="@string/add_phone_number"
                 android:layout_marginStart="20dp"
                 android:layout_marginLeft="20dp" />
-        </RelativeLayout>
+        </LinearLayout>
         <RelativeLayout
             android:id="@+id/layout_datetime"
             android:layout_width="match_parent"
@@ -111,6 +115,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/date_and_time"
+                android:textStyle="bold"
                 android:textSize="18sp" />
             <Button
                 android:id="@+id/button_date"
@@ -161,15 +166,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/header_text"
-                android:textSize="18sp"/>
+                android:textSize="18sp"
+                android:textStyle="bold"/>
             <EditText
                 android:id="@+id/message_field"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:inputType="textImeMultiLine"
+                android:layout_weight="1"
+                android:inputType="textCapSentences|textMultiLine"
+                android:minLines="1"
+                android:maxLines="5"
+                android:scrollHorizontally="false"
                 android:imeOptions="actionDone"
                 android:hint="@string/enter_message"
-                android:layout_marginStart="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_marginLeft="20dp" />
         </LinearLayout>
     </LinearLayout>

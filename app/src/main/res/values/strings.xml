@@ -28,7 +28,7 @@
     <string name="header_datetime">Date &amp; Time</string>
     <string name="error">ERROR</string>
     <string name="header_image">Image</string>
-    <string name="header_text">Text</string>
+    <string name="header_text">Text:</string>
     <string name="title_activity_manage_presets">ManagePresets</string>
     <string name="title_activity_edit_preset">Edit Preset</string>
     <string name="preset_header_name">Preset Name</string>

@@ -11,6 +11,13 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="cs371m.hermes.futuremessenger.EditTextMessageActivity"
     tools:showIn="@layout/activity_edit_text_message">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
     <RelativeLayout android:id="@+id/layout_recipients"
         android:layout_width="match_parent"
@@ -137,7 +144,8 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:scaleType="fitCenter"
-            android:maxHeight="60dp"
+            android:maxHeight="180dp"
+            android:adjustViewBounds="true"
             android:src="@drawable/picture_icon"
             android:onClick="selectAttachment"/>
     </LinearLayout>
@@ -160,4 +168,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginLeft="20dp" />
     </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>

@@ -48,7 +48,11 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
                 // sendMMS("5554;5556", "Hello MMS!");
 //                Log.d("click", _image_uri.getPath().toString());
                 if (_image_uri != null) {
-                    copyImage();
+                    // copyImage();
+                    ImageButton ib = (ImageButton) findViewById(R.id.button_attachment);
+                    Log.d("Image", "max height: " + Integer.toString(ib.getMaxHeight()));
+                    Log.d("Image", "height: " + Integer.toString(ib.getHeight()));
+                    Log.d("Image", "height: " + Integer.toString(ib.getMeasuredHeightAndState()));
                 }
             }
         });
@@ -124,6 +128,7 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
                     try {
                         InputStream imageStream = getContentResolver().openInputStream(selectedImage);
                         Bitmap yourSelectedImage = BitmapFactory.decodeStream(imageStream);
+                        //TODO: fix for very large images
                         ImageButton ib = (ImageButton) findViewById(R.id.button_attachment);
                         ib.setImageBitmap(yourSelectedImage);
                     } catch (FileNotFoundException e) {

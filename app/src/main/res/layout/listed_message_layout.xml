@@ -40,7 +40,7 @@
                 android:text="@string/recipients_lv"
                 android:textStyle="bold"
                 android:textSize="15sp"/>
-            <TextView android:id="@+id/recipient_nums_tv"
+            <TextView android:id="@+id/recipient_names_tv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>

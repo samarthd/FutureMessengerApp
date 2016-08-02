@@ -14,6 +14,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberUtils;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -79,6 +80,9 @@ public class EditTextMessageActivity extends AppCompatActivity
         // If these extras aren't null, then we're editing an existing message.
         if (extras != null) {
             //TODO: Initialize currently selected contacts to have all the existing contacts.
+            buildContactListFromExisting(intent.getStringExtra("recip_names"),
+                                         intent.getStringExtra("recip_nums"));
+
             last_clicked_message_id = intent.getLongExtra("message_id", -1);
             _phonenum_field.setText(intent.getStringExtra("num"));
             _message_field.setText(intent.getStringExtra("message"));
@@ -100,15 +104,25 @@ public class EditTextMessageActivity extends AppCompatActivity
         else {
             // brand new contacts list
             currently_selected_contacts = new ArrayList<>();
-            contactAdapter = new ContactListAdapter(this, currently_selected_contacts);
-            ListView contactsLV = (ListView) findViewById(R.id.selected_contacts_list);
-            contactsLV.setAdapter(contactAdapter);
-
             last_clicked_message_id = -1;
             _calendar = Calendar.getInstance();
             updateDateButtonText();
             updateTimeButtonText();
         }
+
+        ListView contactsLV = (ListView) findViewById(R.id.selected_contacts_list);
+
+        // Ensure the listview's touches won't be stopped by the scrollview
+        contactsLV.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                v.getParent().requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
+        contactAdapter = new ContactListAdapter(this, currently_selected_contacts);
+        contactsLV.setAdapter(contactAdapter);
+        adjustListHeight(contactsLV);
 
         initializeContactChooserButton();
         initializePhoneNumberButton();
@@ -156,10 +170,10 @@ public class EditTextMessageActivity extends AppCompatActivity
                 String message = _message_field.getText().toString();
                 long id;
                 if (last_clicked_message_id == -1) {
-                    id = saveSMS(phonenum, null, null, message);
+                    id = saveSMS(null, null, message);
                 }
                 else {
-                    id = updateSMS(phonenum, message);
+                    id = updateSMS(message);
                 }
 
                 int year = _calendar.get(Calendar.YEAR);
@@ -173,6 +187,25 @@ public class EditTextMessageActivity extends AppCompatActivity
                 returnToMainActivity();
             }
         });
+    }
+
+    // Builds the selected contacts list from given names and numbers delimited by strings.
+    private void buildContactListFromExisting(String recip_names, String recip_nums) {
+        Log.d("Build contact string", "Names: " + recip_names);
+        Log.d("Build contact string", "Numbers: " + recip_nums);
+
+        String[] name_array = recip_names.split(";");
+        String[] num_array = recip_nums.split(";");
+        currently_selected_contacts = new ArrayList<>();
+        if (name_array.length != num_array.length) {
+            Log.d("BuildContactsList", "Lengths of names and numbers are not equal.");
+        }
+        else {
+            for (int i = 0; i < name_array.length; i++) {
+                Contact new_contact = new Contact(name_array[i], num_array[i]);
+                currently_selected_contacts.add(new_contact);
+            }
+        }
     }
 
 
@@ -191,7 +224,7 @@ public class EditTextMessageActivity extends AppCompatActivity
         }
     }
 
-    // Update the selected contacts list
+    // Update the selected contacts list after a user selects a contact.
     private void receiveContactAndAddToList(Intent data) {
 
         boolean showErrorToast = false;
@@ -235,23 +268,13 @@ public class EditTextMessageActivity extends AppCompatActivity
         }
     }
 
-    // Adds a new contact to the recipient list. Ensures no duplicates are added.
+    // Adds a new recipient to the recipient list. Ensures no duplicates are added.
     private void addContactToRecipientList (Contact new_contact) {
         ListView contactsLV = (ListView) findViewById(R.id.selected_contacts_list);
         // Only add this new contact if we haven't already added it.
         if (!currently_selected_contacts.contains(new_contact)) {
             currently_selected_contacts.add(new_contact);
-                /* If the size of the list is now greater than 3, restrict the ListView height
-                   This solution was found on:
-                   http://stackoverflow.com/questions/5487552/limit-height-of-listview-on-android
-                   http://stackoverflow.com/questions/14020859/change-height-of-a-listview-dynamicallyandroid */
-            if (currently_selected_contacts.size() > 3) {
-                RelativeLayout.LayoutParams list = (RelativeLayout.LayoutParams) contactsLV.getLayoutParams();
-                View item = contactAdapter.getView(0, null, contactsLV);
-                item.measure(0,0);
-                list.height = (int) (3.5 * item.getMeasuredHeight());
-                contactsLV.setLayoutParams(list);
-            }
+            adjustListHeight(contactsLV);
             contactAdapter.notifyDataSetChanged();
             // Make sure the most recently added item is in view by scrolling to the bottom.
             contactsLV.setSelection(contactAdapter.getCount() - 1);
@@ -261,13 +284,27 @@ public class EditTextMessageActivity extends AppCompatActivity
         }
     }
 
+    /* If the size of the list is now greater than 3, restrict the ListView height
+       This solution was found on:
+       http://stackoverflow.com/questions/5487552/limit-height-of-listview-on-android
+       http://stackoverflow.com/questions/14020859/change-height-of-a-listview-dynamicallyandroid */
+    private void adjustListHeight(ListView contactsLV) {
+        if (currently_selected_contacts.size() > 3) {
+            RelativeLayout.LayoutParams list = (RelativeLayout.LayoutParams) contactsLV.getLayoutParams();
+            View item = contactAdapter.getView(0, null, contactsLV);
+            item.measure(0,0);
+            list.height = (int) (3.5 * item.getMeasuredHeight());
+            contactsLV.setLayoutParams(list);
+        }
+    }
+
     @Override
     public void onFinishEnterPhoneNum(String phoneNum) {
         addPhoneNumToRecipientList(phoneNum);
     }
 
     private void addPhoneNumToRecipientList(String phoneNum) {
-        Contact new_contact = new Contact("", phoneNum);
+        Contact new_contact = new Contact(" ", phoneNum);
         addContactToRecipientList(new_contact);
     }
 
@@ -303,27 +340,25 @@ public class EditTextMessageActivity extends AppCompatActivity
 
     /**
      * Save the new message into the database
-     * @param phoneNum number to send message to
      * @param date date to send message on
      * @param time time to send the message on
      * @param message the message to send
      *
+     * Sends a text message individually to all specified recipients.
      * Returns the ID of the saved message.
      */
-    private long saveSMS(String phoneNum, String date, String time, String message) {
+    private long saveSMS(String date, String time, String message) {
         /* TODO: determine if message wants to be group, or individual
          * TODO: save numbers as "5554;5556;5558;..."
          */
         long result = -1;
         try {
-            Log.d("saveSMS", phoneNum);
             Log.d("saveSMS", message);
 
             //Save the message
-            String[] phoneNumbers = new String[] {phoneNum};
             String dateTime = getDateTimeFromButtons();
             MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(EditTextMessageActivity.this);
-            result = mDb.storeNewSMS(phoneNumbers, dateTime, message);
+            result = mDb.storeNewSMS(currently_selected_contacts, dateTime, message);
             mDb.close();
 
         } catch (Exception ex) {
@@ -336,16 +371,15 @@ public class EditTextMessageActivity extends AppCompatActivity
 
     // Delete the existing copy of the user-chosen message, and return the ID of the
     // new, updated version.
-    private long updateSMS(String phoneNum, String message) {
+    private long updateSMS(String message) {
         //TODO: Add code to cancel the existing alarm of the message..
-        Log.d("updateSMS", phoneNum);
         Log.d("updateSMS", message);
 
         //Save the message
         String dateTime = getDateTimeFromButtons();
-        String[] phoneNumbers = new String[] {phoneNum};
         MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(EditTextMessageActivity.this);
-        long result = mDb.updateTextMessage(last_clicked_message_id, phoneNumbers, dateTime, message);
+        long result = mDb.updateSMS(last_clicked_message_id, currently_selected_contacts,
+                                            dateTime, message);
         mDb.close();
         return result;
     }

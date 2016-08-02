@@ -92,11 +92,13 @@ public class AlarmReceiver extends Service {
     private void sendSMS(String phoneNum, String message) {
         try {
             Log.d("sendSMS", phoneNum + " " + message);
+            String SENT = "sent";
+            String DELIVERED = "delivered";
 
             /* Create pending intents */
-            Intent sentIntent = new Intent("sent");
+            Intent sentIntent = new Intent(SENT);
             PendingIntent sentPI = PendingIntent.getBroadcast(getApplicationContext(), 0, sentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-            Intent deliveryIntent = new Intent("delivered");
+            Intent deliveryIntent = new Intent(DELIVERED);
             PendingIntent deliverPI = PendingIntent.getBroadcast(getApplicationContext(), 0, deliveryIntent, PendingIntent.FLAG_UPDATE_CURRENT);
             /* Register for SMS send action */
             registerReceiver(new BroadcastReceiver() {
@@ -133,7 +135,7 @@ public class AlarmReceiver extends Service {
 
             SmsManager sms = SmsManager.getDefault();
             sms.sendTextMessage(phoneNum, null, message, sentPI, deliverPI);
-            Log.d("sendSMS", "Text sent?");
+            Log.d("sendSMS", "Text sent");
         } catch (Exception ex) {
             ex.printStackTrace();
         }

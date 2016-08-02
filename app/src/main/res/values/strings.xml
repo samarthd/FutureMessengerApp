@@ -22,4 +22,9 @@
     <string name="add">Add</string>
     <string name="empty_number">Enter a number</string>
     <string name="already_recipient">Already a recipient!</string>
+    <string name="title_activity_multimedia_message">MultimediaMessageActivity</string>
+    <string name="hint_recipients">Enter recipients</string>
+    <string name="hint_message">Enter message</string>
+    <string name="header_datetime">Date &amp; Time</string>
+    <string name="error">ERROR</string>
 </resources>

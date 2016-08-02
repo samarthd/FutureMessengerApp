@@ -105,8 +105,7 @@
             android:id="@+id/layout_datetime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_below="@id/layout_recipients">
+            android:orientation="vertical">
             <TextView
                 android:id="@+id/textview_datetime"
                 android:layout_width="match_parent"
@@ -117,7 +116,7 @@
                 android:id="@+id/button_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ERROR"
+                android:text="@string/error"
                 android:layout_below="@id/textview_datetime"
                 android:layout_marginLeft="18dp"
                 android:onClick="showDatePickerDialog" />
@@ -125,7 +124,7 @@
                 android:id="@+id/button_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="ERROR"
+                android:text="@string/error"
                 android:layout_toRightOf="@id/button_date"
                 android:layout_toEndOf="@id/button_date"
                 android:layout_below="@id/textview_datetime"
@@ -136,12 +135,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_below="@id/layout_datetime"
             android:visibility="gone">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Image"
+                android:text="@string/header_image"
                 android:textSize="18sp"/>
             <ImageButton
                 android:id="@+id/button_attachment"
@@ -149,7 +147,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:scaleType="fitCenter"
-                android:maxHeight="60dp"
+                android:maxHeight="180dp"
+                android:adjustViewBounds="true"
                 android:src="@drawable/picture_icon"
                 android:onClick="selectAttachment"/>
         </LinearLayout>
@@ -157,12 +156,11 @@
             android:id="@+id/layout_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_below="@id/layout_attachment">
+            android:orientation="vertical">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Text"
+                android:text="@string/header_text"
                 android:textSize="18sp"/>
             <EditText
                 android:id="@+id/message_field"

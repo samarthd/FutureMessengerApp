@@ -27,4 +27,6 @@
     <string name="hint_message">Enter message</string>
     <string name="header_datetime">Date &amp; Time</string>
     <string name="error">ERROR</string>
+    <string name="header_image">Image</string>
+    <string name="header_text">Text</string>
 </resources>

@@ -31,7 +31,6 @@ import java.util.Calendar;
 public class EditTextMessageActivity extends AppCompatActivity
         implements EnterPhoneNumberDialogFragment.EnterPhoneNumberListener, DatePickerFragment.DatePickerListener, TimePickerFragment.TimePickerListener {
 
-    private EditText _phonenum_field;
     private TextView _date_button;
     private TextView _time_button;
     private EditText _message_field;
@@ -72,7 +71,6 @@ public class EditTextMessageActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        _phonenum_field = (EditText) findViewById(R.id.recipients_field);
         _message_field = (EditText) findViewById(R.id.message_field);
         _date_button = (TextView) findViewById(R.id.button_date).findViewById(R.id.button_date_text);
         _time_button = (TextView) findViewById(R.id.button_time).findViewById(R.id.button_time_text);
@@ -87,7 +85,6 @@ public class EditTextMessageActivity extends AppCompatActivity
                                          intent.getStringExtra("recip_nums"));
 
             last_clicked_message_id = intent.getLongExtra("message_id", -1);
-            _phonenum_field.setText(intent.getStringExtra("num"));
             _message_field.setText(intent.getStringExtra("message"));
             //TODO: Intent should send in date & time as one string
             String datetime = intent.getStringExtra("date") + " " + intent.getStringExtra("time");
@@ -172,7 +169,6 @@ public class EditTextMessageActivity extends AppCompatActivity
                 Log.d("FabButton", "Message Send button pressed.");
 
                 /* TODO: add in sending of dates and time */
-                String phonenum = _phonenum_field.getText().toString();
                 String message = _message_field.getText().toString();
                 long id;
                 if (last_clicked_message_id == -1) {
@@ -188,12 +184,29 @@ public class EditTextMessageActivity extends AppCompatActivity
                 int hour = _calendar.get(Calendar.HOUR_OF_DAY);
                 int minute = _calendar.get(Calendar.MINUTE);
                 //TODO: Change header?
-                setAlarm(id, phonenum, message, year, month, day, hour, minute);
 
+                //TODO ENSURE AND ENFORCE THAT ALL FIELDS HAVE BEEN FILLED
+                //TODO IDENTIFY WHETHER A MESSAGE IS GROUP, PICTURE, OR INDIVIDUAL, STORE THAT IN DATABASE
+                //TODO SET ONE ALARM WITH JUST THE MESSAGE ID
+
+                setIndividualTextAlarms(id, message, year, month, day, hour, minute);
                 returnToMainActivity();
             }
         });
     }
+
+    //TODO REMOVE THIS
+    // Set alarm for all recipients of this text message (individually)
+    private void setIndividualTextAlarms(long id, String message, int year, int month,
+                                                    int day, int hour, int minute) {
+        for (Contact thisContact : currently_selected_contacts) {
+            String thisNum = thisContact.getPhoneNum();
+            setAlarm(id, thisNum, message, year, month, day, hour, minute);
+            Log.d("SETTING INDIV ALARM", "Phonenumber = " + thisNum);
+        }
+        Toast.makeText(EditTextMessageActivity.this, "Saved your message!", Toast.LENGTH_SHORT).show();
+    }
+
 
     // Builds the selected contacts list from given names and numbers delimited by strings.
     private void buildContactListFromExisting(String recip_names, String recip_nums) {
@@ -365,8 +378,6 @@ public class EditTextMessageActivity extends AppCompatActivity
         calendar.set(year, month, day, hour, minute);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         Log.d("setAlarm", "Message id = " + Long.toString(id));
-
-        Toast.makeText(EditTextMessageActivity.this, "Saved your message!", Toast.LENGTH_SHORT).show();
     }
 
 

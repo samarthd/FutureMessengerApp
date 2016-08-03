@@ -69,9 +69,9 @@ public class AlarmReceiver extends Service {
         Log.d("AlarmReciever: onStart", "About to send SMS");
 
         sendSMS(phoneNum, message);
-        MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
+/*        MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
         mDb.deleteMessage(messageID);
-        mDb.close();
+        mDb.close();*/
         broadcastRefreshLV();
         //Update the MainActivity to have the right value.
 

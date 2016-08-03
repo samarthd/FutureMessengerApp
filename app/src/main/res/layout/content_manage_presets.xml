@@ -2,32 +2,37 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="16dp"
+    android:paddingBottom="8dp"
+    android:paddingRight="8dp"
+    android:paddingLeft="8dp"
+    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="cs371m.hermes.futuremessenger.MainActivity"
-    tools:showIn="@layout/activity_main">
+    tools:context="cs371m.hermes.futuremessenger.ManagePresets"
+    tools:showIn="@layout/activity_manage_presets">
+
 
     <ListView
-        android:id="@+id/scheduled_messages_list"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
+        android:id="@+id/presets_lv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:dividerHeight="0dp"
         android:divider="@null"
-        android:drawSelectorOnTop="true">
-    </ListView>
+        android:dividerHeight="0dp"
+        android:drawSelectorOnTop="true"/>
+
     <TextView
-        android:id="@+id/empty_messages_list_tv"
+        android:id="@+id/empty_preset_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="25dp"
         android:layout_gravity="center"
         android:gravity="center"
-        android:includeFontPadding="false"
-        android:text="@string/no_scheduled_messages"
+        android:padding="9dp"
+        android:text="@string/no_presets_message"
         android:textStyle="bold"
-        android:textSize="15sp" />
+        android:textSize="15sp"/>
+
+
 </LinearLayout>
+

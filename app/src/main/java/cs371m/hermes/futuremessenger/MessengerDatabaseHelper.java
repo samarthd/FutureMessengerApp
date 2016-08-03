@@ -10,6 +10,7 @@ import android.util.Log;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -42,14 +43,13 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
     public static final String RECIP_ID = "RECIPIENT_ID";
     public static final String MESS_ID = "MESSAGE_ID";
 
- /* TODO:
-    Table column names for beta.
+
 
     // Names of various columns in the Preset table in the database.
     public static final String PRESET_TABLE_NAME = "preset_table";
     public static final String PRESET_ID = "ID";
     public static final String PRESET_NAME = "NAME";
-    public static final String PRESET_CONTENT = "CONTENT";*/
+    public static final String PRESET_CONTENT = "CONTENT";
 
 
     private static final String TAG = "IN DATABASE HELPER";
@@ -100,13 +100,13 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         Log.d(TAG, "CREATING ASSOC TABLE: " + createRecMessTable);
         db.execSQL(createRecMessTable);
 
-/*     TODO:
-       In beta, create the preset table.
        // Create the Preset table that will hold our presets.
         db.execSQL("create table " + PRESET_TABLE_NAME + "(" +
                 PRESET_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 PRESET_NAME + " TEXT," +
-                PRESET_CONTENT + " TEXT)");*/
+                PRESET_CONTENT + " TEXT)");
+        Log.d(TAG, "CREATING PRESET TABLE");
+
     }
 
     @Override
@@ -114,14 +114,13 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + RECIPIENT_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + MESSAGE_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + REC_MESS_TABLE_NAME);
-        //TODO: Add this line in beta for presets.
-        //db.execSQL("DROP TABLE IF EXISTS " + PRESET_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + PRESET_TABLE_NAME);
         onCreate(db);
     }
 
     /* Store a new SMS message to be sent to one or more recipient phone numbers.
      * Returns ID of the message on success, -1 on failure. */
-    public long storeNewSMS(String[] phoneNumbers, String dateTime, String message) {
+    public long storeNewSMS(ArrayList<Contact> recipients_list, String dateTime, String message) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         // Store the message in the database.
@@ -129,9 +128,9 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         if (message_id == -1)
             return -1;
 
-        for (String phoneNumber : phoneNumbers) {
+        for (Contact recipient : recipients_list) {
             //Store this recipient in the database.
-            long recipient_id = storeRecipient(phoneNumber);
+            long recipient_id = storeRecipient(recipient);
 
             //Store an association between this recipient and the message.
             ContentValues assocContentValues = new ContentValues();
@@ -151,9 +150,11 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
        it will store a new recipient in the database and return the newly
        created recipient ID. If an error occurs, it will return -1.
      */
-    private long storeRecipient(String phoneNumber) {
+    private long storeRecipient(Contact recipient) {
         SQLiteDatabase db = getWritableDatabase();
 
+        String phoneNumber = recipient.getPhoneNum();
+        String name = recipient.getName();
         // Search for this phone number in our database.
         Cursor cursor = db.query(RECIPIENT_TABLE_NAME, new String[] {RECIPIENT_ID},
                 RECIPIENT_PHONE_NUMBER + "=?", new String[] {phoneNumber},null, null, null);
@@ -165,6 +166,9 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         if (cursor.getCount() == 0) {
             // make new recipient
             ContentValues recipContentValues = new ContentValues();
+            Log.d("Store Recipient", "Name = " + name);
+            Log.d("Store Recipient", "Number = " + phoneNumber);
+            recipContentValues.put(RECIPIENT_NAME, name);
             recipContentValues.put(RECIPIENT_PHONE_NUMBER, phoneNumber);
             recipient_id = db.insert(RECIPIENT_TABLE_NAME, null, recipContentValues);
         }
@@ -213,8 +217,9 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         String sql_select = "SELECT M." + MESSAGE_ID + " AS _id, "+
                             "M." + MESSAGE_TXT_CONTENT + ", " +
                             "M." + MESSAGE_FORMATTED_DT + ", " +
-                            "GROUP_CONCAT(" + "R." + RECIPIENT_ID + ") AS RECIPIENT_IDS, " +
-                            "GROUP_CONCAT(" + "R." + RECIPIENT_PHONE_NUMBER + ") AS RECIPIENT_NUMBERS " +
+                            "GROUP_CONCAT(" + "R." + RECIPIENT_ID + ", ';') AS RECIPIENT_IDS, " +
+                            "GROUP_CONCAT(" + "R." + RECIPIENT_NAME + ", ';') AS RECIPIENT_NAMES, " +
+                            "GROUP_CONCAT(" + "R." + RECIPIENT_PHONE_NUMBER + ", ';') AS RECIPIENT_NUMBERS " +
                             "FROM " + MESSAGE_TABLE_NAME + " AS M" +
                             " LEFT JOIN " + REC_MESS_TABLE_NAME + " AS RM ON RM." + MESS_ID + "=_id" +
                             " LEFT JOIN " + RECIPIENT_TABLE_NAME + " AS R ON RM." + RECIP_ID + "=R." + RECIPIENT_ID +
@@ -227,7 +232,7 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
     }
 
     /* Get some basic data about only one message. Used to populate fields in the
-     * EditTextMessageActivity. */
+     * message editing activities. */
     public String[] getScheduledMessageData(long message_id){
 
         SQLiteDatabase db = getWritableDatabase();
@@ -235,8 +240,9 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         //Make a query for that message and its basic information.
         String sql_select = "SELECT M."+ MESSAGE_ID + ", M." + MESSAGE_DATETIME + ", " +
                 "M." + MESSAGE_TXT_CONTENT + ", " +
-                "GROUP_CONCAT(" + "R." + RECIPIENT_ID + ") AS RECIPIENT_IDS, " +
-                "GROUP_CONCAT(" + "R." + RECIPIENT_PHONE_NUMBER + ") AS RECIPIENT_NUMBERS " +
+                "GROUP_CONCAT(" + "R." + RECIPIENT_ID + ", ';') AS RECIPIENT_IDS, " +
+                "GROUP_CONCAT(" + "R." + RECIPIENT_NAME + ", ';') AS RECIPIENT_NAMES, " +
+                "GROUP_CONCAT(" + "R." + RECIPIENT_PHONE_NUMBER + ", ';') AS RECIPIENT_NUMBERS " +
                 "FROM " + MESSAGE_TABLE_NAME + " AS M" +
                 " LEFT JOIN " + REC_MESS_TABLE_NAME + " AS RM ON RM." + MESS_ID + "=M." + MESSAGE_ID +
                 " LEFT JOIN " + RECIPIENT_TABLE_NAME + " AS R ON RM." + RECIP_ID + "=R." + RECIPIENT_ID +
@@ -250,18 +256,20 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         else {
             resultCursor.moveToFirst();
             assert(resultCursor.getLong(0) == message_id);
-            String phoneNumbers = resultCursor.getString(4);
-            String message = resultCursor.getString(2);
-            String dateTime = resultCursor.getString(1);
+            String recip_names = resultCursor.getString(resultCursor.getColumnIndex("RECIPIENT_NAMES"));
+            String recip_nums = resultCursor.getString(resultCursor.getColumnIndex("RECIPIENT_NUMBERS"));
+            String message = resultCursor.getString(resultCursor.getColumnIndex(MESSAGE_TXT_CONTENT));
+            String dateTime = resultCursor.getString(resultCursor.getColumnIndex(MESSAGE_DATETIME));
             String[] dateTimeSplit = dateTime.split(" ");
             String date = dateTimeSplit[0];
             String time = dateTimeSplit[1];
-            String[] result = new String[] {phoneNumbers, date, time, message, dateTime};
+            String[] result = new String[] {recip_names, recip_nums, message, date, time, dateTime};
             resultCursor.close();
             return result;
         }
 
     }
+
 
     /* Delete a message from the database. Delete the associations between this message and its
     *  recipients, and if the recipients have no other scheduled messages, then delete them
@@ -274,7 +282,7 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
                 " LEFT JOIN " + MESSAGE_TABLE_NAME + " AS M ON RM." + MESS_ID + "=M." + MESSAGE_ID +
                 " WHERE M." + MESSAGE_ID + "=?";
         Cursor recipientCursor = db.rawQuery(sql_select, new String[] {"" + message_id});
-        if (recipientCursor.getCount() != 1) {
+        if (recipientCursor.getCount() < 1) {
             Log.d(TAG, "Delete Error, couldn't find that message");
             return false;
         }
@@ -315,10 +323,57 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
     /* This method will delete the message with the given ID and create a new one with the
     *  new values and return its ID. Before calling this method, make sure you've updated/cancelled
     *  the existing alarm used to schedule it. */
-    public long updateTextMessage(long message_id, String[] phoneNumbers, String dateTime, String message) {
+    public long updateSMS(long message_id, ArrayList<Contact> recipients_list, String dateTime, String message) {
         deleteMessage(message_id);
-        return storeNewSMS(phoneNumbers, dateTime, message);
+        return storeNewSMS(recipients_list, dateTime, message);
     }
 
+    // Store a new preset
+    public long storeNewPreset(String name, String content) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues presetContentValues = new ContentValues();
+        presetContentValues.put(PRESET_NAME, name);
+        presetContentValues.put(PRESET_CONTENT, content);
+        return db.insert(PRESET_TABLE_NAME, null, presetContentValues);
+    }
+
+    // Delete a preset
+    public void deletePreset(long preset_id) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(PRESET_TABLE_NAME, PRESET_ID + "=?", new String[] {"" + preset_id});
+    }
+
+    // Returns the name and content of a preset.
+    public String[] getPresetData(long preset_id) {
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor resultCursor = db.query(PRESET_TABLE_NAME, new String[] {PRESET_NAME, PRESET_CONTENT},
+                                       PRESET_ID + "=?", new String[] {"" + preset_id}, null, null, null, null);
+        String name = "";
+        String content = "";
+        if (resultCursor.moveToFirst()) {
+            name = resultCursor.getString(resultCursor.getColumnIndex(PRESET_NAME));
+            content = resultCursor.getString(resultCursor.getColumnIndex(PRESET_CONTENT));
+        }
+        return new String[] {name, content};
+    }
+
+    // Return a cursor over all the presets.
+    public Cursor getAllPresets() {
+        SQLiteDatabase db = getWritableDatabase();
+        String sql_select = "SELECT " + PRESET_ID + " AS _id, " +
+                            PRESET_NAME + ", " +
+                            PRESET_CONTENT +
+                            " FROM " + PRESET_TABLE_NAME +
+                            " ORDER BY _id DESC";
+        return db.rawQuery(sql_select, null);
+    }
+
+    public void editPreset(long preset_id, String new_name, String new_content){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues newVals = new ContentValues();
+        newVals.put(PRESET_NAME, new_name);
+        newVals.put(PRESET_CONTENT, new_content);
+        db.update(PRESET_TABLE_NAME, newVals, PRESET_ID + "=" + preset_id, null);
+    }
 
 }

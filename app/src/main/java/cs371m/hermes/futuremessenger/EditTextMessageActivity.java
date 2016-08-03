@@ -47,7 +47,7 @@ public class EditTextMessageActivity extends AppCompatActivity
      */
     private final DateFormat DF_DATE     = DateFormat.getDateInstance(DateFormat.MEDIUM);
     private final DateFormat DF_TIME     = DateFormat.getTimeInstance(DateFormat.SHORT);
-    private final DateFormat DF_DATETIME = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+    private final DateFormat DF_DATETIME = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /* Are we making a brand new message?
      * If we're editing/deleting an existing message, store the ID of it here.

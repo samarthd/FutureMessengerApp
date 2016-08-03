@@ -34,8 +34,11 @@ public class EditPreset extends AppCompatActivity {
                 //TODO: Save text into database
                 EditText name = (EditText) findViewById(R.id.edit_preset_name);
                 EditText message = (EditText) findViewById(R.id.edit_preset_message);
-                Log.d(TAG, name.getText().toString());
-                Log.d(TAG, message.getText().toString());
+                String preset_name = name.getText().toString();
+                String preset_message = message.getText().toString();
+                savePreset(preset_name, preset_message);
+                Log.d(TAG, preset_name);
+                Log.d(TAG, preset_message);
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -46,6 +49,17 @@ public class EditPreset extends AppCompatActivity {
         EditText message = (EditText) findViewById(R.id.edit_preset_message);
         name.setText(name_text);
         message.setText(msg_text);
+    }
+
+    // Save the preset in our database.
+    private void savePreset(String name, String message) {
+        MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
+        long result = mDb.storeNewPreset(name, message);
+        Log.d("EDIT PRESET", "Preset stored under id: " + result);
+        mDb.close();
+        Intent ret = new Intent(this, ManagePresets.class);
+        setResult(ManagePresets.RESULT_OK, ret);
+        finish();
     }
 
 }

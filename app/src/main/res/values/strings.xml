@@ -10,8 +10,8 @@
     <string name="new_picture_message">New Picture Message</string>
     <string name="title_activity_text_message">Text Message</string>
     <string name="message">Message:&#160;</string>
-    <string name="date_and_time">Date &#038; Time to Send:&#160;</string>
-    <string name="recipients_lv">Recipients:&#160;</string>
+    <string name="date_and_time">Date &#038; Time to Send&#160;</string>
+    <string name="recipients_lv">Recipient(s):&#160;</string>
     <string name="recipient_ids">Recipient ID in database:&#160;</string>
     <string name="currently_scheduled_tv">Scheduled Messages</string>
     <string name="add_phone_number">ADD A PHONE NUMBER</string>
@@ -22,17 +22,18 @@
     <string name="add">Add</string>
     <string name="empty_number">Enter a number</string>
     <string name="already_recipient">Already a recipient!</string>
-    <string name="title_activity_multimedia_message">MultimediaMessageActivity</string>
+    <string name="title_activity_multimedia_message">Edit Picture Message</string>
     <string name="hint_recipients">Enter recipients</string>
     <string name="hint_message">Enter message</string>
     <string name="header_datetime">Date &amp; Time</string>
     <string name="error">ERROR</string>
     <string name="header_image">Image</string>
-    <string name="header_text">Text:</string>
-    <string name="title_activity_manage_presets">ManagePresets</string>
+    <string name="header_text">Text</string>
+    <string name="title_activity_manage_presets">Manage Presets</string>
     <string name="title_activity_edit_preset">Edit Preset</string>
     <string name="preset_header_name">Preset Name</string>
     <string name="preset_header_message">Preset Message</string>
-    <string name="hint_preset_name">Enter a name for preset</string>
+    <string name="hint_preset_name">Enter a name for the preset</string>
     <string name="hint_preset_message">Enter a message</string>
+    <string name="no_presets_message">You don\'t have any presets saved.\nClick the button below to make one!</string>
 </resources>

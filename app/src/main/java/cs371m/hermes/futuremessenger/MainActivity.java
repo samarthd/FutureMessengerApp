@@ -113,8 +113,8 @@ public class MainActivity extends AppCompatActivity {
         preset_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "Beta feature!", Toast.LENGTH_SHORT).show();
                 main_menu.collapse();
+                launchPresetActivity();
             }
         });
 
@@ -175,6 +175,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private void launchPresetActivity(){
+        Intent intent = new Intent(this, ManagePresets.class);
+        startActivity(intent);
+    }
+
     private void createTextMessage() {
         Intent intent = new Intent(this, EditTextMessageActivity.class);
         startActivityForResult(intent, 1);
@@ -189,25 +194,30 @@ public class MainActivity extends AppCompatActivity {
     private void editScheduledMessage(long message_id) {
         // Get the message's data.
         String[] message_info = mDb.getScheduledMessageData(message_id);
-        String recip_names = message_info[0];
-        String recip_nums = message_info[1];
-        String message = message_info[2];
-        String date = message_info[3];
-        String time = message_info[4];
-        String dateTime = message_info[5];
+        if (message_info != null) {
+            String recip_names = message_info[0];
+            String recip_nums = message_info[1];
+            String message = message_info[2];
+            String date = message_info[3];
+            String time = message_info[4];
+            String dateTime = message_info[5];
 
-        // Place the data in an intent.
-        Intent intent  = new Intent(this, EditTextMessageActivity.class);
-        intent.putExtra("recip_names", recip_names);
-        intent.putExtra("recip_nums", recip_nums);
-        intent.putExtra("date", date);
-        intent.putExtra("time", time);
-        intent.putExtra("message", message);
-        intent.putExtra("message_id", message_id);
-        intent.putExtra("message_datetime", dateTime);
+            // Place the data in an intent.
+            Intent intent = new Intent(this, EditTextMessageActivity.class);
+            intent.putExtra("recip_names", recip_names);
+            intent.putExtra("recip_nums", recip_nums);
+            intent.putExtra("date", date);
+            intent.putExtra("time", time);
+            intent.putExtra("message", message);
+            intent.putExtra("message_id", message_id);
+            intent.putExtra("message_datetime", dateTime);
 
-        // Start the edit message activity through this intent.
-        startActivityForResult(intent, 1);
+            // Start the edit message activity through this intent.
+            startActivityForResult(intent, 1);
+        }
+        else {
+            Toast.makeText(MainActivity.this, "That message can't be edited.", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -226,8 +236,6 @@ public class MainActivity extends AppCompatActivity {
                 new ContactDatabaseAdapter(getBaseContext(), cursor, R.layout.listed_message_layout);
         ListView messagesListView = (ListView) findViewById(R.id.scheduled_messages_list);
         messagesListView.setAdapter(adapter);
-
-
 
 
         /* Make the list items clickable for their context menu */

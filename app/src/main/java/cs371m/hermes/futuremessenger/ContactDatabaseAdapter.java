@@ -43,6 +43,7 @@ public class ContactDatabaseAdapter extends CursorAdapter {
         Log.d(TAG, "Unfiltered nums: " + cursor.getString(cursor.getColumnIndex("RECIPIENT_NUMBERS")));
         String[] all_recip_names = cursor.getString(cursor.getColumnIndex("RECIPIENT_NAMES")).split(";");
         String[] all_recip_nums = cursor.getString(cursor.getColumnIndex("RECIPIENT_NUMBERS")).split(";");
+
         ArrayList<String> namesList = new ArrayList<>();
         if (all_recip_names.length != all_recip_nums.length) {
             Log.d(TAG, "Names and numbers lengths didn't match.");

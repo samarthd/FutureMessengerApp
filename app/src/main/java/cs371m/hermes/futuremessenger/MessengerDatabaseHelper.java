@@ -43,14 +43,13 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
     public static final String RECIP_ID = "RECIPIENT_ID";
     public static final String MESS_ID = "MESSAGE_ID";
 
- /* TODO:
-    Table column names for beta.
+
 
     // Names of various columns in the Preset table in the database.
     public static final String PRESET_TABLE_NAME = "preset_table";
     public static final String PRESET_ID = "ID";
     public static final String PRESET_NAME = "NAME";
-    public static final String PRESET_CONTENT = "CONTENT";*/
+    public static final String PRESET_CONTENT = "CONTENT";
 
 
     private static final String TAG = "IN DATABASE HELPER";
@@ -101,13 +100,13 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         Log.d(TAG, "CREATING ASSOC TABLE: " + createRecMessTable);
         db.execSQL(createRecMessTable);
 
-/*     TODO:
-       In beta, create the preset table.
        // Create the Preset table that will hold our presets.
         db.execSQL("create table " + PRESET_TABLE_NAME + "(" +
                 PRESET_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 PRESET_NAME + " TEXT," +
-                PRESET_CONTENT + " TEXT)");*/
+                PRESET_CONTENT + " TEXT)");
+        Log.d(TAG, "CREATING PRESET TABLE");
+
     }
 
     @Override
@@ -115,8 +114,7 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + RECIPIENT_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + MESSAGE_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + REC_MESS_TABLE_NAME);
-        //TODO: Add this line in beta for presets.
-        //db.execSQL("DROP TABLE IF EXISTS " + PRESET_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + PRESET_TABLE_NAME);
         onCreate(db);
     }
 
@@ -330,5 +328,43 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         return storeNewSMS(recipients_list, dateTime, message);
     }
 
+    // Store a new preset
+    public long storeNewPreset(String name, String content) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues presetContentValues = new ContentValues();
+        presetContentValues.put(PRESET_NAME, name);
+        presetContentValues.put(PRESET_CONTENT, content);
+        return db.insert(PRESET_TABLE_NAME, null, presetContentValues);
+    }
+
+    // Delete a preset
+    public void deletePreset(long preset_id) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(PRESET_TABLE_NAME, PRESET_ID + "=?", new String[] {"" + preset_id});
+    }
+
+    // Returns the name and content of a preset.
+    public String[] getPresetData(long preset_id) {
+        SQLiteDatabase db = getWritableDatabase();
+        Cursor resultCursor = db.query(PRESET_TABLE_NAME, new String[] {PRESET_NAME, PRESET_CONTENT},
+                                       PRESET_ID + "=?", new String[] {"" + preset_id}, null, null, null, null);
+        String name = "";
+        String content = "";
+        if (resultCursor.moveToFirst()) {
+            name = resultCursor.getString(resultCursor.getColumnIndex(PRESET_NAME));
+            content = resultCursor.getString(resultCursor.getColumnIndex(PRESET_CONTENT));
+        }
+        return new String[] {name, content};
+    }
+
+    // Return a cursor over all the presets.
+    public Cursor getAllPresets() {
+        SQLiteDatabase db = getWritableDatabase();
+        String sql_select = "SELECT " + PRESET_ID + " AS _id, " +
+                            PRESET_NAME + ", " +
+                            PRESET_CONTENT +
+                            " FROM " + PRESET_TABLE_NAME;
+        return db.rawQuery(sql_select, null);
+    }
 
 }

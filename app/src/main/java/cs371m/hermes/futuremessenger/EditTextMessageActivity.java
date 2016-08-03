@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DateFormat;
@@ -33,8 +34,8 @@ public class EditTextMessageActivity extends AppCompatActivity
         implements EnterPhoneNumberDialogFragment.EnterPhoneNumberListener, DatePickerFragment.DatePickerListener, TimePickerFragment.TimePickerListener {
 
     private EditText _phonenum_field;
-    private Button _date_button;
-    private Button _time_button;
+    private TextView _date_button;
+    private TextView _time_button;
     private EditText _message_field;
 
     /**
@@ -72,8 +73,8 @@ public class EditTextMessageActivity extends AppCompatActivity
 
         _phonenum_field = (EditText) findViewById(R.id.recipients_field);
         _message_field = (EditText) findViewById(R.id.message_field);
-        _date_button = (Button) findViewById(R.id.button_date);
-        _time_button = (Button) findViewById(R.id.button_time);
+        _date_button = (TextView) findViewById(R.id.button_date).findViewById(R.id.button_date_text);
+        _time_button = (TextView) findViewById(R.id.button_time).findViewById(R.id.button_time_text);
 
         /* TODO: If editing scheduled message, cancel previous version first */
         Intent intent = getIntent();
@@ -470,11 +471,11 @@ public class EditTextMessageActivity extends AppCompatActivity
     }
 
     protected void updateTimeButtonText() {
-        _time_button.setText(DF_TIME.format(_calendar.getTime()));
+        _time_button.setText(DF_TIME.format(_calendar.getTime()).toUpperCase());
     }
 
     protected void updateDateButtonText() {
-        _date_button.setText(DF_DATE.format(_calendar.getTime()));
+        _date_button.setText(DF_DATE.format(_calendar.getTime()).toUpperCase());
     }
 
 }

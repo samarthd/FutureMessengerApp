@@ -59,24 +59,37 @@ public class AlarmReceiver extends Service {
         try {
             Bundle bundle = intent.getExtras();
             messageID = bundle.getLong("message_id");
-            phoneNum = (String) bundle.getCharSequence("num");
-            message = (String) bundle.getCharSequence("message");
         }catch(NullPointerException e){
             Log.d("Alarm", "NullPointerException");
         }
+        MessengerDatabaseHelper mdb = new MessengerDatabaseHelper(this);
+        String[] results = mdb.getScheduledMessageData(messageID);
+        String names = results[0];
+        String numbers = results[1];
+        String messageText = results[2];
+        //TODO: add group/mms/individ message check
+
 
         Log.d("AlarmReciever: onStart", Long.toString(messageID));
         Log.d("AlarmReciever: onStart", "About to send SMS");
 
-        sendSMS(phoneNum, message);
-/*        MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
+        sendIndividualSMS(names, numbers, messageText);
+        //Delete message from database after send
+        MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
         mDb.deleteMessage(messageID);
-        mDb.close();*/
+        mDb.close();
         broadcastRefreshLV();
         //Update the MainActivity to have the right value.
 
     }
+    //sends individual SMS messages to all listed recipients (same message)
+    public void sendIndividualSMS(String names, String numbers, String messageText){
+        String[] numbersArray = numbers.split(";");
 
+        for(String number : numbersArray) {
+            sendSMS(number, messageText);
+        }
+    }
 
     public void sendNotification(String result){
         //TODO: change notification icon and customize text to display message

@@ -403,11 +403,10 @@ public class EditTextMessageActivity extends AppCompatActivity
 
     // Delete the existing copy of the user-chosen message, and return the ID of the
     // new, updated version.
-    private long updateSMS(String phoneNum, String message) {
+    private long updateSMS(String message) {
         //cancel the previous alarm
         cancelAlarm();
 
-        Log.d("updateSMS", phoneNum);
         Log.d("updateSMS", message);
 
         //Save the message

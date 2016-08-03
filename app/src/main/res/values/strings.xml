@@ -11,9 +11,9 @@
     <string name="new_text_message">New Text Message</string>
     <string name="new_picture_message">New Picture Message</string>
     <string name="title_activity_text_message">Text Message</string>
-    <string name="message">Message:&#160;</string>
+    <string name="message">Message&#160;</string>
     <string name="date_and_time">Date &#038; Time to Send&#160;</string>
-    <string name="recipients_lv">Recipient(s):&#160;</string>
+    <string name="recipients_lv">Recipient(s)&#160;</string>
     <string name="recipient_ids">Recipient ID in database:&#160;</string>
     <string name="currently_scheduled_tv">Scheduled Messages</string>
     <string name="add_phone_number">ADD A PHONE NUMBER</string>
@@ -22,7 +22,7 @@
     <string name="enter_message">Enter message</string>
     <string name="cancel">Cancel</string>
     <string name="add">Add</string>
-    <string name="empty_number">Enter a number</string>
+    <string name="empty_number">You can\'t leave this blank!</string>
     <string name="already_recipient">Already a recipient!</string>
     <string name="title_activity_multimedia_message">Edit Picture Message</string>
     <string name="hint_recipients">Enter recipients</string>
@@ -37,7 +37,7 @@
     <string name="preset_header_message">Preset Message</string>
     <string name="hint_preset_name">Enter a name for the preset</string>
     <string name="hint_preset_message">Enter the text you want to save</string>
-    <string name="no_presets_message">You don\'t have any presets saved.\nClick the button below to make one!</string>
+    <string name="no_presets_message">You currently don\'t have any presets saved.\nClick the button below to make one!</string>
     <string name="title_activity_select_preset">Select Preset</string>
     <string name="no_selectable_presets_message">You don\'t have any presets saved.</string>
     <string name="populate_from_preset">POPULATE FROM PRESET</string>

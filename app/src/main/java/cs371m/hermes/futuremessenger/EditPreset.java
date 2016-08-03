@@ -14,6 +14,8 @@ public class EditPreset extends AppCompatActivity {
 
     private final String TAG = "EditPreset";
 
+    private long last_clicked_preset_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,7 +26,11 @@ public class EditPreset extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         if (extras != null) {
-            fillEditTextFields(intent.getStringExtra("name"), intent.getStringExtra("message"));
+            last_clicked_preset_id = intent.getLongExtra("preset_id", -1);
+            fillEditTextFields(intent.getStringExtra("name"), intent.getStringExtra("content"));
+        }
+        else {
+            last_clicked_preset_id = -1;
         }
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -36,7 +42,18 @@ public class EditPreset extends AppCompatActivity {
                 EditText message = (EditText) findViewById(R.id.edit_preset_message);
                 String preset_name = name.getText().toString();
                 String preset_message = message.getText().toString();
-                savePreset(preset_name, preset_message);
+                // If we aren't editing an existing preset, then store a new one.
+                if (last_clicked_preset_id == -1) {
+                    savePreset(preset_name, preset_message);
+                    Log.d(TAG, "Saved new preset with name " + preset_name + " and message " +
+                                preset_message);
+                }
+                // We are editing an existing one, so just update its values.
+                else {
+                    updatePreset(preset_name, preset_message);
+                    Log.d(TAG, "Edited preset with new name " + preset_name + " and message " +
+                            preset_message);
+                }
                 Log.d(TAG, preset_name);
                 Log.d(TAG, preset_message);
             }
@@ -55,7 +72,18 @@ public class EditPreset extends AppCompatActivity {
     private void savePreset(String name, String message) {
         MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
         long result = mDb.storeNewPreset(name, message);
-        Log.d("EDIT PRESET", "Preset stored under id: " + result);
+        Log.d("SAVE NEW PRESET", "Preset stored under id: " + result);
+        mDb.close();
+        Intent ret = new Intent(this, ManagePresets.class);
+        setResult(ManagePresets.RESULT_OK, ret);
+        finish();
+    }
+
+    // updatePreset
+    private void updatePreset(String name, String message) {
+        MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
+        mDb.editPreset(last_clicked_preset_id, name, message);
+        Log.d("EDIT PRESET", "Edited preset with id " + last_clicked_preset_id);
         mDb.close();
         Intent ret = new Intent(this, ManagePresets.class);
         setResult(ManagePresets.RESULT_OK, ret);

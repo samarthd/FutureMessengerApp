@@ -4,9 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardUseCompatPadding="true"
-    app:cardElevation="4dp"
-    app:cardCornerRadius="1dp"
-    >
+    app:cardElevation="2dp"
+    app:cardCornerRadius="1dp" >
 
     <LinearLayout
         android:orientation="vertical" android:layout_width="match_parent"

@@ -367,4 +367,12 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         return db.rawQuery(sql_select, null);
     }
 
+    public void editPreset(long preset_id, String new_name, String new_content){
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues newVals = new ContentValues();
+        newVals.put(PRESET_NAME, new_name);
+        newVals.put(PRESET_CONTENT, new_content);
+        db.update(PRESET_TABLE_NAME, newVals, PRESET_ID + "=" + preset_id, null);
+    }
+
 }

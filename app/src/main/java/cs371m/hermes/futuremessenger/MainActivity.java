@@ -61,10 +61,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.edit:
-                editScheduledMessage(last_clicked_message_id);
+                editScheduledMessage();
                 return true;
             case R.id.delete:
-                deleteScheduledMessage(last_clicked_message_id);
+                deleteScheduledMessage();
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -191,9 +191,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /* Edit a currently scheduled message. */
-    private void editScheduledMessage(long message_id) {
+    private void editScheduledMessage() {
         // Get the message's data.
-        String[] message_info = mDb.getScheduledMessageData(message_id);
+        String[] message_info = mDb.getScheduledMessageData(last_clicked_message_id);
         if (message_info != null) {
             String recip_names = message_info[0];
             String recip_nums = message_info[1];
@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("date", date);
             intent.putExtra("time", time);
             intent.putExtra("message", message);
-            intent.putExtra("message_id", message_id);
+            intent.putExtra("message_id", last_clicked_message_id);
             intent.putExtra("message_datetime", dateTime);
 
             // Start the edit message activity through this intent.
@@ -222,7 +222,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     /* Delete a currently scheduled message. */
-    private void deleteScheduledMessage(long last_clicked_message_id) {
+    private void deleteScheduledMessage() {
         mDb.deleteMessage(last_clicked_message_id);
         // Force a refresh of the listView so that the changes will be reflected in the ListView.
         fillListView();

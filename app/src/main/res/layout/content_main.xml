@@ -23,7 +23,7 @@
         android:id="@+id/empty_messages_list_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="16dp"
+        android:paddingTop="25dp"
         android:layout_gravity="center"
         android:gravity="center"
         android:includeFontPadding="false"

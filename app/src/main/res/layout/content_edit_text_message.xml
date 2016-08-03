@@ -94,15 +94,6 @@
                         android:padding="10dp" />
                 </android.support.v7.widget.CardView>
             </LinearLayout>
-
-            <EditText
-                android:id="@+id/recipients_field"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:inputType="phone"
-                android:hint="@string/add_phone_number"
-                android:layout_marginStart="20dp"
-                android:layout_marginLeft="20dp" />
         </LinearLayout>
         <LinearLayout
             android:id="@+id/layout_datetime"

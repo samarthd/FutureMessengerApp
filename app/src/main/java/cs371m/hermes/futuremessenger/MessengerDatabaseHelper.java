@@ -363,7 +363,8 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         String sql_select = "SELECT " + PRESET_ID + " AS _id, " +
                             PRESET_NAME + ", " +
                             PRESET_CONTENT +
-                            " FROM " + PRESET_TABLE_NAME;
+                            " FROM " + PRESET_TABLE_NAME +
+                            " ORDER BY _id DESC";
         return db.rawQuery(sql_select, null);
     }
 

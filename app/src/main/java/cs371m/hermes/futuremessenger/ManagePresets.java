@@ -135,7 +135,7 @@ public class ManagePresets extends AppCompatActivity {
             String name = preset_info[0];
             String content = preset_info[1];
 
-            // Place the data in an intent.
+            // Place the data in an intent
             Intent intent = new Intent(this, EditPreset.class);
             intent.putExtra("name", name);
             intent.putExtra("preset_id", last_clicked_preset_id);

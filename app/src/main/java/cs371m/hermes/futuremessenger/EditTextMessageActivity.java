@@ -16,11 +16,9 @@ import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +54,9 @@ public class EditTextMessageActivity extends AppCompatActivity
 
     // Request code for starting the contact picker activity
     private static final int CONTACT_PICKER_REQUEST = 9999;
+
+    // Request code for starting the select preset activity
+    private static final int POPULATE_FROM_PRESET_REQUEST = 9998;
 
     // List that holds the currently selected contacts
     private ArrayList<Contact> currently_selected_contacts;
@@ -122,6 +123,7 @@ public class EditTextMessageActivity extends AppCompatActivity
                 return false;
             }
         });
+
         contactAdapter = new ContactListAdapter(this, currently_selected_contacts);
         contactsLV.setAdapter(contactAdapter);
         adjustListHeight(contactsLV);
@@ -235,6 +237,8 @@ public class EditTextMessageActivity extends AppCompatActivity
                 case CONTACT_PICKER_REQUEST:
                     receiveContactAndAddToList(data);
                     break;
+                case POPULATE_FROM_PRESET_REQUEST:
+                    populateTextFieldFromPreset(data);
             }
         }
         else {
@@ -412,6 +416,17 @@ public class EditTextMessageActivity extends AppCompatActivity
         return result;
     }
 
+    // Launch the preset selection activity
+    public void launchPresetSelection(View v) {
+        Intent intent = new Intent(this, SelectPresetActivity.class);
+        startActivityForResult(intent, POPULATE_FROM_PRESET_REQUEST);
+    }
+
+    private void populateTextFieldFromPreset(Intent data) {
+        String preset_content = data.getStringExtra("preset_content");
+        EditText textField = (EditText) findViewById(R.id.message_field);
+        textField.append(preset_content);
+    }
     //TODO: Remove (if not used often), or change name to be more descriptive of what it does
     private String getDateTimeFromButtons() {
         return DF_DATETIME.format(_calendar.getTime());

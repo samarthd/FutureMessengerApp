@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -81,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Create our database.
         mDb = new MessengerDatabaseHelper(MainActivity.this);
+        ListView scheduledListView = (ListView) findViewById(R.id.scheduled_messages_list);
+        scheduledListView.setEmptyView(findViewById(R.id.empty_messages_list_tv));
 
         // Populate the listview from the database.
         fillListView();

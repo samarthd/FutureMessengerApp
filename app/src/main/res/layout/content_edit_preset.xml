@@ -14,33 +14,45 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="16dp">
+        android:orientation="vertical">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/preset_header_name"
-            android:textSize="20sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
         <EditText
             android:id="@+id/edit_preset_name"
+            android:maxLength="140"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textCapSentences|textMultiLine"
+            android:minLines="1"
+            android:maxLines="5"
+            android:scrollHorizontally="false"
+            android:imeOptions="actionDone"
             android:hint="@string/hint_preset_name"
-            android:textSize="18sp"
-            android:layout_marginStart="20dp"/>
+            android:textSize="15sp"
+            android:paddingTop="8dp"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="18dp"
+            android:paddingTop="8dp"
             android:text="@string/preset_header_message"
-            android:textSize="20sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
         <EditText
             android:id="@+id/edit_preset_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textCapSentences|textMultiLine"
+            android:minLines="1"
+            android:maxLines="5"
+            android:scrollHorizontally="false"
+            android:imeOptions="actionDone"
             android:hint="@string/hint_preset_message"
-            android:textSize="18sp"
-            android:layout_marginStart="20dp"/>
+            android:textSize="15sp"
+            android:paddingTop="8dp"/>
     </LinearLayout>
 
 </RelativeLayout>

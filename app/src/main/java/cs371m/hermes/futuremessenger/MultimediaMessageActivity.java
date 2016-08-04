@@ -24,7 +24,6 @@ import java.io.OutputStream;
 import java.text.DateFormat;
 import java.util.Calendar;
 
-//TODO: Have these activities extend an MessageActivity, to remove duplicate code
 public class MultimediaMessageActivity extends EditTextMessageActivity {
 
     private static final int SELECT_IMAGE = 200;

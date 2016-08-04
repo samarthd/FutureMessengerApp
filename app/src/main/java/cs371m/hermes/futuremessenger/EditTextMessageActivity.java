@@ -169,7 +169,11 @@ public class EditTextMessageActivity extends AppCompatActivity
                 //TODO IDENTIFY WHETHER A MESSAGE IS GROUP, PICTURE, OR INDIVIDUAL, STORE THAT IN DATABASE
                 //TODO SET ONE ALARM WITH JUST THE MESSAGE ID
                 if (isEntryFieldsFilled()) {
-                    showGroupDialog();
+                    if (currently_selected_contacts.size() >= 2) {
+                        showGroupDialog();
+                    } else {
+                        //TODO: just send message
+                    }
 //                    String message = get_message_text();
 //                    long id;
 //                    if (last_clicked_message_id == -1) {
@@ -535,6 +539,7 @@ public class EditTextMessageActivity extends AppCompatActivity
         //TODO: Store the group selection type
         // 0 == Group, 1 == Individual
 
+        /* TODO: MOVE CODE INTO IT'S OWN METHOD */
         int year = _calendar.get(Calendar.YEAR);
         int month = _calendar.get(Calendar.MONTH);
         int day = _calendar.get(Calendar.DAY_OF_MONTH);
@@ -550,6 +555,8 @@ public class EditTextMessageActivity extends AppCompatActivity
             id = updateSMS(message);
         }
 
+        //TODO: set only one alarm
+        //TODO: the Alarm will take care of individual or group splitting
         setIndividualTextAlarms(id, message, year, month, day, hour, minute);
         returnToMainActivity();
     }

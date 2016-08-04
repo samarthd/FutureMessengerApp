@@ -70,7 +70,7 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
                 }
                 String message = get_message_text();
                 String numbers = getNumbersFromContactsSelected();
-                saveMessage(message, new_image_path);
+                // saveMessage(message, new_image_path);
             }
         });
     }

@@ -15,10 +15,12 @@ import android.widget.Toast;
 public class AlarmBroadcastReceiver extends BroadcastReceiver{
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.d("Boot receiver", "working");
-        Toast.makeText(context, "BOOT RECEIVER WORKING", Toast.LENGTH_LONG).show();
-        //Intent in = new Intent(context, AlarmReceiver.class);
-        //context.startService(in);
-
+        //TODO CHANGE THE SERVICE THAT IS LAUNCHED. MAKE A SERVICE TO RE-SET ALL ALARMS/SEND MESSAGES.
+        Log.w("Boot receiver", "working");
+            Toast.makeText(context, "BOOT RECEIVER WORKING", Toast.LENGTH_LONG).show();
+            Intent i = new Intent(context, AlarmReceiver.class);
+            context.startService(i);
+            //Intent in = new Intent(context, AlarmReceiver.class);
+            //context.startService(in);
     }
 }

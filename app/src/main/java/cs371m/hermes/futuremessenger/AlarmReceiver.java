@@ -56,6 +56,7 @@ public class AlarmReceiver extends Service {
         super.onStart(intent, startId);
         //check if extras even exist; this suppresses null pointer exceptions that happen
         //due to checking for null extras.
+        Log.d("SERVICE STARTED", "HELLO IT STARTED");
         try {
             Bundle bundle = intent.getExtras();
             messageID = bundle.getLong("message_id");
@@ -64,21 +65,27 @@ public class AlarmReceiver extends Service {
         }
         MessengerDatabaseHelper mdb = new MessengerDatabaseHelper(this);
         String[] results = mdb.getScheduledMessageData(messageID);
-        String names = results[0];
-        String numbers = results[1];
-        String messageText = results[2];
-        //TODO: add group/mms/individ message check
+        if (results == null) {
+            Log.d("Alarm", "No message data found.");
+        }
+        else{
+            String names = results[0];
+            String numbers = results[1];
+            String messageText = results[2];
+            //TODO: add group/mms/individ message check
 
 
-        Log.d("AlarmReciever: onStart", Long.toString(messageID));
-        Log.d("AlarmReciever: onStart", "About to send SMS");
+            Log.d("AlarmReciever: onStart", Long.toString(messageID));
+            Log.d("AlarmReciever: onStart", "About to send SMS");
 
-        sendIndividualSMS(names, numbers, messageText);
-        //Delete message from database after send
-        MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
-        mDb.deleteMessage(messageID);
-        mDb.close();
-        broadcastRefreshLV();
+            sendIndividualSMS(names, numbers, messageText);
+            //Delete message from database after send
+            MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
+            mDb.deleteMessage(messageID);
+            mDb.close();
+            broadcastRefreshLV();
+        }
+
         //Update the MainActivity to have the right value.
 
     }

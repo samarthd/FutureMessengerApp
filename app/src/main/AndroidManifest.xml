@@ -44,7 +44,7 @@
         </receiver>
 
         <service android:name=".AlarmReceiver" />
-
+        <service android:name=".BootService" />
         <activity
             android:name=".MultimediaMessageActivity"
             android:label="@string/title_activity_multimedia_message"

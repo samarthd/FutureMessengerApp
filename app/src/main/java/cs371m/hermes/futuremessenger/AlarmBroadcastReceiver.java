@@ -18,7 +18,7 @@ public class AlarmBroadcastReceiver extends BroadcastReceiver{
         //TODO CHANGE THE SERVICE THAT IS LAUNCHED. MAKE A SERVICE TO RE-SET ALL ALARMS/SEND MESSAGES.
         Log.w("Boot receiver", "working");
             Toast.makeText(context, "BOOT RECEIVER WORKING", Toast.LENGTH_LONG).show();
-            Intent i = new Intent(context, AlarmReceiver.class);
+            Intent i = new Intent(context, BootService.class);
             context.startService(i);
             //Intent in = new Intent(context, AlarmReceiver.class);
             //context.startService(in);

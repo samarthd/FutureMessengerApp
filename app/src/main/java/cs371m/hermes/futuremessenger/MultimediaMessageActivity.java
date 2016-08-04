@@ -181,7 +181,7 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
 
     @Override
     protected boolean isNoMessageEntered() {
-        //TODO: check if there is no text AND no image
-        return true;
+        boolean prev_result = super.isNoMessageEntered();
+        return prev_result && _image_uri == null;
     }
 }

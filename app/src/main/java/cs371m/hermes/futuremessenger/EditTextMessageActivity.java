@@ -30,7 +30,9 @@ import java.util.Calendar;
 import java.util.Collection;
 
 public class EditTextMessageActivity extends AppCompatActivity
-        implements EnterPhoneNumberDialogFragment.EnterPhoneNumberListener, DatePickerFragment.DatePickerListener, TimePickerFragment.TimePickerListener {
+        implements EnterPhoneNumberDialogFragment.EnterPhoneNumberListener,
+        DatePickerFragment.DatePickerListener, TimePickerFragment.TimePickerListener,
+        GroupDialogFragment.GroupDialogListener {
 
     private TextView _date_button;
     private TextView _time_button;
@@ -164,26 +166,21 @@ public class EditTextMessageActivity extends AppCompatActivity
                 Log.d("FabButton", "Message Send button pressed.");
 
                 /* TODO: add in sending of dates and time */
-
-                int year = _calendar.get(Calendar.YEAR);
-                int month = _calendar.get(Calendar.MONTH);
-                int day = _calendar.get(Calendar.DAY_OF_MONTH);
-                int hour = _calendar.get(Calendar.HOUR_OF_DAY);
-                int minute = _calendar.get(Calendar.MINUTE);
                 //TODO IDENTIFY WHETHER A MESSAGE IS GROUP, PICTURE, OR INDIVIDUAL, STORE THAT IN DATABASE
                 //TODO SET ONE ALARM WITH JUST THE MESSAGE ID
                 if (isEntryFieldsFilled()) {
-                    String message = get_message_text();
-                    long id;
-                    if (last_clicked_message_id == -1) {
-                        id = saveMessage(message, null);
-                    }
-                    else {
-                        id = updateSMS(message);
-                    }
-
-                    setIndividualTextAlarms(id, message, year, month, day, hour, minute);
-                    returnToMainActivity();
+                    showGroupDialog();
+//                    String message = get_message_text();
+//                    long id;
+//                    if (last_clicked_message_id == -1) {
+//                        id = saveMessage(message, null);
+//                    }
+//                    else {
+//                        id = updateSMS(message);
+//                    }
+//
+//                    setIndividualTextAlarms(id, message, year, month, day, hour, minute);
+//                    returnToMainActivity();
                 }
             }
         });
@@ -500,6 +497,12 @@ public class EditTextMessageActivity extends AppCompatActivity
         newFragment.show(getFragmentManager(), "datePicker");
     }
 
+    protected int showGroupDialog () {
+        DialogFragment newFragment = new GroupDialogFragment();
+        newFragment.show(getFragmentManager(), "groupDialog");
+        return 0;
+    }
+
     /**
      * Method called by DatePickerDialogFragment, once user has selected the date
      * @param year the year selected
@@ -524,6 +527,31 @@ public class EditTextMessageActivity extends AppCompatActivity
         _calendar.set(Calendar.HOUR_OF_DAY, hour);
         _calendar.set(Calendar.MINUTE, minute);
         updateTimeButtonText();
+    }
+
+    @Override
+    public void onGroupSelected(int i) {
+        Log.d("GroupSelect", Integer.toString(i));
+        //TODO: Store the group selection type
+        // 0 == Group, 1 == Individual
+
+        int year = _calendar.get(Calendar.YEAR);
+        int month = _calendar.get(Calendar.MONTH);
+        int day = _calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = _calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = _calendar.get(Calendar.MINUTE);
+
+        String message = get_message_text();
+        long id;
+        if (last_clicked_message_id == -1) {
+            id = saveMessage(message, null);
+        }
+        else {
+            id = updateSMS(message);
+        }
+
+        setIndividualTextAlarms(id, message, year, month, day, hour, minute);
+        returnToMainActivity();
     }
 
     protected void updateTimeButtonText() {

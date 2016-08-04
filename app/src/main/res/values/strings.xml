@@ -45,4 +45,10 @@
     <string name="no_contacts_entered">No contact entered</string>
     <string name="no_message_entered">No message entered</string>
     <string name="bad_date_entered">Date not set to future!</string>
+    <string-array name="group_choice">
+        <item>@string/group_group</item>
+        <item>@string/group_indiv</item>
+    </string-array>
+    <string name="group_group">Group</string>
+    <string name="group_indiv">Individually</string>
 </resources>

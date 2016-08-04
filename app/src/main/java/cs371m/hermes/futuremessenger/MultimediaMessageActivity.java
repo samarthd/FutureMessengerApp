@@ -40,23 +40,34 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         LinearLayout layout_ib = (LinearLayout) findViewById(R.id.layout_attachment);
         layout_ib.setVisibility(View.VISIBLE);
+    }
 
+    @Override
+    protected void initializeScheduleButton() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // sendMMS("5554;5556", "Hello MMS!");
+                //TODO: IMPLEMENT save_message FAB
+                Log.d("Multimedia", "Message Send button pressed.");
+                /** ORDER OF EVENTS
+                 * copy image
+                 * get copied image path
+                 * get numbers from contacts
+                 * get message text
+                 * create/update database entry
+                 * set an alarm, with database entry id
+                 */
+                String message = get_message_text();
+//                sendMMS("5554;5556", "Hello MMS!");
 //                Log.d("click", _image_uri.getPath().toString());
+                String new_image_path = null;
                 if (_image_uri != null) {
                     // copyImage();
                     ImageButton ib = (ImageButton) findViewById(R.id.button_attachment);
-                    Log.d("Image", "max height: " + Integer.toString(ib.getMaxHeight()));
-                    Log.d("Image", "height: " + Integer.toString(ib.getHeight()));
-                    Log.d("Image", "height: " + Integer.toString(ib.getMeasuredHeightAndState()));
                 }
             }
         });
-
     }
 
     //TODO: Move method to AlarmReciever
@@ -76,9 +87,8 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
 
     // https://stackoverflow.com/questions/2507898/how-to-pick-an-image-from-gallery-sd-card-for-my-app
     public void selectAttachment(View v) {
-        //TODO: make it so that we can attach a video, image, or other files?
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-        photoPickerIntent.setType("image/*");
+        photoPickerIntent.setType("image/*"); //TODO: Videos, audio files, etc?
         startActivityForResult(photoPickerIntent, SELECT_IMAGE);
     }
 

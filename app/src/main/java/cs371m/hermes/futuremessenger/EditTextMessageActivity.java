@@ -38,18 +38,18 @@ public class EditTextMessageActivity extends AppCompatActivity
     /**
      * _calendar holds the Date that the Buttons are displaying
      */
-    Calendar _calendar;
+    private Calendar _calendar;
     /**
      * some common DateFormat objects we will use
      */
-    private final DateFormat DF_DATE     = DateFormat.getDateInstance(DateFormat.MEDIUM);
-    private final DateFormat DF_TIME     = DateFormat.getTimeInstance(DateFormat.SHORT);
-    private final DateFormat DF_DATETIME = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static final DateFormat DF_DATE     = DateFormat.getDateInstance(DateFormat.MEDIUM);
+    public static final DateFormat DF_TIME     = DateFormat.getTimeInstance(DateFormat.SHORT);
+    public static final DateFormat DF_DATETIME = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     /* Are we making a brand new message?
      * If we're editing/deleting an existing message, store the ID of it here.
      * Otherwise it will be -1. */
-    private long last_clicked_message_id;
+    protected long last_clicked_message_id;
 
     // Request code for starting the contact picker activity
     private static final int CONTACT_PICKER_REQUEST = 9999;
@@ -162,7 +162,7 @@ public class EditTextMessageActivity extends AppCompatActivity
     }
 
     // Initialize the schedule button.
-    private void initializeScheduleButton() {
+    protected void initializeScheduleButton() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,7 +170,7 @@ public class EditTextMessageActivity extends AppCompatActivity
                 Log.d("FabButton", "Message Send button pressed.");
 
                 /* TODO: add in sending of dates and time */
-                String message = _message_field.getText().toString();
+                String message = get_message_text();
                 long id;
                 if (last_clicked_message_id == -1) {
                     id = saveSMS(null, null, message);
@@ -184,8 +184,6 @@ public class EditTextMessageActivity extends AppCompatActivity
                 int day = _calendar.get(Calendar.DAY_OF_MONTH);
                 int hour = _calendar.get(Calendar.HOUR_OF_DAY);
                 int minute = _calendar.get(Calendar.MINUTE);
-                //TODO: Change header?
-
                 //TODO ENSURE AND ENFORCE THAT ALL FIELDS HAVE BEEN FILLED
                 //TODO IDENTIFY WHETHER A MESSAGE IS GROUP, PICTURE, OR INDIVIDUAL, STORE THAT IN DATABASE
                 //TODO SET ONE ALARM WITH JUST THE MESSAGE ID
@@ -207,7 +205,6 @@ public class EditTextMessageActivity extends AppCompatActivity
         }
         Toast.makeText(EditTextMessageActivity.this, "Saved your message!", Toast.LENGTH_SHORT).show();
     }
-
 
     // Builds the selected contacts list from given names and numbers delimited by strings.
     private void buildContactListFromExisting(String recip_names, String recip_nums) {
@@ -441,7 +438,7 @@ public class EditTextMessageActivity extends AppCompatActivity
         EditText textField = (EditText) findViewById(R.id.message_field);
         textField.append(preset_content);
     }
-    //TODO: Remove (if not used often), or change name to be more descriptive of what it does
+
     private void cancelAlarm(){
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(),
@@ -450,6 +447,8 @@ public class EditTextMessageActivity extends AppCompatActivity
         alarmManager.cancel(pendingIntent);
         Log.d("Alarm", "Old alarm canceled");
     }
+
+    //TODO: Remove (if not used often), or change name to be more descriptive of what it does
     private String getDateTimeFromButtons() {
         return DF_DATETIME.format(_calendar.getTime());
     }
@@ -513,6 +512,19 @@ public class EditTextMessageActivity extends AppCompatActivity
 
     protected void updateDateButtonText() {
         _date_button.setText(DF_DATE.format(_calendar.getTime()).toUpperCase());
+    }
+
+    protected String get_message_text() {
+        return _message_field.getText().toString();
+    }
+
+    protected final boolean isContactEntered() {
+        return !currently_selected_contacts.isEmpty();
+    }
+
+    protected final boolean isMessageEntered() {
+        String msg = get_message_text();
+        return !msg.equals("");
     }
 
 }

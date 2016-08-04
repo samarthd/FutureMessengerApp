@@ -190,7 +190,7 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         msgContentValues.put(MESSAGE_DATETIME, dateTime);
 
         //Format the datetime in a human-friendly manner.
-        SimpleDateFormat sourceDF = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+        SimpleDateFormat sourceDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date dateTime_obj;
         String formattedString = "";
         try {

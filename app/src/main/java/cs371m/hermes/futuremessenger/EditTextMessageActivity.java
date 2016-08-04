@@ -182,7 +182,7 @@ public class EditTextMessageActivity extends AppCompatActivity
                     String message = get_message_text();
                     long id;
                     if (last_clicked_message_id == -1) {
-                        id = saveSMS(null, null, message);
+                        id = saveMessage(message, null);
                     }
                     else {
                         id = updateSMS(message);
@@ -397,21 +397,18 @@ public class EditTextMessageActivity extends AppCompatActivity
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.clear();
         calendar.set(year, month, day, hour, minute);
+        //TODO: remove above calendar stuff, and just do _calendar.getTimeInMillis()?
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         Log.d("setAlarm", "Message id = " + Long.toString(id));
     }
 
-
     /**
-     * Save the new message into the database
-     * @param date date to send message on
-     * @param time time to send the message on
-     * @param message the message to send
-     *
-     * Sends a text message individually to all specified recipients.
-     * Returns the ID of the saved message.
+     * Save a new message into the database
+     * @param message       the message to send
+     * @param image_path    an image to send
+     * @return the ID of the save message
      */
-    private long saveSMS(String date, String time, String message) {
+    private long saveMessage(String message, String image_path) {
         /* TODO: determine if message wants to be group, or individual
          * TODO: save numbers as "5554;5556;5558;..."
          */
@@ -420,7 +417,7 @@ public class EditTextMessageActivity extends AppCompatActivity
             Log.d("saveSMS", message);
 
             //Save the message
-            String dateTime = getDateTimeFromButtons();
+            String dateTime = getDateTime();
             MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(EditTextMessageActivity.this);
             result = mDb.storeNewSMS(currently_selected_contacts, dateTime, message);
             mDb.close();
@@ -442,7 +439,7 @@ public class EditTextMessageActivity extends AppCompatActivity
         Log.d("updateSMS", message);
 
         //Save the message
-        String dateTime = getDateTimeFromButtons();
+        String dateTime = getDateTime();
         MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(EditTextMessageActivity.this);
         long result = mDb.updateSMS(last_clicked_message_id, currently_selected_contacts,
                                             dateTime, message);
@@ -471,8 +468,7 @@ public class EditTextMessageActivity extends AppCompatActivity
         Log.d("Alarm", "Old alarm canceled");
     }
 
-    //TODO: Remove (if not used often), or change name to be more descriptive of what it does
-    private String getDateTimeFromButtons() {
+    private String getDateTime() {
         return DF_DATETIME.format(_calendar.getTime());
     }
 

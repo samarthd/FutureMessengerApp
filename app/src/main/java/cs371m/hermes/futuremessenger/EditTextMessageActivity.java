@@ -170,28 +170,51 @@ public class EditTextMessageActivity extends AppCompatActivity
                 Log.d("FabButton", "Message Send button pressed.");
 
                 /* TODO: add in sending of dates and time */
-                String message = get_message_text();
-                long id;
-                if (last_clicked_message_id == -1) {
-                    id = saveSMS(null, null, message);
-                }
-                else {
-                    id = updateSMS(message);
-                }
 
                 int year = _calendar.get(Calendar.YEAR);
                 int month = _calendar.get(Calendar.MONTH);
                 int day = _calendar.get(Calendar.DAY_OF_MONTH);
                 int hour = _calendar.get(Calendar.HOUR_OF_DAY);
                 int minute = _calendar.get(Calendar.MINUTE);
-                //TODO ENSURE AND ENFORCE THAT ALL FIELDS HAVE BEEN FILLED
                 //TODO IDENTIFY WHETHER A MESSAGE IS GROUP, PICTURE, OR INDIVIDUAL, STORE THAT IN DATABASE
                 //TODO SET ONE ALARM WITH JUST THE MESSAGE ID
+                if (isEntryFieldsFilled()) {
+                    String message = get_message_text();
+                    long id;
+                    if (last_clicked_message_id == -1) {
+                        id = saveSMS(null, null, message);
+                    }
+                    else {
+                        id = updateSMS(message);
+                    }
 
-                setIndividualTextAlarms(id, message, year, month, day, hour, minute);
-                returnToMainActivity();
+                    setIndividualTextAlarms(id, message, year, month, day, hour, minute);
+                    returnToMainActivity();
+                }
             }
         });
+    }
+
+    /**
+     * checks to see if entry fields were filled, and makes a Toast if something is not
+     * also checks to see if the Date is set in the future
+     * @return false if a field is missing or incorrect
+     */
+    protected boolean isEntryFieldsFilled() {
+        boolean result = false;
+        if (isNoContactEntered()) {
+            Toast.makeText(getApplicationContext(),
+                    R.string.no_contacts_entered, Toast.LENGTH_SHORT).show();
+        } else if (isNoMessageEntered()) {
+            Toast.makeText(getApplicationContext(),
+                    R.string.no_message_entered, Toast.LENGTH_SHORT).show();
+        } else if (isDateInPast()) {
+            Toast.makeText(getApplicationContext(),
+                    R.string.bad_date_entered, Toast.LENGTH_SHORT).show();
+        } else {
+            result = true;
+        }
+        return result;
     }
 
     //TODO REMOVE THIS
@@ -518,13 +541,18 @@ public class EditTextMessageActivity extends AppCompatActivity
         return _message_field.getText().toString();
     }
 
-    protected final boolean isContactEntered() {
-        return !currently_selected_contacts.isEmpty();
+    protected boolean isNoContactEntered() {
+        return currently_selected_contacts.isEmpty();
     }
 
-    protected final boolean isMessageEntered() {
+    protected boolean isNoMessageEntered() {
         String msg = get_message_text();
-        return !msg.equals("");
+        return msg.equals("");
+    }
+
+    protected final boolean isDateInPast() {
+        Calendar now = Calendar.getInstance();
+        return _calendar.before(now);
     }
 
 }

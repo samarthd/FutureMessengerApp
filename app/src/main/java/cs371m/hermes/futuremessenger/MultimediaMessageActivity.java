@@ -178,4 +178,10 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
     public static void logPrintCalendar(Calendar c, DateFormat df) {
         Log.d("print", df.format(c.getTime()));
     }
+
+    @Override
+    protected boolean isNoMessageEntered() {
+        //TODO: check if there is no text AND no image
+        return true;
+    }
 }

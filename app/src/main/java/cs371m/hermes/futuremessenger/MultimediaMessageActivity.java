@@ -58,7 +58,7 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
                  * set an alarm, with database entry id
                  */
                 String message = get_message_text();
-//                sendMMS("5554;5556", "Hello MMS!");
+//                sendMMS("5554;5556;5125222032", "Hello MMS!");
 //                Log.d("click", _image_uri.getPath().toString());
                 String new_image_path = null;
                 if (_image_uri != null) {

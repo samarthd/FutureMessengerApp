@@ -27,6 +27,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 
 public class EditTextMessageActivity extends AppCompatActivity
         implements EnterPhoneNumberDialogFragment.EnterPhoneNumberListener, DatePickerFragment.DatePickerListener, TimePickerFragment.TimePickerListener {
@@ -522,7 +523,6 @@ public class EditTextMessageActivity extends AppCompatActivity
         _calendar.set(Calendar.HOUR_OF_DAY, hour);
         _calendar.set(Calendar.MINUTE, minute);
         updateTimeButtonText();
-        // setTimeButton(hour, minute);
     }
 
     protected void updateTimeButtonText() {
@@ -551,4 +551,15 @@ public class EditTextMessageActivity extends AppCompatActivity
         return _calendar.before(now);
     }
 
+    public static String stringJoin(Collection<String> words, String delim) {
+        if (words.isEmpty()) {
+            return "";
+        }
+
+        StringBuilder result = new StringBuilder();
+        for (String word : words) {
+            result.append(delim).append(word);
+        }
+        return result.substring(1);
+    }
 }

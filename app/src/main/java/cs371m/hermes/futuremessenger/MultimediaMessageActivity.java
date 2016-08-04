@@ -41,6 +41,11 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
         layout_ib.setVisibility(View.VISIBLE);
     }
 
+
+    /**
+     * Determines what the FAButton will do
+     * save the MMS into the database, and schedule an alarm
+     */
     @Override
     protected void initializeScheduleButton() {
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -57,17 +62,15 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
                  * create/update database entry
                  * set an alarm, with database entry id
                  */
-                String message = get_message_text();
-                String numbers = getNumbersFromContactsSelected();
-                sendMMS(numbers, "Hello MMS!");
+//                sendMMS(numbers, "Hello MMS!");
 //                Log.d("click", _image_uri.getPath().toString());
-
-                Log.d("test", numbers);
                 String new_image_path = null;
                 if (_image_uri != null) {
-                    // copyImage();
-                    ImageButton ib = (ImageButton) findViewById(R.id.button_attachment);
+                    new_image_path = copyImage();
                 }
+                String message = get_message_text();
+                String numbers = getNumbersFromContactsSelected();
+                saveMessage(message, new_image_path);
             }
         });
     }
@@ -131,6 +134,11 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
         } else {
             return null;
         }
+    }
+
+    public static boolean deleteCopiedFile(String path) {
+        File file = new File(path);
+        return file.delete();
     }
 
     @Override

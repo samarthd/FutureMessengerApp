@@ -75,11 +75,11 @@ public class EditTextMessageActivity extends AppCompatActivity
         _message_field = (EditText) findViewById(R.id.message_field);
         _date_button = (TextView) findViewById(R.id.button_date).findViewById(R.id.button_date_text);
         _time_button = (TextView) findViewById(R.id.button_time).findViewById(R.id.button_time_text);
+        _calendar = Calendar.getInstance();
 
         /* TODO: If editing scheduled message, cancel previous version first */
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
-        // If these extras aren't null, then we're editing an existing message.
         if (extras != null) {
             //TODO: Initialize currently selected contacts to have all the existing contacts.
             buildContactListFromExisting(intent.getStringExtra("recip_names"),
@@ -91,26 +91,21 @@ public class EditTextMessageActivity extends AppCompatActivity
             String datetime = intent.getStringExtra("date") + " " + intent.getStringExtra("time");
             Log.d("editing text", datetime);
             try {
-                _calendar = Calendar.getInstance();
                 _calendar.setTime(DF_DATETIME.parse(datetime));
             } catch (ParseException e) {
                 //TODO: Major error if this is run, need to do something
                 // Editing a text, but the parse of the datetime fails
                 Log.e("onCreate", "Attempt to parse failed: " + datetime);
                 e.printStackTrace();
-            } finally {
-                updateDateButtonText();
-                updateTimeButtonText();
             }
         }
         else {
             // brand new contacts list
             currently_selected_contacts = new ArrayList<>();
             last_clicked_message_id = -1;
-            _calendar = Calendar.getInstance();
-            updateDateButtonText();
-            updateTimeButtonText();
         }
+        updateDateButtonText();
+        updateTimeButtonText();
 
         ListView contactsLV = (ListView) findViewById(R.id.selected_contacts_list);
 
@@ -131,8 +126,6 @@ public class EditTextMessageActivity extends AppCompatActivity
         initializeContactChooserButton();
         initializePhoneNumberButton();
         initializeScheduleButton();
-
-
     }
 
     // When the contact button is clicked, launch the contact picker.
@@ -417,7 +410,7 @@ public class EditTextMessageActivity extends AppCompatActivity
      * @param image_path    an image to send
      * @return the ID of the save message
      */
-    private long saveMessage(String message, String image_path) {
+    protected long saveMessage(String message, String image_path) {
         /* TODO: determine if message wants to be group, or individual
          * TODO: save numbers as "5554;5556;5558;..."
          */

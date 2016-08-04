@@ -74,8 +74,8 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
         }
     }
 
+    // https://stackoverflow.com/questions/2507898/how-to-pick-an-image-from-gallery-sd-card-for-my-app
     public void selectAttachment(View v) {
-        // https://stackoverflow.com/questions/2507898/how-to-pick-an-image-from-gallery-sd-card-for-my-app
         //TODO: make it so that we can attach a video, image, or other files?
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*");
@@ -83,43 +83,47 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
     }
 
     //SOURCE: https://stackoverflow.com/questions/10854211/android-store-inputstream-in-file
-    private void copyImage() {
-        String state = Environment.getExternalStorageState();
-        String rootExtDir = Environment.getExternalStorageDirectory().toString();
-        Log.d("", rootExtDir);
-
+    private String copyImage() {
+        // String state = Environment.getExternalStorageState();
+        // String rootExtDir = Environment.getExternalStorageDirectory().toString();
+        // Log.d("", rootExtDir);
+        boolean success = true;
         String fileName = getFileName(_image_uri);
         File dst_file = new File(getExternalFilesDir(null), fileName);
         try {
             InputStream input = getContentResolver().openInputStream(_image_uri);
             OutputStream output = new FileOutputStream(dst_file);
-            try {
-                try {
-                    byte[] buffer = new byte[1024];
-                    int read;
 
-                    while ((read = input.read(buffer)) != -1) {
-                        output.write(buffer, 0, read);
-                    }
-                    output.flush();
-                } finally {
-                    output.close();
+            try {
+                byte[] buffer = new byte[1024];
+                int read;
+
+                while ((read = input.read(buffer)) != -1) {
+                    output.write(buffer, 0, read);
                 }
+                output.flush();
             } catch (Exception e) {
+                success = false;
                 e.printStackTrace();
             } finally {
                 input.close();
+                output.close();
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
+            success = false;
             e.printStackTrace();
+        }
+
+        if (success) {
+            return dst_file.getAbsolutePath();
+        } else {
+            return null;
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
-        //super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         switch (requestCode) {
             case SELECT_IMAGE:
                 if (resultCode == RESULT_OK) {
@@ -161,7 +165,7 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
         return result;
     }
 
-    public void logPrintCalendar(Calendar c, DateFormat df) {
+    public static void logPrintCalendar(Calendar c, DateFormat df) {
         Log.d("print", df.format(c.getTime()));
     }
 }

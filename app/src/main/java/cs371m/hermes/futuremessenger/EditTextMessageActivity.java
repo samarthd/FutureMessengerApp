@@ -94,6 +94,7 @@ public class EditTextMessageActivity extends AppCompatActivity
                 _calendar.setTime(DF_DATETIME.parse(datetime));
             } catch (ParseException e) {
                 //TODO: Major error if this is run, need to do something
+                // Editing a text, but the parse of the datetime fails
                 Log.e("onCreate", "Attempt to parse failed: " + datetime);
                 e.printStackTrace();
             } finally {

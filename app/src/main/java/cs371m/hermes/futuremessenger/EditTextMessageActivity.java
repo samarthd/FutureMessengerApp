@@ -387,8 +387,6 @@ public class EditTextMessageActivity extends AppCompatActivity
         Intent alarmIntent = new Intent(EditTextMessageActivity.this, AlarmReceiver.class);
         Bundle bundle = new Bundle();
         bundle.putLong("message_id", id);
-        bundle.putCharSequence("num", phoneNum);
-        bundle.putCharSequence("message", message);
         alarmIntent.putExtras(bundle);
 
         PendingIntent pendingIntent = PendingIntent.getService(EditTextMessageActivity.this,

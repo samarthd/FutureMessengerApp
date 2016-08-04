@@ -56,27 +56,47 @@ public class AlarmReceiver extends Service {
         super.onStart(intent, startId);
         //check if extras even exist; this suppresses null pointer exceptions that happen
         //due to checking for null extras.
+        Log.d("SERVICE STARTED", "HELLO IT STARTED");
         try {
             Bundle bundle = intent.getExtras();
             messageID = bundle.getLong("message_id");
-            phoneNum = (String) bundle.getCharSequence("num");
-            message = (String) bundle.getCharSequence("message");
         }catch(NullPointerException e){
             Log.d("Alarm", "NullPointerException");
         }
+        MessengerDatabaseHelper mdb = new MessengerDatabaseHelper(this);
+        String[] results = mdb.getScheduledMessageData(messageID);
+        if (results == null) {
+            Log.d("Alarm", "No message data found.");
+        }
+        else{
+            String names = results[0];
+            String numbers = results[1];
+            String messageText = results[2];
+            //TODO: add group/mms/individ message check
 
-        Log.d("AlarmReciever: onStart", Long.toString(messageID));
-        Log.d("AlarmReciever: onStart", "About to send SMS");
 
-        sendSMS(phoneNum, message);
-/*        MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
-        mDb.deleteMessage(messageID);
-        mDb.close();*/
-        broadcastRefreshLV();
+            Log.d("AlarmReciever: onStart", Long.toString(messageID));
+            Log.d("AlarmReciever: onStart", "About to send SMS");
+
+            sendIndividualSMS(names, numbers, messageText);
+            //Delete message from database after send
+            MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
+            mDb.deleteMessage(messageID);
+            mDb.close();
+            broadcastRefreshLV();
+        }
+
         //Update the MainActivity to have the right value.
 
     }
+    //sends individual SMS messages to all listed recipients (same message)
+    public void sendIndividualSMS(String names, String numbers, String messageText){
+        String[] numbersArray = numbers.split(";");
 
+        for(String number : numbersArray) {
+            sendSMS(number, messageText);
+        }
+    }
 
     public void sendNotification(String result){
         //TODO: change notification icon and customize text to display message

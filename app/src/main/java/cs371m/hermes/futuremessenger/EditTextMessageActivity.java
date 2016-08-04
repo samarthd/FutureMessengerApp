@@ -218,6 +218,14 @@ public class EditTextMessageActivity extends AppCompatActivity
         return result;
     }
 
+    protected final String getNumbersFromContactsSelected() {
+        ArrayList<String> numbers = new ArrayList<String>();
+        for (Contact thisContact : currently_selected_contacts) {
+            numbers.add(thisContact.getPhoneNum());
+        }
+        return stringJoin(numbers, ";");
+    }
+
     //TODO REMOVE THIS
     // Set alarm for all recipients of this text message (individually)
     private void setIndividualTextAlarms(long id, String message, int year, int month,

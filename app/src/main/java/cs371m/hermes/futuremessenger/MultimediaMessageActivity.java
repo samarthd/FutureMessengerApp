@@ -26,6 +26,7 @@ import java.util.Calendar;
 
 public class MultimediaMessageActivity extends EditTextMessageActivity {
 
+    private String TAG = "MMSActivity ";
     private static final int SELECT_IMAGE = 200;
 
     protected Uri _image_uri;
@@ -46,34 +47,30 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
      * Determines what the FAButton will do
      * save the MMS into the database, and schedule an alarm
      */
-    @Override
-    protected void initializeScheduleButton() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //TODO: IMPLEMENT save_message FAB
-                Log.d("Multimedia", "Message Send button pressed.");
-                /** ORDER OF EVENTS
-                 * copy image
-                 * get copied image path
-                 * get numbers from contacts
-                 * get message text
-                 * create/update database entry
-                 * set an alarm, with database entry id
-                 */
-//                sendMMS(numbers, "Hello MMS!");
-//                Log.d("click", _image_uri.getPath().toString());
-                String new_image_path = null;
-                if (_image_uri != null) {
-                    new_image_path = copyImage();
-                }
-                String message = get_message_text();
-                String numbers = getNumbersFromContactsSelected();
-                // saveMessage(message, new_image_path);
-            }
-        });
-    }
+//    @Override
+//    protected void initializeScheduleButton() {
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                //TODO: IMPLEMENT save_message FAB
+//                Log.d("Multimedia", "Message Send button pressed.");
+//                /*
+//                TODO with the new saveMessage,
+//                TODO do I even need to overwrite the old onClick method?
+//                 */
+////                sendMMS(numbers, "Hello MMS!");
+////                Log.d("click", _image_uri.getPath().toString());
+////                String new_image_path = null;
+////                if (_image_uri != null) {
+////                    new_image_path = copyImage();
+////                }
+////                String message = get_message_text();
+////                String numbers = getNumbersFromContactsSelected();
+////                saveMessage(message, new_image_path);
+//            }
+//        });
+//    }
 
     //TODO: Move method to AlarmReciever
     public void sendMMS(String phonenum, String message) {
@@ -88,6 +85,21 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(Intent.createChooser(intent, "Send MMS"));
         }
+    }
+
+    @Override
+    protected void scheduleMessage(long id, String message, String image_path, int group_flag) {
+        /** ORDER OF EVENTS
+         * copy image
+         * get copied image path
+         * get numbers from contacts
+         * get message text
+         * create/update database entry
+         * set an alarm, with database entry id
+         */
+        Log.d(TAG + "scheduleMsg", "scheduling message");
+//        String path = copyImage();
+//        super.scheduleMessage(id, message, path, -1);
     }
 
     // https://stackoverflow.com/questions/2507898/how-to-pick-an-image-from-gallery-sd-card-for-my-app

@@ -173,18 +173,25 @@ public class EditTextMessageActivity extends AppCompatActivity
                         showGroupDialog();
                     } else {
                         //TODO: just send message
+                        //TODO: MOVE TO ITS OWN METHOD
+                        int year = _calendar.get(Calendar.YEAR);
+                        int month = _calendar.get(Calendar.MONTH);
+                        int day = _calendar.get(Calendar.DAY_OF_MONTH);
+                        int hour = _calendar.get(Calendar.HOUR_OF_DAY);
+                        int minute = _calendar.get(Calendar.MINUTE);
+
+                        String message = get_message_text();
+                        long id;
+                        if (last_clicked_message_id == -1) {
+                            id = saveMessage(message, null);
+                        }
+                        else {
+                            id = updateSMS(message);
+                        }
+
+                        setIndividualTextAlarms(id, message, year, month, day, hour, minute);
+                        returnToMainActivity();
                     }
-//                    String message = get_message_text();
-//                    long id;
-//                    if (last_clicked_message_id == -1) {
-//                        id = saveMessage(message, null);
-//                    }
-//                    else {
-//                        id = updateSMS(message);
-//                    }
-//
-//                    setIndividualTextAlarms(id, message, year, month, day, hour, minute);
-//                    returnToMainActivity();
                 }
             }
         });

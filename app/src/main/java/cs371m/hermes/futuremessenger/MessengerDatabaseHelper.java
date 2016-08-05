@@ -90,10 +90,9 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
          /* Create the Recipients_Messages table that will hold associations
             between Messages and Recipients. (A message can have many recipients
             and a recipient could have many associated messages.) */
-
         final String createRecMessTable =
                 "create table " + REC_MESS_TABLE_NAME + "(" +
-                        RECIP_ID + " INTEGER NOT NULL," +
+                RECIP_ID + " INTEGER NOT NULL," +
                 MESS_ID + " INTEGER NOT NULL," +
                 "PRIMARY KEY(" + RECIP_ID + ", " + MESS_ID + "))";
 
@@ -208,12 +207,13 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
     }
 
     /* Retrieve all scheduled messages and some associated data in a Cursor. This will be
-     * passed to a SimpleCursorAdapter that will then populate the ListView with this data. */
+     * passed to an adapter that will then populate the ListView with this data. */
     public Cursor getAllScheduledMessages() {
         SQLiteDatabase db = getWritableDatabase();
-        /* This will join the tables together and get many rows of messages, each that have a column
-         * that has all of the phone numbers separated by commas in one big string, and a formatted
-         * version of the date and time string. */
+        /* This will join the tables together and get many rows of messages. Each row will have columns
+         * for IDs, names, and numbers. Each of those columns holds one big string delimited by
+         * semicolons that has data for all of the message's associated recipients. There is also a
+         * column holding the formatted datetime of the message. */
         String sql_select = "SELECT M." + MESSAGE_ID + " AS _id, "+
                             "M." + MESSAGE_TXT_CONTENT + ", " +
                             "M." + MESSAGE_FORMATTED_DT + ", " +

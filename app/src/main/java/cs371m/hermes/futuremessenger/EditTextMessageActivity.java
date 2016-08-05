@@ -102,7 +102,7 @@ public class EditTextMessageActivity extends AppCompatActivity
             } catch (ParseException e) {
                 //TODO: Major error if this is run, need to do something
                 // Editing a text, but the parse of the datetime fails
-                Log.e("onCreate", "Attempt to parse failed: " + datetime);
+                Log.e(TAG + "onCreate", "Attempt to parse failed: " + datetime);
                 e.printStackTrace();
             }
         }
@@ -195,6 +195,7 @@ public class EditTextMessageActivity extends AppCompatActivity
                         }
 
                         setIndividualTextAlarms(id, message, year, month, day, hour, minute);
+                        // scheduleMessage(last_clicked_message_id, message, null, -1);
                         returnToMainActivity();
                     }
                 }
@@ -434,6 +435,24 @@ public class EditTextMessageActivity extends AppCompatActivity
     }
 
     /**
+     * store the message in the database and set an alarm to send the message
+     * @param id         database id of message; -1 if new message
+     * @param message    message to be sent
+     * @param image_path file path for an image
+     * @param group_flag 0 == group message, 1 == individual, ??? == neither
+     */
+    protected void scheduleMessage(long id, String message, String image_path, int group_flag) {
+        Log.d(TAG + "scheduleMsg", "scheduling message");
+        long ret_database_id;
+        if (id == -1) {
+            ret_database_id = saveMessage(message, image_path);
+        } else {
+            ret_database_id = updateMessage(message, image_path);
+        }
+        setAlarm(ret_database_id, _calendar);
+    }
+
+    /**
      * Save a new message into the database
      * @param message       the message to send
      * @param image_path    an image to send
@@ -568,28 +587,10 @@ public class EditTextMessageActivity extends AppCompatActivity
     @Override
     public void onGroupSelected(int i) {
         Log.d(TAG + "GroupSelect", Integer.toString(i));
-        //TODO: Store the group selection type
         // 0 == Group, 1 == Individual
 
-        /* TODO: MOVE CODE INTO IT'S OWN METHOD */
-        int year = _calendar.get(Calendar.YEAR);
-        int month = _calendar.get(Calendar.MONTH);
-        int day = _calendar.get(Calendar.DAY_OF_MONTH);
-        int hour = _calendar.get(Calendar.HOUR_OF_DAY);
-        int minute = _calendar.get(Calendar.MINUTE);
-
         String message = get_message_text();
-        long id;
-        if (last_clicked_message_id == -1) {
-            id = saveMessage(message, null);
-        }
-        else {
-            id = updateMessage(message, null);
-        }
-
-        //TODO: set only one alarm
-        //TODO: the Alarm will take care of individual or group splitting
-        setIndividualTextAlarms(id, message, year, month, day, hour, minute);
+        scheduleMessage(last_clicked_message_id, message, null, i);
         returnToMainActivity();
     }
 

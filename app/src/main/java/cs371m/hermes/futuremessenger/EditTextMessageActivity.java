@@ -34,6 +34,11 @@ public class EditTextMessageActivity extends AppCompatActivity
         DatePickerFragment.DatePickerListener, TimePickerFragment.TimePickerListener,
         GroupDialogFragment.GroupDialogListener {
 
+    /**
+     *
+     */
+    private String TAG = "EditTextMessageActivity ";
+
     private TextView _date_button;
     private TextView _time_button;
     private EditText _message_field;
@@ -91,7 +96,7 @@ public class EditTextMessageActivity extends AppCompatActivity
             _message_field.setText(intent.getStringExtra("message"));
             //TODO: Intent should send in date & time as one string
             String datetime = intent.getStringExtra("date") + " " + intent.getStringExtra("time");
-            Log.d("editing text", datetime);
+            Log.d(TAG + "editing text", datetime);
             try {
                 _calendar.setTime(DF_DATETIME.parse(datetime));
             } catch (ParseException e) {
@@ -163,7 +168,7 @@ public class EditTextMessageActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("FabButton", "Message Send button pressed.");
+                Log.d(TAG + "FabButton", "Message Send button pressed.");
 
                 /* TODO: add in sending of dates and time */
                 //TODO IDENTIFY WHETHER A MESSAGE IS GROUP, PICTURE, OR INDIVIDUAL, STORE THAT IN DATABASE
@@ -233,22 +238,23 @@ public class EditTextMessageActivity extends AppCompatActivity
                                                     int day, int hour, int minute) {
         for (Contact thisContact : currently_selected_contacts) {
             String thisNum = thisContact.getPhoneNum();
-            setAlarm(id, thisNum, message, year, month, day, hour, minute);
-            Log.d("SETTING INDIV ALARM", "Phonenumber = " + thisNum);
+//            setAlarm(id, thisNum, message, year, month, day, hour, minute);
+            setAlarm(id, _calendar);
+            Log.d(TAG + "SETTING INDIV ALARM", "Phonenumber = " + thisNum);
         }
         Toast.makeText(EditTextMessageActivity.this, "Saved your message!", Toast.LENGTH_SHORT).show();
     }
 
     // Builds the selected contacts list from given names and numbers delimited by strings.
     private void buildContactListFromExisting(String recip_names, String recip_nums) {
-        Log.d("Build contact string", "Names: " + recip_names);
-        Log.d("Build contact string", "Numbers: " + recip_nums);
+        Log.d(TAG + "Build contact string", "Names: " + recip_names);
+        Log.d(TAG + "Build contact string", "Numbers: " + recip_nums);
 
         String[] name_array = recip_names.split(";");
         String[] num_array = recip_nums.split(";");
         currently_selected_contacts = new ArrayList<>();
         if (name_array.length != num_array.length) {
-            Log.d("BuildContactsList", "Lengths of names and numbers are not equal.");
+            Log.d(TAG + "BuildContactsList", "Lengths of names and numbers are not equal.");
         }
         else {
             for (int i = 0; i < name_array.length; i++) {
@@ -384,11 +390,7 @@ public class EditTextMessageActivity extends AppCompatActivity
         addContactToRecipientList(new_contact);
     }
 
-    /**
-     * Create Alarm
-     * @param phoneNum
-     * @param message
-     */
+    /** TODO: Replaced with setAlarm(long, Calendar) */
     protected void setAlarm(long id, String phoneNum, String message, int year, int month, int day, int hour, int minute){
         /* Set the alarm with the selected parameters */
         Intent alarmIntent = new Intent(EditTextMessageActivity.this, AlarmReceiver.class);
@@ -407,7 +409,27 @@ public class EditTextMessageActivity extends AppCompatActivity
         calendar.set(year, month, day, hour, minute);
         //TODO: remove above calendar stuff, and just do _calendar.getTimeInMillis()?
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-        Log.d("setAlarm", "Message id = " + Long.toString(id));
+        Log.d(TAG + "setAlarm", "Message id = " + Long.toString(id));
+    }
+
+
+    /**
+     * set an alarm for when to send the message
+     * @param id the id in the database with the message and numbers to send
+     * @param when set to when the alarm is set
+     */
+    protected void setAlarm(long id, Calendar when) {
+        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+        Log.d(TAG + "setAlarm", this.getClass().toString());
+        Bundle bundle = new Bundle();
+        bundle.putLong("message_id", id);
+        alarmIntent.putExtras(bundle);
+
+        PendingIntent pendingIntent = PendingIntent.getService(this,
+                (int) id, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, when.getTimeInMillis(), pendingIntent);
+        Log.d(TAG + "setAlarm", "Message id = " + Long.toString(id));
     }
 
     /**
@@ -422,7 +444,7 @@ public class EditTextMessageActivity extends AppCompatActivity
          */
         long result = -1;
         try {
-            Log.d("saveSMS", message);
+            Log.d(TAG + "saveSMS", message);
 
             //Save the message
             String dateTime = getDateTime();
@@ -444,7 +466,7 @@ public class EditTextMessageActivity extends AppCompatActivity
         //cancel the previous alarm
         cancelAlarm();
 
-        Log.d("updateSMS", message);
+        Log.d(TAG + "updateSMS", message);
 
         //Save the message
         String dateTime = getDateTime();
@@ -473,7 +495,7 @@ public class EditTextMessageActivity extends AppCompatActivity
                 (int) last_clicked_message_id, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
-        Log.d("Alarm", "Old alarm canceled");
+        Log.d(TAG +"cancelAlarm", "Old alarm canceled");
     }
 
     private String getDateTime() {
@@ -540,7 +562,7 @@ public class EditTextMessageActivity extends AppCompatActivity
 
     @Override
     public void onGroupSelected(int i) {
-        Log.d("GroupSelect", Integer.toString(i));
+        Log.d(TAG + "GroupSelect", Integer.toString(i));
         //TODO: Store the group selection type
         // 0 == Group, 1 == Individual
 

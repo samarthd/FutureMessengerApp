@@ -191,7 +191,7 @@ public class EditTextMessageActivity extends AppCompatActivity
                             id = saveMessage(message, null);
                         }
                         else {
-                            id = updateSMS(message);
+                            id = updateMessage(message, null);
                         }
 
                         setIndividualTextAlarms(id, message, year, month, day, hour, minute);
@@ -419,6 +419,7 @@ public class EditTextMessageActivity extends AppCompatActivity
      * @param when set to when the alarm is set
      */
     protected void setAlarm(long id, Calendar when) {
+        //TODO: getContext() instead of this?
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
         Log.d(TAG + "setAlarm", this.getClass().toString());
         Bundle bundle = new Bundle();
@@ -462,9 +463,9 @@ public class EditTextMessageActivity extends AppCompatActivity
 
     // Delete the existing copy of the user-chosen message, and return the ID of the
     // new, updated version.
-    private long updateSMS(String message) {
+    private long updateMessage(String message, String image_path) {
         //cancel the previous alarm
-        cancelAlarm();
+        cancelAlarm(last_clicked_message_id);
 
         Log.d(TAG + "updateSMS", message);
 
@@ -489,10 +490,14 @@ public class EditTextMessageActivity extends AppCompatActivity
         textField.append(preset_content);
     }
 
-    private void cancelAlarm(){
+    /**
+     * cancel a scheduled message alarm
+     * @param id the database id to cancel
+     */
+    private void cancelAlarm(long id){
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(),
-                (int) last_clicked_message_id, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
+                (int) id, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
         Log.d(TAG +"cancelAlarm", "Old alarm canceled");
@@ -579,7 +584,7 @@ public class EditTextMessageActivity extends AppCompatActivity
             id = saveMessage(message, null);
         }
         else {
-            id = updateSMS(message);
+            id = updateMessage(message, null);
         }
 
         //TODO: set only one alarm

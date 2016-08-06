@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.OpenableColumns;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -42,35 +43,22 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
         layout_ib.setVisibility(View.VISIBLE);
     }
 
-
-    /**
-     * Determines what the FAButton will do
-     * save the MMS into the database, and schedule an alarm
-     */
-//    @Override
-//    protected void initializeScheduleButton() {
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //TODO: IMPLEMENT save_message FAB
-//                Log.d("Multimedia", "Message Send button pressed.");
-//                /*
-//                TODO with the new saveMessage,
-//                TODO do I even need to overwrite the old onClick method?
-//                 */
-////                sendMMS(numbers, "Hello MMS!");
-////                Log.d("click", _image_uri.getPath().toString());
-////                String new_image_path = null;
-////                if (_image_uri != null) {
-////                    new_image_path = copyImage();
-////                }
-////                String message = get_message_text();
-////                String numbers = getNumbersFromContactsSelected();
-////                saveMessage(message, new_image_path);
-//            }
-//        });
-//    }
+    @Override
+    protected void initializeScheduleButton() {
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "Message Send button pressed.");
+                if (_image_uri != null) {
+//                    String path = copyImage(_image_uri);
+//                    Log.d(TAG, path);
+//                    String saved_path = "/storage/emulated/0/Android/data/cs371m.hermes.futuremessenger/files/PSX_20151124_021724.jpg";
+//                    deleteCopiedFile(saved_path);
+                }
+            }
+        });
+    }
 
     //TODO: Move method to AlarmReciever
     public void sendMMS(String phonenum, String message) {
@@ -98,7 +86,7 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
          * set an alarm, with database entry id
          */
         Log.d(TAG + "scheduleMsg", "scheduling message");
-        String path = copyImage();
+        String path = copyImage(_image_uri);
         super.scheduleMessage(id, message, path, group_flag);
     }
 
@@ -110,15 +98,20 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
     }
 
     //SOURCE: https://stackoverflow.com/questions/10854211/android-store-inputstream-in-file
-    private String copyImage() {
+    @Nullable
+    private String copyImage(Uri uri) {
         // String state = Environment.getExternalStorageState();
         // String rootExtDir = Environment.getExternalStorageDirectory().toString();
         // Log.d("", rootExtDir);
+        if (uri == null) {
+            return null;
+        }
+
         boolean success = true;
-        String fileName = getFileName(_image_uri);
+        String fileName = getFileName(uri);
         File dst_file = new File(getExternalFilesDir(null), fileName);
         try {
-            InputStream input = getContentResolver().openInputStream(_image_uri);
+            InputStream input = getContentResolver().openInputStream(uri);
             OutputStream output = new FileOutputStream(dst_file);
 
             try {

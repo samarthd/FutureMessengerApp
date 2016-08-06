@@ -26,7 +26,7 @@ import java.util.Calendar;
 
 public class MultimediaMessageActivity extends EditTextMessageActivity {
 
-    private String TAG = "MMSActivity ";
+    private static String TAG = "MMSActivity ";
     private static final int SELECT_IMAGE = 200;
 
     protected Uri _image_uri;
@@ -98,8 +98,8 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
          * set an alarm, with database entry id
          */
         Log.d(TAG + "scheduleMsg", "scheduling message");
-//        String path = copyImage();
-//        super.scheduleMessage(id, message, path, -1);
+        String path = copyImage();
+        super.scheduleMessage(id, message, path, group_flag);
     }
 
     // https://stackoverflow.com/questions/2507898/how-to-pick-an-image-from-gallery-sd-card-for-my-app
@@ -163,16 +163,49 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
                     _image_uri = selectedImage;
                     try {
                         InputStream imageStream = getContentResolver().openInputStream(selectedImage);
-                        Bitmap yourSelectedImage = BitmapFactory.decodeStream(imageStream);
-                        //TODO: fix for very large images
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inJustDecodeBounds = true;
+                        BitmapFactory.decodeStream(imageStream, null, options);
+
+                        /* Tries to "efficiently" get the sample size, but not quite there, I think */
                         ImageButton ib = (ImageButton) findViewById(R.id.button_attachment);
-                        ib.setImageBitmap(yourSelectedImage);
+
+                        //height and width are the minimum size we want of the image
+                        options.inSampleSize = calculateInSampleSize(options, ib.getMaxHeight(), ib.getWidth());
+                        options.inJustDecodeBounds = false;
+                        imageStream = getContentResolver().openInputStream(selectedImage);
+                        Bitmap scaledImage = BitmapFactory.decodeStream(imageStream, null, options);
+
+                        ib.setImageBitmap(scaledImage);
                     } catch (FileNotFoundException e) {
-                        Log.d("onActivityResult", "FILE NOT FOUND");
+                        Log.d(TAG + "onActivityResult", "FILE NOT FOUND");
                     }
 
                 }
         }
+    }
+
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        Log.d(TAG + "image sizes(h, w)", Integer.toString(height) + ", " + Integer.toString(width));
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        Log.d(TAG + "calcSampleSize", Integer.toString(inSampleSize));
+        return inSampleSize;
     }
 
     public String getFileName(Uri uri) {

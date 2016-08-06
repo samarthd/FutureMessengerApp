@@ -18,6 +18,8 @@ import android.telephony.SmsManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 /**
  * Created by Drew on 7/18/2016.
  */
@@ -192,7 +194,19 @@ public class AlarmReceiver extends Service {
             }, new IntentFilter("delivered"));
 
             SmsManager sms = SmsManager.getDefault();
-            sms.sendTextMessage(phoneNum, null, message, sentPI, deliverPI);
+            if (message.length() >= 160) {
+                ArrayList<String> parts = sms.divideMessage(message);
+                ArrayList<PendingIntent> sentIntents = new ArrayList<PendingIntent>();
+                ArrayList<PendingIntent> deliveryIntents = new ArrayList<PendingIntent>();
+                for(int i = 0; i < parts.size(); ++i) {
+                    sentIntents.add(PendingIntent.getBroadcast(getApplicationContext(), 0, sentIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+                    deliveryIntents.add(PendingIntent.getBroadcast(getApplicationContext(), 0, deliveryIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+                }
+                sms.sendMultipartTextMessage(phoneNum, null, parts, sentIntents, deliveryIntents);
+                Log.d("sendSMS", "sent split messages");
+            } else {
+                sms.sendTextMessage(phoneNum, null, message, sentPI, deliverPI);
+            }
             Log.d("sendSMS", "Text sent");
         } catch (Exception ex) {
             ex.printStackTrace();

@@ -50,14 +50,13 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Message Send button pressed.");
-                sendMMS("5554;5556;6000", "Hello MMS");
-//                if (_image_uri != null) {
+                if (_image_uri != null) {
 //                    String path = copyImage(_image_uri);
 //                    Log.d(TAG, path);
 //                    String saved_path = "/storage/emulated/0/Android/data/cs371m.hermes.futuremessenger/files/PSX_20151124_021724.jpg";
 //                    deleteCopiedFile(saved_path);
-//                    sendMMS("5554;", "Hello MMS");
-//                }
+                    sendMMS(getNumbersFromContactsSelected(), get_message_text());
+                }
             }
         });
     }

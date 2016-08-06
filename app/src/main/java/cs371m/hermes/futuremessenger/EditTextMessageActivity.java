@@ -179,26 +179,7 @@ public class EditTextMessageActivity extends AppCompatActivity
                     } else {
                         //TODO: just send message
                         //TODO: MOVE TO ITS OWN METHOD
-                        int year = _calendar.get(Calendar.YEAR);
-                        int month = _calendar.get(Calendar.MONTH);
-                        int day = _calendar.get(Calendar.DAY_OF_MONTH);
-                        int hour = _calendar.get(Calendar.HOUR_OF_DAY);
-                        int minute = _calendar.get(Calendar.MINUTE);
-
-                        String message = get_message_text();
-
-                        // TODO GET THE ACTUAL GROUP FLAG
-                        int group_flag = MessengerDatabaseHelper.NOT_GROUP_MESSAGE;
-                        long id;
-                        if (last_clicked_message_id == -1) {
-                            id = saveMessage(message, null, group_flag);
-                        }
-                        else {
-                            id = updateMessage(message, null, group_flag);
-                        }
-
-                        setIndividualTextAlarms(id, message, year, month, day, hour, minute);
-                        // scheduleMessage(last_clicked_message_id, message, null, -1);
+                        scheduleMessage(last_clicked_message_id, get_message_text(), null, MessengerDatabaseHelper.NOT_GROUP_MESSAGE);
                         returnToMainActivity();
                     }
                 }
@@ -236,18 +217,6 @@ public class EditTextMessageActivity extends AppCompatActivity
         return stringJoin(numbers, ";");
     }
 
-    //TODO REMOVE THIS
-    // Set alarm for all recipients of this text message (individually)
-    private void setIndividualTextAlarms(long id, String message, int year, int month,
-                                                    int day, int hour, int minute) {
-        for (Contact thisContact : currently_selected_contacts) {
-            String thisNum = thisContact.getPhoneNum();
-//            setAlarm(id, thisNum, message, year, month, day, hour, minute);
-            setAlarm(id, _calendar);
-            Log.d(TAG + "SETTING INDIV ALARM", "Phonenumber = " + thisNum);
-        }
-        Toast.makeText(EditTextMessageActivity.this, "Saved your message!", Toast.LENGTH_SHORT).show();
-    }
 
     // Builds the selected contacts list from given names and numbers delimited by strings.
     private void buildContactListFromExisting(String recip_names, String recip_nums) {
@@ -594,7 +563,7 @@ public class EditTextMessageActivity extends AppCompatActivity
         // 0 == Group, 1 == Individual
 
         String message = get_message_text();
-        scheduleMessage(last_clicked_message_id, message, null, i);
+        scheduleMessage(last_clicked_message_id, message, null, (i==1)?MessengerDatabaseHelper.NOT_GROUP_MESSAGE:MessengerDatabaseHelper.IS_GROUP_MESSAGE);
         returnToMainActivity();
     }
 

@@ -43,23 +43,23 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
         layout_ib.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    protected void initializeScheduleButton() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "Message Send button pressed.");
-                if (_image_uri != null) {
-//                    String path = copyImage(_image_uri);
-//                    Log.d(TAG, path);
-//                    String saved_path = "/storage/emulated/0/Android/data/cs371m.hermes.futuremessenger/files/PSX_20151124_021724.jpg";
-//                    deleteCopiedFile(saved_path);
-                    sendMMS(getNumbersFromContactsSelected(), get_message_text());
-                }
-            }
-        });
-    }
+//    @Override
+//    protected void initializeScheduleButton() {
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Log.d(TAG, "Message Send button pressed.");
+//                if (_image_uri != null) {
+////                    String path = copyImage(_image_uri);
+////                    Log.d(TAG, path);
+////                    String saved_path = "/storage/emulated/0/Android/data/cs371m.hermes.futuremessenger/files/PSX_20151124_021724.jpg";
+////                    deleteCopiedFile(saved_path);
+//                    sendMMS(getNumbersFromContactsSelected(), get_message_text());
+//                }
+//            }
+//        });
+//    }
 
     //TODO: Move method to AlarmReciever
     public void sendMMS(String phonenum, String message) {
@@ -89,8 +89,8 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
          * set an alarm, with database entry id
          */
         Log.d(TAG + "scheduleMsg", "scheduling message");
-        String path = copyImage(_image_uri);
-        super.scheduleMessage(id, message, path, group_flag);
+        //String path = copyImage(_image_uri);
+        super.scheduleMessage(id, message, _image_uri.getPath(), group_flag);
     }
 
     // https://stackoverflow.com/questions/2507898/how-to-pick-an-image-from-gallery-sd-card-for-my-app

@@ -75,7 +75,9 @@ public class AlarmReceiver extends Service {
             String numbers = results.getString("recip_nums");
             String messageText = results.getString("message");
             //TODO: add group/mms/individ message check
-
+            int groupFlag = results.getInt("group_flag");
+            String img_path = results.getString("image_path");
+            Log.d("Alarm", img_path);
 
             Log.d("AlarmReciever: onStart", Long.toString(messageID));
             Log.d("AlarmReciever: onStart", "About to send SMS");
@@ -97,6 +99,22 @@ public class AlarmReceiver extends Service {
 
         for(String number : numbersArray) {
             sendSMS(number, messageText);
+        }
+    }
+
+    public void sendMMS(String phonenum, String message) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        //intent.setData(Uri.parse("smsto:" + phonenum));
+        intent.putExtra("address", phonenum);
+        intent.putExtra("sms_body", message);
+        //intent.putExtra(Intent.EXTRA_STREAM, _image_uri);
+        intent.setType("image/*");
+        //intent.setDataAndType(Uri.parse("smsto:" + phonenum), "*/*");
+
+        Log.d("Alarm", "in sendMMS()");
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            Log.d("SendMMS", "launching activity");
+            startActivity(Intent.createChooser(intent, "Send MMS"));
         }
     }
 

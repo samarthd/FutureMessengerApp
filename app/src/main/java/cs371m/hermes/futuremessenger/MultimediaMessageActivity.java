@@ -50,27 +50,31 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "Message Send button pressed.");
-                if (_image_uri != null) {
+                sendMMS("5554;5556;6000", "Hello MMS");
+//                if (_image_uri != null) {
 //                    String path = copyImage(_image_uri);
 //                    Log.d(TAG, path);
 //                    String saved_path = "/storage/emulated/0/Android/data/cs371m.hermes.futuremessenger/files/PSX_20151124_021724.jpg";
 //                    deleteCopiedFile(saved_path);
-                }
+//                    sendMMS("5554;", "Hello MMS");
+//                }
             }
         });
     }
 
     //TODO: Move method to AlarmReciever
     public void sendMMS(String phonenum, String message) {
-        Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mmsto:" + phonenum));
+        Intent intent = new Intent(Intent.ACTION_SEND);
+//        intent.setData(Uri.parse("smsto:" + phonenum));
+        intent.putExtra("address", phonenum);
         intent.putExtra("sms_body", message);
-        File sdcard = Environment.getExternalStorageDirectory();
-        File gif = new File (sdcard, "Download/dancing-banana.gif");
-        Log.d("sendMMS", gif.getPath());
-        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(gif));
+        intent.putExtra(Intent.EXTRA_STREAM, _image_uri);
+        intent.setType("image/*");
+//        intent.setDataAndType(Uri.parse("smsto:" + phonenum), "*/*");
 
+        Log.d("SendMMS", "in sendMMS()");
         if (intent.resolveActivity(getPackageManager()) != null) {
+            Log.d("SendMMS", "launching activity");
             startActivity(Intent.createChooser(intent, "Send MMS"));
         }
     }

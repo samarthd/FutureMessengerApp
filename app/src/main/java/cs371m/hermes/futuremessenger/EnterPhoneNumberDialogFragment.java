@@ -72,7 +72,7 @@ public class EnterPhoneNumberDialogFragment extends DialogFragment {
         final AlertDialog d = (AlertDialog) getDialog();
         if (d != null) {
 
-            Button add_button = (Button) d.getButton(Dialog.BUTTON_POSITIVE);
+            Button add_button = d.getButton(Dialog.BUTTON_POSITIVE);
             add_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

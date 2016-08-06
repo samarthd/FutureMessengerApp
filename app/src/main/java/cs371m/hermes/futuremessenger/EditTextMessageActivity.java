@@ -186,12 +186,15 @@ public class EditTextMessageActivity extends AppCompatActivity
                         int minute = _calendar.get(Calendar.MINUTE);
 
                         String message = get_message_text();
+
+                        // TODO GET THE ACTUAL GROUP FLAG
+                        int group_flag = MessengerDatabaseHelper.NOT_GROUP_MESSAGE;
                         long id;
                         if (last_clicked_message_id == -1) {
-                            id = saveMessage(message, null);
+                            id = saveMessage(message, null, group_flag);
                         }
                         else {
-                            id = updateMessage(message, null);
+                            id = updateMessage(message, null, group_flag);
                         }
 
                         setIndividualTextAlarms(id, message, year, month, day, hour, minute);
@@ -334,7 +337,7 @@ public class EditTextMessageActivity extends AppCompatActivity
 
 
         if (showErrorToast)
-            Toast.makeText(this, "Something went wrong with that contact.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.edit_error, Toast.LENGTH_SHORT).show();
         else {
             Contact current_contact = new Contact(name, phoneNumber);
             addContactToRecipientList(current_contact);
@@ -445,9 +448,9 @@ public class EditTextMessageActivity extends AppCompatActivity
         Log.d(TAG + "scheduleMsg", "scheduling message");
         long ret_database_id;
         if (id == -1) {
-            ret_database_id = saveMessage(message, image_path);
+            ret_database_id = saveMessage(message, image_path, group_flag);
         } else {
-            ret_database_id = updateMessage(message, image_path);
+            ret_database_id = updateMessage(message, image_path, group_flag);
         }
         setAlarm(ret_database_id, _calendar);
     }
@@ -458,7 +461,7 @@ public class EditTextMessageActivity extends AppCompatActivity
      * @param image_path    an image to send
      * @return the ID of the save message
      */
-    protected long saveMessage(String message, String image_path) {
+    protected long saveMessage(String message, String image_path, int group_flag) {
         /* TODO: determine if message wants to be group, or individual
          * TODO: save numbers as "5554;5556;5558;..."
          */
@@ -469,7 +472,8 @@ public class EditTextMessageActivity extends AppCompatActivity
             //Save the message
             String dateTime = getDateTime();
             MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(EditTextMessageActivity.this);
-            result = mDb.storeNewSMS(currently_selected_contacts, dateTime, message);
+            result = mDb.storeNewMessage(currently_selected_contacts, dateTime, message, image_path,
+                                         group_flag);
             mDb.close();
 
         } catch (Exception ex) {
@@ -482,17 +486,17 @@ public class EditTextMessageActivity extends AppCompatActivity
 
     // Delete the existing copy of the user-chosen message, and return the ID of the
     // new, updated version.
-    private long updateMessage(String message, String image_path) {
+    private long updateMessage(String message, String image_path, int group_flag) {
         //cancel the previous alarm
         cancelAlarm(last_clicked_message_id);
 
-        Log.d(TAG + "updateSMS", message);
+        Log.d(TAG + "updateMessage", message);
 
         //Save the message
         String dateTime = getDateTime();
         MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(EditTextMessageActivity.this);
-        long result = mDb.updateSMS(last_clicked_message_id, currently_selected_contacts,
-                                            dateTime, message);
+        long result = mDb.updateExistingMessage(last_clicked_message_id, currently_selected_contacts,
+                                            dateTime, message, image_path, group_flag);
         mDb.close();
         return result;
     }

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Bundle;
 import android.util.Log;
 
 import java.text.DateFormat;
@@ -36,6 +37,10 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
     public static final String MESSAGE_FORMATTED_DT = "FORMATTED_DATETIME";
     public static final String MESSAGE_TXT_CONTENT = "TEXT_CONTENT";
     public static final String MESSAGE_IMG_PATH = "IMAGE_PATH";
+    public static final String MESSAGE_GROUP = "GROUP_FLAG";
+
+    public static final int NOT_GROUP_MESSAGE = 0;
+    public static final int IS_GROUP_MESSAGE = 1;
 
     // Names of various columns in the Recipient-Message association
     // table in the database.
@@ -83,7 +88,8 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
                 MESSAGE_DATETIME + " TEXT," +
                 MESSAGE_FORMATTED_DT + " TEXT," +
                 MESSAGE_TXT_CONTENT + " TEXT," +
-                MESSAGE_IMG_PATH + " TEXT)";
+                MESSAGE_IMG_PATH + " TEXT," +
+                MESSAGE_GROUP + " INTEGER)";
         Log.d(TAG, "CREATING MESSAGE TABLE: " + createMessTable);
         db.execSQL(createMessTable);
 
@@ -117,13 +123,14 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    /* Store a new SMS message to be sent to one or more recipient phone numbers.
+    /* Store a new message to be sent to one or more recipient phone numbers.
      * Returns ID of the message on success, -1 on failure. */
-    public long storeNewSMS(ArrayList<Contact> recipients_list, String dateTime, String message) {
+    public long storeNewMessage(ArrayList<Contact> recipients_list, String dateTime, String message,
+                                 String image_path, int group_message) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         // Store the message in the database.
-        long message_id = storeNewMessage(dateTime, message);
+        long message_id = storeMessageData(dateTime, message, image_path, group_message);
         if (message_id == -1)
             return -1;
 
@@ -179,14 +186,17 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         }
         return recipient_id;
     }
-    /* Stores a new message in the database, and returns its message id. If
+    /* Stores data about a message in the database, and returns its message id. If
        there was an error in storing the message, returns -1.
      */
-    private long storeNewMessage(String dateTime, String message) {
+    private long storeMessageData(String dateTime, String message, String image_path,
+                                  int group_flag) {
         SQLiteDatabase db = getWritableDatabase();
         ContentValues msgContentValues = new ContentValues();
         msgContentValues.put(MESSAGE_TXT_CONTENT, message);
         msgContentValues.put(MESSAGE_DATETIME, dateTime);
+        msgContentValues.put(MESSAGE_IMG_PATH, image_path);
+        msgContentValues.put(MESSAGE_GROUP, group_flag);
 
         //Format the datetime in a human-friendly manner.
         SimpleDateFormat sourceDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -234,13 +244,15 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
 
     /* Get some basic data about only one message. Used to populate fields in the
      * message editing activities. */
-    public String[] getScheduledMessageData(long message_id){
+    public Bundle getScheduledMessageData(long message_id){
 
         SQLiteDatabase db = getWritableDatabase();
 
         //Make a query for that message and its basic information.
         String sql_select = "SELECT M."+ MESSAGE_ID + ", M." + MESSAGE_DATETIME + ", " +
                 "M." + MESSAGE_TXT_CONTENT + ", " +
+                "M." + MESSAGE_IMG_PATH + ", " +
+                "M." + MESSAGE_GROUP + ", " +
                 "GROUP_CONCAT(" + "R." + RECIPIENT_ID + ", ';') AS RECIPIENT_IDS, " +
                 "GROUP_CONCAT(" + "R." + RECIPIENT_NAME + ", ';') AS RECIPIENT_NAMES, " +
                 "GROUP_CONCAT(" + "R." + RECIPIENT_PHONE_NUMBER + ", ';') AS RECIPIENT_NUMBERS " +
@@ -260,11 +272,22 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
             String recip_names = resultCursor.getString(resultCursor.getColumnIndex("RECIPIENT_NAMES"));
             String recip_nums = resultCursor.getString(resultCursor.getColumnIndex("RECIPIENT_NUMBERS"));
             String message = resultCursor.getString(resultCursor.getColumnIndex(MESSAGE_TXT_CONTENT));
+            String image_path = resultCursor.getString(resultCursor.getColumnIndex(MESSAGE_IMG_PATH));
+            int group_flag = resultCursor.getInt(resultCursor.getColumnIndex(MESSAGE_GROUP));
             String dateTime = resultCursor.getString(resultCursor.getColumnIndex(MESSAGE_DATETIME));
             String[] dateTimeSplit = dateTime.split(" ");
             String date = dateTimeSplit[0];
             String time = dateTimeSplit[1];
-            String[] result = new String[] {recip_names, recip_nums, message, date, time, dateTime};
+            Bundle result = new Bundle();
+            result.putString("recip_names", recip_names);
+            result.putString("recip_nums", recip_nums);
+            result.putString("message", message);
+            result.putString("image_path", image_path);
+            result.putInt("group_flag", group_flag);
+            result.putString("date", date);
+            result.putString("time", time);
+            result.putString("dateTime", dateTime);
+           // String[] result = new String[] {recip_names, recip_nums, message, date, time, dateTime};
             resultCursor.close();
             return result;
         }
@@ -324,9 +347,11 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
     /* This method will delete the message with the given ID and create a new one with the
     *  new values and return its ID. Before calling this method, make sure you've updated/cancelled
     *  the existing alarm used to schedule it. */
-    public long updateSMS(long message_id, ArrayList<Contact> recipients_list, String dateTime, String message) {
+    public long updateExistingMessage(long message_id, ArrayList<Contact> recipients_list,
+                                      String dateTime, String message, String image_path,
+                                      int group_flag) {
         deleteMessage(message_id);
-        return storeNewSMS(recipients_list, dateTime, message);
+        return storeNewMessage(recipients_list, dateTime, message, image_path, group_flag);
     }
 
     // Store a new preset
@@ -348,7 +373,8 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
     public String[] getPresetData(long preset_id) {
         SQLiteDatabase db = getWritableDatabase();
         Cursor resultCursor = db.query(PRESET_TABLE_NAME, new String[] {PRESET_NAME, PRESET_CONTENT},
-                                       PRESET_ID + "=?", new String[] {"" + preset_id}, null, null, null, null);
+                                       PRESET_ID + "=?", new String[] {"" + preset_id}, null, null,
+                                       null, null);
         String name = "";
         String content = "";
         if (resultCursor.moveToFirst()) {

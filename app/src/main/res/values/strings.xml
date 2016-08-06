@@ -45,6 +45,7 @@
     <string name="no_contacts_entered">No contact entered</string>
     <string name="no_message_entered">No message entered</string>
     <string name="bad_date_entered">Date not set to future!</string>
+    <string name="edit_error">Something went wrong with that contact.</string>
     <string-array name="group_choice">
         <item>@string/group_group</item>
         <item>@string/group_indiv</item>

@@ -42,4 +42,13 @@
     <string name="no_selectable_presets_message">You don\'t have any presets saved.</string>
     <string name="populate_from_preset">POPULATE FROM PRESET</string>
     <string name="no_scheduled_messages">No messages are currently scheduled.</string>
+    <string name="no_contacts_entered">No contact entered</string>
+    <string name="no_message_entered">No message entered</string>
+    <string name="bad_date_entered">Date not set to future!</string>
+    <string-array name="group_choice">
+        <item>@string/group_group</item>
+        <item>@string/group_indiv</item>
+    </string-array>
+    <string name="group_group">Group</string>
+    <string name="group_indiv">Individually</string>
 </resources>

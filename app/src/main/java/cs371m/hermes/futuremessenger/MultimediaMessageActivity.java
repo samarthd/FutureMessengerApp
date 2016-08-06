@@ -26,7 +26,7 @@ import java.util.Calendar;
 
 public class MultimediaMessageActivity extends EditTextMessageActivity {
 
-    private String TAG = "MMSActivity ";
+    private static String TAG = "MMSActivity ";
     private static final int SELECT_IMAGE = 200;
 
     protected Uri _image_uri;
@@ -163,24 +163,22 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
                     _image_uri = selectedImage;
                     try {
                         InputStream imageStream = getContentResolver().openInputStream(selectedImage);
-                        // Bitmap yourSelectedImage = BitmapFactory.decodeStream(imageStream);
-                        //TODO: fix for very large images
                         BitmapFactory.Options options = new BitmapFactory.Options();
                         options.inJustDecodeBounds = true;
                         BitmapFactory.decodeStream(imageStream, null, options);
 
-                        //TODO: get max texture sizes at runtime, or by device?
-                        //TODO: W/OpenGLRenderer: Bitmap too large to be uploaded into a texture (4128x2322, max=4096x4096)
-                        options.inSampleSize = calculateInSampleSize(options, 2048, 2048);
-                        Log.d(TAG + "scale", Integer.toString(options.inSampleSize));
+                        /* Tries to "efficiently" get the sample size, but not quite there, I think */
+                        ImageButton ib = (ImageButton) findViewById(R.id.button_attachment);
+
+                        //height and width are the minimum size we want of the image
+                        options.inSampleSize = calculateInSampleSize(options, ib.getMaxHeight(), ib.getWidth());
                         options.inJustDecodeBounds = false;
                         imageStream = getContentResolver().openInputStream(selectedImage);
                         Bitmap scaledImage = BitmapFactory.decodeStream(imageStream, null, options);
 
-                        ImageButton ib = (ImageButton) findViewById(R.id.button_attachment);
                         ib.setImageBitmap(scaledImage);
                     } catch (FileNotFoundException e) {
-                        Log.d("onActivityResult", "FILE NOT FOUND");
+                        Log.d(TAG + "onActivityResult", "FILE NOT FOUND");
                     }
 
                 }
@@ -191,7 +189,7 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
         final int height = options.outHeight;
         final int width = options.outWidth;
-        Log.d("CalcSampleSize", Integer.toString(height) + " " + Integer.toString(width));
+        Log.d(TAG + "image sizes(h, w)", Integer.toString(height) + ", " + Integer.toString(width));
         int inSampleSize = 1;
 
         if (height > reqHeight || width > reqWidth) {
@@ -206,6 +204,7 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
             }
         }
 
+        Log.d(TAG + "calcSampleSize", Integer.toString(inSampleSize));
         return inSampleSize;
     }
 

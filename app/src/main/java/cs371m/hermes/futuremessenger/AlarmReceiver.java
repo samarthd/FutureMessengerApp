@@ -8,11 +8,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -82,7 +82,13 @@ public class AlarmReceiver extends Service {
             Log.d("AlarmReciever: onStart", Long.toString(messageID));
             Log.d("AlarmReciever: onStart", "About to send SMS");
 
-            sendIndividualSMS(names, numbers, messageText);
+
+            if(groupFlag==MessengerDatabaseHelper.IS_GROUP_MESSAGE){
+                sendMMS(numbers, messageText, img_path);
+            }else{
+                sendIndividualSMS(names, numbers, messageText);
+            }
+
             //Delete message from database after send
             MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
             mDb.deleteMessage(messageID);
@@ -102,12 +108,12 @@ public class AlarmReceiver extends Service {
         }
     }
 
-    public void sendMMS(String phonenum, String message) {
+    public void sendMMS(String phonenum, String message, String uri_path) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         //intent.setData(Uri.parse("smsto:" + phonenum));
         intent.putExtra("address", phonenum);
         intent.putExtra("sms_body", message);
-        //intent.putExtra(Intent.EXTRA_STREAM, _image_uri);
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(uri_path));
         intent.setType("image/*");
         //intent.setDataAndType(Uri.parse("smsto:" + phonenum), "*/*");
 

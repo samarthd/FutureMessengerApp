@@ -163,16 +163,50 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
                     _image_uri = selectedImage;
                     try {
                         InputStream imageStream = getContentResolver().openInputStream(selectedImage);
-                        Bitmap yourSelectedImage = BitmapFactory.decodeStream(imageStream);
+                        // Bitmap yourSelectedImage = BitmapFactory.decodeStream(imageStream);
                         //TODO: fix for very large images
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inJustDecodeBounds = true;
+                        BitmapFactory.decodeStream(imageStream, null, options);
+
+                        //TODO: get max texture sizes at runtime, or by device?
+                        //TODO: W/OpenGLRenderer: Bitmap too large to be uploaded into a texture (4128x2322, max=4096x4096)
+                        options.inSampleSize = calculateInSampleSize(options, 2048, 2048);
+                        Log.d(TAG + "scale", Integer.toString(options.inSampleSize));
+                        options.inJustDecodeBounds = false;
+                        imageStream = getContentResolver().openInputStream(selectedImage);
+                        Bitmap scaledImage = BitmapFactory.decodeStream(imageStream, null, options);
+
                         ImageButton ib = (ImageButton) findViewById(R.id.button_attachment);
-                        ib.setImageBitmap(yourSelectedImage);
+                        ib.setImageBitmap(scaledImage);
                     } catch (FileNotFoundException e) {
                         Log.d("onActivityResult", "FILE NOT FOUND");
                     }
 
                 }
         }
+    }
+
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        Log.d("CalcSampleSize", Integer.toString(height) + " " + Integer.toString(width));
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 
     public String getFileName(Uri uri) {

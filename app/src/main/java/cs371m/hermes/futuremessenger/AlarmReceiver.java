@@ -64,14 +64,14 @@ public class AlarmReceiver extends Service {
             Log.d("Alarm", "NullPointerException");
         }
         MessengerDatabaseHelper mdb = new MessengerDatabaseHelper(this);
-        String[] results = mdb.getScheduledMessageData(messageID);
+        Bundle results = mdb.getScheduledMessageData(messageID);
         if (results == null) {
             Log.d("Alarm", "No message data found.");
         }
         else{
-            String names = results[0];
-            String numbers = results[1];
-            String messageText = results[2];
+            String names = results.getString("recip_names");
+            String numbers = results.getString("recip_nums");
+            String messageText = results.getString("message");
             //TODO: add group/mms/individ message check
 
 

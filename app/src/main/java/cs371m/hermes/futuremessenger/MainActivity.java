@@ -198,24 +198,28 @@ public class MainActivity extends AppCompatActivity {
     /* Edit a currently scheduled message. */
     private void editScheduledMessage() {
         // Get the message's data.
-        String[] message_info = mDb.getScheduledMessageData(last_clicked_message_id);
+        Bundle message_info = mDb.getScheduledMessageData(last_clicked_message_id);
         if (message_info != null) {
-            String recip_names = message_info[0];
-            String recip_nums = message_info[1];
-            String message = message_info[2];
-            String date = message_info[3];
-            String time = message_info[4];
-            String dateTime = message_info[5];
+            String recip_names = message_info.getString("recip_names");
+            String recip_nums = message_info.getString("recip_nums");
+            String message = message_info.getString("message");
+            String image_path = message_info.getString("image_path");
+            int group_flag = message_info.getInt("group_flag");
+            String date = message_info.getString("date");
+            String time = message_info.getString("time");
+            String dateTime = message_info.getString("dateTime");
 
             // Place the data in an intent.
             Intent intent = new Intent(this, EditTextMessageActivity.class);
             intent.putExtra("recip_names", recip_names);
             intent.putExtra("recip_nums", recip_nums);
+            intent.putExtra("message", message);
+            intent.putExtra("image_path", image_path);
+            intent.putExtra("group_flag", group_flag);
             intent.putExtra("date", date);
             intent.putExtra("time", time);
-            intent.putExtra("message", message);
-            intent.putExtra("message_id", last_clicked_message_id);
             intent.putExtra("message_datetime", dateTime);
+            intent.putExtra("message_id", last_clicked_message_id);
 
             // Start the edit message activity through this intent.
             startActivityForResult(intent, 1);

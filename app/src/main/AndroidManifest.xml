@@ -49,7 +49,9 @@
             android:name=".MultimediaMessageActivity"
             android:label="@string/title_activity_multimedia_message"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden|stateUnchanged">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="cs371m.hermes.futuremessenger.MainActivity" />
@@ -58,7 +60,8 @@
             android:name=".ManagePresets"
             android:label="@string/title_activity_manage_presets"
             android:parentActivityName=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="cs371m.hermes.futuremessenger.MainActivity" />
@@ -67,7 +70,8 @@
             android:name=".EditPreset"
             android:label="@string/title_activity_edit_preset"
             android:parentActivityName=".ManagePresets"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="cs371m.hermes.futuremessenger.ManagePresets" />
@@ -75,6 +79,7 @@
         <activity
             android:name=".SelectPresetActivity"
             android:label="@string/title_activity_select_preset"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait" />
     </application>
 </manifest>

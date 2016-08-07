@@ -41,6 +41,12 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         LinearLayout layout_ib = (LinearLayout) findViewById(R.id.layout_attachment);
         layout_ib.setVisibility(View.VISIBLE);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String uri_path = getIntent().getStringExtra("image_path");
+            _image_uri = Uri.parse(uri_path);
+        }
     }
 
 //    @Override
@@ -90,7 +96,7 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
          */
         Log.d(TAG + "scheduleMsg", "scheduling message");
         //String path = copyImage(_image_uri);
-        super.scheduleMessage(id, message, _image_uri.toString(), group_flag);
+        super.scheduleMessage(id, message, _image_uri.toString(), MessengerDatabaseHelper.IS_GROUP_MESSAGE);
     }
 
     // https://stackoverflow.com/questions/2507898/how-to-pick-an-image-from-gallery-sd-card-for-my-app
@@ -147,6 +153,12 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
     public static boolean deleteCopiedFile(String path) {
         File file = new File(path);
         return file.delete();
+    }
+
+    @Override
+    public int showGroupDialog() {
+        onGroupSelected(0); //Always considered a Group Message
+        return 0;
     }
 
     @Override

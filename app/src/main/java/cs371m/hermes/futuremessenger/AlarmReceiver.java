@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -77,23 +78,23 @@ public class AlarmReceiver extends Service {
             //TODO: add group/mms/individ message check
             int groupFlag = results.getInt("group_flag");
             String img_path = results.getString("image_path");
-            Log.d("Alarm", img_path);
+            if (img_path != null)
+                Log.d("Alarm", img_path);
 
             Log.d("AlarmReciever: onStart", Long.toString(messageID));
-            Log.d("AlarmReciever: onStart", "About to send SMS");
-
 
             if(groupFlag==MessengerDatabaseHelper.IS_GROUP_MESSAGE){
+                Log.d("AlarmReceiver: onStart", "about to send MMS");
                 sendMMS(numbers, messageText, img_path);
             }else{
+                Log.d("AlarmReciever: onStart", "About to send SMS");
                 sendIndividualSMS(names, numbers, messageText);
+                //Delete message from database after send
+                MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
+                mDb.deleteMessage(messageID);
+                mDb.close();
+                broadcastRefreshLV();
             }
-
-            //Delete message from database after send
-            MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
-            mDb.deleteMessage(messageID);
-            mDb.close();
-            broadcastRefreshLV();
         }
 
         //Update the MainActivity to have the right value.
@@ -117,11 +118,27 @@ public class AlarmReceiver extends Service {
         intent.setType("image/*");
         //intent.setDataAndType(Uri.parse("smsto:" + phonenum), "*/*");
 
-        Log.d("Alarm", "in sendMMS()");
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        //Add a back stack
+       // stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addNextIntent(Intent.createChooser(intent, "Send MMS"));
+        PendingIntent pending = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setContentIntent(pending).setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle("Future Messenger")//title of the notification
+                .setAutoCancel(true)//clears notification after user clicks on it
+                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);;
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotificationManager.notify((int) messageID, builder.build());
+        Log.d("SEND MMS", "Finished pushing notification.");
+
+
+/*        Log.d("Alarm", "in sendMMS()");
         if (intent.resolveActivity(getPackageManager()) != null) {
             Log.d("SendMMS", "launching activity");
             startActivity(Intent.createChooser(intent, "Send MMS"));
-        }
+        }*/
     }
 
     public void sendNotification(String result){

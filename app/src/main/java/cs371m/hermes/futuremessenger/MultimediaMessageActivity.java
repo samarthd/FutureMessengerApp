@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -205,15 +206,15 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
                         BitmapFactory.decodeStream(imageStream, null, options);
 
                         /* Tries to "efficiently" get the sample size, but not quite there, I think */
-                        ImageButton ib = (ImageButton) findViewById(R.id.button_attachment);
+                        ImageView iv = (ImageView) findViewById(R.id.thumbnail);
 
                         //height and width are the minimum size we want of the image
-                        options.inSampleSize = calculateInSampleSize(options, ib.getMaxHeight(), ib.getWidth());
+                        options.inSampleSize = calculateInSampleSize(options, iv.getMaxHeight(), iv.getWidth());
                         options.inJustDecodeBounds = false;
                         imageStream = getContentResolver().openInputStream(selectedImage);
                         Bitmap scaledImage = BitmapFactory.decodeStream(imageStream, null, options);
 
-                        ib.setImageBitmap(scaledImage);
+                        iv.setImageBitmap(scaledImage);
                     } catch (FileNotFoundException e) {
                         Log.d(TAG + "onActivityResult", "FILE NOT FOUND");
                     }

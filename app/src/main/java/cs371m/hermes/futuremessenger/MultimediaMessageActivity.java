@@ -41,39 +41,31 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         LinearLayout layout_ib = (LinearLayout) findViewById(R.id.layout_attachment);
         layout_ib.setVisibility(View.VISIBLE);
-    }
 
-    @Override
-    protected void initializeScheduleButton() {
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "Message Send button pressed.");
-                if (_image_uri != null) {
-//                    String path = copyImage(_image_uri);
-//                    Log.d(TAG, path);
-//                    String saved_path = "/storage/emulated/0/Android/data/cs371m.hermes.futuremessenger/files/PSX_20151124_021724.jpg";
-//                    deleteCopiedFile(saved_path);
-                }
-            }
-        });
-    }
-
-    //TODO: Move method to AlarmReciever
-    public void sendMMS(String phonenum, String message) {
-        Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mmsto:" + phonenum));
-        intent.putExtra("sms_body", message);
-        File sdcard = Environment.getExternalStorageDirectory();
-        File gif = new File (sdcard, "Download/dancing-banana.gif");
-        Log.d("sendMMS", gif.getPath());
-        intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(gif));
-
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(Intent.createChooser(intent, "Send MMS"));
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String uri_path = getIntent().getStringExtra("image_path");
+            _image_uri = Uri.parse(uri_path);
         }
     }
+
+//    @Override
+//    protected void initializeScheduleButton() {
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Log.d(TAG, "Message Send button pressed.");
+//                if (_image_uri != null) {
+////                    String path = copyImage(_image_uri);
+////                    Log.d(TAG, path);
+////                    String saved_path = "/storage/emulated/0/Android/data/cs371m.hermes.futuremessenger/files/PSX_20151124_021724.jpg";
+////                    deleteCopiedFile(saved_path);
+//                    sendMMS(getNumbersFromContactsSelected(), get_message_text());
+//                }
+//            }
+//        });
+//    }
 
     @Override
     protected void scheduleMessage(long id, String message, String image_path, int group_flag) {
@@ -86,8 +78,8 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
          * set an alarm, with database entry id
          */
         Log.d(TAG + "scheduleMsg", "scheduling message");
-        String path = copyImage(_image_uri);
-        super.scheduleMessage(id, message, path, group_flag);
+        //String path = copyImage(_image_uri);
+        super.scheduleMessage(id, message, _image_uri.toString(), MessengerDatabaseHelper.IS_GROUP_MESSAGE);
     }
 
     // https://stackoverflow.com/questions/2507898/how-to-pick-an-image-from-gallery-sd-card-for-my-app
@@ -102,7 +94,6 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
     private String copyImage(Uri uri) {
         // String state = Environment.getExternalStorageState();
         // String rootExtDir = Environment.getExternalStorageDirectory().toString();
-        // Log.d("", rootExtDir);
         if (uri == null) {
             return null;
         }
@@ -144,6 +135,12 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
     public static boolean deleteCopiedFile(String path) {
         File file = new File(path);
         return file.delete();
+    }
+
+    @Override
+    public int showGroupDialog() {
+        onGroupSelected(0); //Always considered a Group Message
+        return 0;
     }
 
     @Override
@@ -224,7 +221,7 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
     }
 
     public static void logPrintCalendar(Calendar c, DateFormat df) {
-        Log.d("print", df.format(c.getTime()));
+        Log.d(TAG + "print", df.format(c.getTime()));
     }
 
     @Override

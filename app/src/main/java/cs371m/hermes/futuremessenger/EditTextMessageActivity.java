@@ -100,7 +100,7 @@ public class EditTextMessageActivity extends AppCompatActivity
             try {
                 _calendar.setTime(DF_DATETIME.parse(datetime));
             } catch (ParseException e) {
-                //TODO: Major error if this is run, need to do something
+                // Major error if this is run, need to do something
                 // Editing a text, but the parse of the datetime fails
                 Log.e(TAG + "onCreate", "Attempt to parse failed: " + datetime);
                 e.printStackTrace();
@@ -168,37 +168,13 @@ public class EditTextMessageActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG + "FabButton", "Message Send button pressed.");
+                Log.d(TAG + "FAButton", "Message Send button pressed.");
 
-                /* TODO: add in sending of dates and time */
-                //TODO IDENTIFY WHETHER A MESSAGE IS GROUP, PICTURE, OR INDIVIDUAL, STORE THAT IN DATABASE
-                //TODO SET ONE ALARM WITH JUST THE MESSAGE ID
                 if (isEntryFieldsFilled()) {
                     if (currently_selected_contacts.size() >= 2) {
                         showGroupDialog();
                     } else {
-                        //TODO: just send message
-                        //TODO: MOVE TO ITS OWN METHOD
-                        int year = _calendar.get(Calendar.YEAR);
-                        int month = _calendar.get(Calendar.MONTH);
-                        int day = _calendar.get(Calendar.DAY_OF_MONTH);
-                        int hour = _calendar.get(Calendar.HOUR_OF_DAY);
-                        int minute = _calendar.get(Calendar.MINUTE);
-
-                        String message = get_message_text();
-
-                        // TODO GET THE ACTUAL GROUP FLAG
-                        int group_flag = MessengerDatabaseHelper.NOT_GROUP_MESSAGE;
-                        long id;
-                        if (last_clicked_message_id == -1) {
-                            id = saveMessage(message, null, group_flag);
-                        }
-                        else {
-                            id = updateMessage(message, null, group_flag);
-                        }
-
-                        setIndividualTextAlarms(id, message, year, month, day, hour, minute);
-                        // scheduleMessage(last_clicked_message_id, message, null, -1);
+                        scheduleMessage(last_clicked_message_id, get_message_text(), null, MessengerDatabaseHelper.NOT_GROUP_MESSAGE);
                         returnToMainActivity();
                     }
                 }
@@ -233,21 +209,9 @@ public class EditTextMessageActivity extends AppCompatActivity
         for (Contact thisContact : currently_selected_contacts) {
             numbers.add(thisContact.getPhoneNum());
         }
-        return stringJoin(numbers, ";");
+        return stringJoin(numbers, "; ");
     }
 
-    //TODO REMOVE THIS
-    // Set alarm for all recipients of this text message (individually)
-    private void setIndividualTextAlarms(long id, String message, int year, int month,
-                                                    int day, int hour, int minute) {
-        for (Contact thisContact : currently_selected_contacts) {
-            String thisNum = thisContact.getPhoneNum();
-//            setAlarm(id, thisNum, message, year, month, day, hour, minute);
-            setAlarm(id, _calendar);
-            Log.d(TAG + "SETTING INDIV ALARM", "Phonenumber = " + thisNum);
-        }
-        Toast.makeText(EditTextMessageActivity.this, "Saved your message!", Toast.LENGTH_SHORT).show();
-    }
 
     // Builds the selected contacts list from given names and numbers delimited by strings.
     private void buildContactListFromExisting(String recip_names, String recip_nums) {
@@ -296,7 +260,7 @@ public class EditTextMessageActivity extends AppCompatActivity
             }
         }
         else {
-            Log.w("CONTACT PICKER RESULT", "NOT OK");
+            Log.w(TAG + "CONTACT PICKER RESULT", "NOT OK");
         }
     }
 
@@ -394,29 +358,6 @@ public class EditTextMessageActivity extends AppCompatActivity
         addContactToRecipientList(new_contact);
     }
 
-    /** TODO: Replaced with setAlarm(long, Calendar) */
-    protected void setAlarm(long id, String phoneNum, String message, int year, int month, int day, int hour, int minute){
-        /* Set the alarm with the selected parameters */
-        Intent alarmIntent = new Intent(EditTextMessageActivity.this, AlarmReceiver.class);
-        Bundle bundle = new Bundle();
-        bundle.putLong("message_id", id);
-        alarmIntent.putExtras(bundle);
-
-        PendingIntent pendingIntent = PendingIntent.getService(EditTextMessageActivity.this,
-                                      (int) id, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
-        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
-
-        /* Set calendar dates */
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.clear();
-        calendar.set(year, month, day, hour, minute);
-        //TODO: remove above calendar stuff, and just do _calendar.getTimeInMillis()?
-        alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-        Log.d(TAG + "setAlarm", "Message id = " + Long.toString(id));
-    }
-
-
     /**
      * set an alarm for when to send the message
      * @param id the id in the database with the message and numbers to send
@@ -452,6 +393,11 @@ public class EditTextMessageActivity extends AppCompatActivity
         } else {
             ret_database_id = updateMessage(message, image_path, group_flag);
         }
+        Log.d(TAG + "scheduleMsg", "id: " + id);
+        Log.d(TAG + "scheduleMsg", "numbers: " + getNumbersFromContactsSelected());
+        Log.d(TAG + "scheduleMsg", "message: " + message);
+        Log.d(TAG + "scheduleMsg", "image_path: " + image_path);
+        Log.d(TAG + "scheduleMsg", "group_flag: " + group_flag);
         setAlarm(ret_database_id, _calendar);
     }
 
@@ -462,9 +408,6 @@ public class EditTextMessageActivity extends AppCompatActivity
      * @return the ID of the save message
      */
     protected long saveMessage(String message, String image_path, int group_flag) {
-        /* TODO: determine if message wants to be group, or individual
-         * TODO: save numbers as "5554;5556;5558;..."
-         */
         long result = -1;
         try {
             Log.d(TAG + "saveSMS", message);
@@ -489,8 +432,6 @@ public class EditTextMessageActivity extends AppCompatActivity
     private long updateMessage(String message, String image_path, int group_flag) {
         //cancel the previous alarm
         cancelAlarm(last_clicked_message_id);
-
-        Log.d(TAG + "updateMessage", message);
 
         //Save the message
         String dateTime = getDateTime();
@@ -594,7 +535,7 @@ public class EditTextMessageActivity extends AppCompatActivity
         // 0 == Group, 1 == Individual
 
         String message = get_message_text();
-        scheduleMessage(last_clicked_message_id, message, null, i);
+        scheduleMessage(last_clicked_message_id, message, null, (i==1)?MessengerDatabaseHelper.NOT_GROUP_MESSAGE:MessengerDatabaseHelper.IS_GROUP_MESSAGE);
         returnToMainActivity();
     }
 

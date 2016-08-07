@@ -8,11 +8,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -75,12 +75,20 @@ public class AlarmReceiver extends Service {
             String numbers = results.getString("recip_nums");
             String messageText = results.getString("message");
             //TODO: add group/mms/individ message check
-
+            int groupFlag = results.getInt("group_flag");
+            String img_path = results.getString("image_path");
+            if (img_path != null)
+                Log.d("Alarm", img_path);
 
             Log.d("AlarmReciever: onStart", Long.toString(messageID));
-            Log.d("AlarmReciever: onStart", "About to send SMS");
 
-            sendIndividualSMS(names, numbers, messageText);
+            if(groupFlag==MessengerDatabaseHelper.IS_GROUP_MESSAGE || img_path != null){
+                Log.d("AlarmReceiver: onStart", "about to send MMS");
+                sendMMS(numbers, messageText, img_path);
+            }else{
+                Log.d("AlarmReciever: onStart", "About to send SMS");
+                sendIndividualSMS(names, numbers, messageText);
+            }
             //Delete message from database after send
             MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
             mDb.deleteMessage(messageID);
@@ -100,11 +108,40 @@ public class AlarmReceiver extends Service {
         }
     }
 
-    public void sendNotification(String result){
+    public void sendMMS(String phonenum, String message, String uri_path) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        //intent.setData(Uri.parse("smsto:" + phonenum));
+        intent.putExtra("address", phonenum);
+        intent.putExtra("sms_body", message);
+        intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(uri_path));
+        intent.setType("image/*");
+        //intent.setDataAndType(Uri.parse("smsto:" + phonenum), "*/*");
+
+        PendingIntent pending =
+                PendingIntent.getActivity(this, (int) messageID, Intent.createChooser(intent, getResources()
+                                                          .getString(R.string.mms_chooser_text)), 0);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+        builder.setContentIntent(pending).setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle(getResources().getString(R.string.app_name))//title of the notification
+                .setAutoCancel(true)//clears notification after user clicks on it
+                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
+        NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        mNotificationManager.notify((int) messageID, builder.build());
+        Log.d("SEND MMS", "Finished pushing notification.");
+
+
+/*        Log.d("Alarm", "in sendMMS()");
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            Log.d("SendMMS", "launching activity");
+            startActivity(Intent.createChooser(intent, "Send MMS"));
+        }*/
+    }
+
+    public void sendDeliveryNotification(String result){
         //TODO: change notification icon and customize text to display message
         //this intent defines where the user goes after they click the notification
         Intent resultIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendInt = PendingIntent.getActivity(this, 0, resultIntent, 0);
+        PendingIntent pendInt = PendingIntent.getActivity(this, (int) messageID, resultIntent, 0);
 
         NotificationCompat.Builder  mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.notification_icon)
@@ -182,7 +219,7 @@ public class AlarmReceiver extends Service {
                             break;
                     }
                     //Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
-                    sendNotification(result);
+                    sendDeliveryNotification(result);
                 }
             }, new IntentFilter("sent"));
 

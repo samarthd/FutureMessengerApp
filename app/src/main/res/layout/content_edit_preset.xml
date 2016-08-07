@@ -26,13 +26,13 @@
             android:maxLength="140"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textCapSentences|textMultiLine"
+            android:inputType="textCapWords"
             android:minLines="1"
             android:maxLines="5"
-            android:scrollHorizontally="false"
-            android:imeOptions="actionDone"
+            android:scrollHorizontally="true"
+            android:imeOptions="actionNext"
             android:hint="@string/hint_preset_name"
-            android:textSize="15sp"
+            android:textSize="18sp"
             android:paddingTop="8dp"/>
         <TextView
             android:layout_width="match_parent"
@@ -51,7 +51,7 @@
             android:scrollHorizontally="false"
             android:imeOptions="actionDone"
             android:hint="@string/hint_preset_message"
-            android:textSize="15sp"
+            android:textSize="18sp"
             android:paddingTop="8dp"/>
     </LinearLayout>
 

@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class EditPreset extends AppCompatActivity {
 
@@ -42,23 +43,42 @@ public class EditPreset extends AppCompatActivity {
                 EditText message = (EditText) findViewById(R.id.edit_preset_message);
                 String preset_name = name.getText().toString();
                 String preset_message = message.getText().toString();
-                // If we aren't editing an existing preset, then store a new one.
-                if (last_clicked_preset_id == -1) {
-                    savePreset(preset_name, preset_message);
-                    Log.d(TAG, "Saved new preset with name " + preset_name + " and message " +
+
+                if (!isFieldsEmpty()) {
+                    // If we aren't editing an existing preset, then store a new one.
+                    if (last_clicked_preset_id == -1) {
+                        savePreset(preset_name, preset_message);
+                        Log.d(TAG, "Saved new preset with name " + preset_name + " and message " +
                                 preset_message);
+                    }
+                    // We are editing an existing one, so just update its values.
+                    else {
+                        updatePreset(preset_name, preset_message);
+                        Log.d(TAG, "Edited preset with new name " + preset_name + " and message " +
+                                preset_message);
+                    }
+                    Log.d(TAG, preset_name);
+                    Log.d(TAG, preset_message);
                 }
-                // We are editing an existing one, so just update its values.
-                else {
-                    updatePreset(preset_name, preset_message);
-                    Log.d(TAG, "Edited preset with new name " + preset_name + " and message " +
-                            preset_message);
-                }
-                Log.d(TAG, preset_name);
-                Log.d(TAG, preset_message);
             }
         });
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private boolean isFieldsEmpty() {
+        boolean result = true;
+        EditText name = (EditText) findViewById(R.id.edit_preset_name);
+        EditText message = (EditText) findViewById(R.id.edit_preset_message);
+        if (name.getText().toString().equals("")) {
+            Toast.makeText(getApplicationContext(),
+                    "Preset needs a name", Toast.LENGTH_SHORT).show();
+        } else if (message.getText().toString().equals("")) {
+            Toast.makeText(getApplicationContext(),
+                    "No message set", Toast.LENGTH_SHORT).show();
+        } else {
+            result = false;
+        }
+        return result;
     }
 
     private void fillEditTextFields(String name_text, String msg_text) {

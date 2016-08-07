@@ -16,13 +16,13 @@
             android:id="@+id/preset_name_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15sp"
+            android:textSize="20sp"
             android:textStyle="bold"/>
         <TextView
             android:id="@+id/preset_content_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="12sp"/>
+            android:textSize="16sp"/>
 
     </LinearLayout>
 

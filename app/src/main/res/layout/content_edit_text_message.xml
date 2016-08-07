@@ -189,7 +189,8 @@
                     android:scaleType="fitCenter"
                     android:maxHeight="180dp"
                     android:adjustViewBounds="true"
-                    android:src="@drawable/picture_icon" />
+                    android:src="@drawable/picture_icon"
+                    android:padding="10dp"/>
             </android.support.v7.widget.CardView>
         </LinearLayout>
         <LinearLayout

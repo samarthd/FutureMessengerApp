@@ -83,13 +83,12 @@ public class AlarmReceiver extends Service {
 
             Log.d("AlarmReciever: onStart", Long.toString(messageID));
 
-            if(groupFlag==MessengerDatabaseHelper.IS_GROUP_MESSAGE){
+            if(groupFlag==MessengerDatabaseHelper.IS_GROUP_MESSAGE || img_path != null){
                 Log.d("AlarmReceiver: onStart", "about to send MMS");
                 sendMMS(numbers, messageText, img_path);
             }else{
                 Log.d("AlarmReciever: onStart", "About to send SMS");
                 sendIndividualSMS(names, numbers, messageText);
-
             }
             //Delete message from database after send
             MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
@@ -120,7 +119,7 @@ public class AlarmReceiver extends Service {
         //intent.setDataAndType(Uri.parse("smsto:" + phonenum), "*/*");
 
         PendingIntent pending =
-                PendingIntent.getActivity(this, 0, Intent.createChooser(intent, getResources()
+                PendingIntent.getActivity(this, (int) messageID, Intent.createChooser(intent, getResources()
                                                           .getString(R.string.mms_chooser_text)), 0);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setContentIntent(pending).setSmallIcon(R.drawable.notification_icon)

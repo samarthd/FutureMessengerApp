@@ -30,6 +30,6 @@
         android:paddingTop="9dp"
         android:text="@string/no_selectable_presets_message"
         android:textStyle="bold"
-        android:textSize="24sp"/>
+        android:textSize="20sp"/>
 
 </LinearLayout>

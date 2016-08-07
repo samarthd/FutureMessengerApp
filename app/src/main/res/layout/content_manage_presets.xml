@@ -31,7 +31,7 @@
         android:padding="9dp"
         android:text="@string/no_presets_message"
         android:textStyle="bold"
-        android:textSize="18sp"/>
+        android:textSize="15sp"/>
 
 
 </LinearLayout>

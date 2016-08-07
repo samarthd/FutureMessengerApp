@@ -89,12 +89,13 @@ public class AlarmReceiver extends Service {
             }else{
                 Log.d("AlarmReciever: onStart", "About to send SMS");
                 sendIndividualSMS(names, numbers, messageText);
-                //Delete message from database after send
-                MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
-                mDb.deleteMessage(messageID);
-                mDb.close();
-                broadcastRefreshLV();
+
             }
+            //Delete message from database after send
+            MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
+            mDb.deleteMessage(messageID);
+            mDb.close();
+            broadcastRefreshLV();
         }
 
         //Update the MainActivity to have the right value.
@@ -118,17 +119,14 @@ public class AlarmReceiver extends Service {
         intent.setType("image/*");
         //intent.setDataAndType(Uri.parse("smsto:" + phonenum), "*/*");
 
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        //Add a back stack
-       // stackBuilder.addParentStack(MainActivity.class);
-        stackBuilder.addNextIntent(Intent.createChooser(intent, "Send MMS"));
-        PendingIntent pending = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
+        PendingIntent pending =
+                PendingIntent.getActivity(this, 0, Intent.createChooser(intent, getResources()
+                                                          .getString(R.string.mms_chooser_text)), 0);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setContentIntent(pending).setSmallIcon(R.drawable.notification_icon)
-                .setContentTitle("Future Messenger")//title of the notification
+                .setContentTitle(getResources().getString(R.string.app_name))//title of the notification
                 .setAutoCancel(true)//clears notification after user clicks on it
-                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);;
+                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNotificationManager.notify((int) messageID, builder.build());
         Log.d("SEND MMS", "Finished pushing notification.");

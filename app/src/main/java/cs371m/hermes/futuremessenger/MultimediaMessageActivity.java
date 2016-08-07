@@ -90,7 +90,7 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
          */
         Log.d(TAG + "scheduleMsg", "scheduling message");
         //String path = copyImage(_image_uri);
-        super.scheduleMessage(id, message, _image_uri.getPath(), group_flag);
+        super.scheduleMessage(id, message, _image_uri.toString(), group_flag);
     }
 
     // https://stackoverflow.com/questions/2507898/how-to-pick-an-image-from-gallery-sd-card-for-my-app

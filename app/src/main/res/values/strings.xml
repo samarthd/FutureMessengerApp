@@ -52,4 +52,5 @@
     </string-array>
     <string name="group_group">Group</string>
     <string name="group_indiv">Individually</string>
+    <string name="mms_chooser_text">Send MMS</string>
 </resources>

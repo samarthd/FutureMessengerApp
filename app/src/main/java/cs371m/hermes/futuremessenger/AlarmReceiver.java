@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -138,11 +137,11 @@ public class AlarmReceiver extends Service {
         }*/
     }
 
-    public void sendNotification(String result){
+    public void sendDeliveryNotification(String result){
         //TODO: change notification icon and customize text to display message
         //this intent defines where the user goes after they click the notification
         Intent resultIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendInt = PendingIntent.getActivity(this, 0, resultIntent, 0);
+        PendingIntent pendInt = PendingIntent.getActivity(this, (int) messageID, resultIntent, 0);
 
         NotificationCompat.Builder  mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.notification_icon)
@@ -220,7 +219,7 @@ public class AlarmReceiver extends Service {
                             break;
                     }
                     //Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
-                    sendNotification(result);
+                    sendDeliveryNotification(result);
                 }
             }, new IntentFilter("sent"));
 

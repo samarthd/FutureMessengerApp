@@ -67,23 +67,6 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
 //        });
 //    }
 
-    //TODO: Move method to AlarmReciever
-    public void sendMMS(String phonenum, String message) {
-        Intent intent = new Intent(Intent.ACTION_SEND);
-//        intent.setData(Uri.parse("smsto:" + phonenum));
-        intent.putExtra("address", phonenum);
-        intent.putExtra("sms_body", message);
-        intent.putExtra(Intent.EXTRA_STREAM, _image_uri);
-        intent.setType("image/*");
-//        intent.setDataAndType(Uri.parse("smsto:" + phonenum), "*/*");
-
-        Log.d("SendMMS", "in sendMMS()");
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            Log.d("SendMMS", "launching activity");
-            startActivity(Intent.createChooser(intent, "Send MMS"));
-        }
-    }
-
     @Override
     protected void scheduleMessage(long id, String message, String image_path, int group_flag) {
         /** ORDER OF EVENTS
@@ -111,7 +94,6 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
     private String copyImage(Uri uri) {
         // String state = Environment.getExternalStorageState();
         // String rootExtDir = Environment.getExternalStorageDirectory().toString();
-        // Log.d("", rootExtDir);
         if (uri == null) {
             return null;
         }
@@ -239,7 +221,7 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
     }
 
     public static void logPrintCalendar(Calendar c, DateFormat df) {
-        Log.d("print", df.format(c.getTime()));
+        Log.d(TAG + "print", df.format(c.getTime()));
     }
 
     @Override

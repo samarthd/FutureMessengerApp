@@ -8,11 +8,15 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
 import android.util.Log;
@@ -74,7 +78,6 @@ public class AlarmReceiver extends Service {
             String names = results.getString("recip_names");
             String numbers = results.getString("recip_nums");
             String messageText = results.getString("message");
-            //TODO: add group/mms/individ message check
             int groupFlag = results.getInt("group_flag");
             String img_path = results.getString("image_path");
             if (img_path != null)
@@ -94,17 +97,14 @@ public class AlarmReceiver extends Service {
                 Log.d(TAG, "About to send SMS");
                 sendIndividualSMS(names, numbers, messageText);
             }
-            //Delete message from database after send
+            // Delete the message from our database after sending has been completed
             MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
             mDb.deleteMessage(messageID);
             mDb.close();
             broadcastRefreshLV();
         }
-
-        //Update the MainActivity to have the right value.
-
     }
-    //sends individual SMS messages to all listed recipients (same message)
+    // Sends individual SMS messages to all listed recipients (same message)
     public void sendIndividualSMS(String names, String numbers, String messageText){
         String[] numbersArray = numbers.split(";");
 
@@ -113,36 +113,35 @@ public class AlarmReceiver extends Service {
         }
     }
 
+    // Sends a picture message to the specified recipient
     public void sendPictureMMS(String phonenum, String message, String uri_path) {
         String TAG = "sendPictureMMS";
         Intent intent = new Intent(Intent.ACTION_SEND);
-        //intent.setData(Uri.parse("smsto:" + phonenum));
         intent.putExtra("address", phonenum);
         intent.putExtra("sms_body", message);
         intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(uri_path));
         intent.setType("image/*");
-        //intent.setDataAndType(Uri.parse("smsto:" + phonenum), "*/*");
 
+        //TODO customize the text of this notification to inform the user it's a picture message.
         PendingIntent pending =
                 PendingIntent.getActivity(this, (int) messageID, Intent.createChooser(intent, getResources()
                                                           .getString(R.string.mms_chooser_text)), 0);
+        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.launcher_icon);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setContentIntent(pending).setSmallIcon(R.drawable.notification_icon)
-                .setContentTitle(getResources().getString(R.string.app_name))//title of the notification
-                .setAutoCancel(true)//clears notification after user clicks on it
-                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
+        builder.setContentIntent(pending)
+               .setSmallIcon(R.drawable.picture_icon)
+               .setLargeIcon(largeIcon)
+               .setColor(ContextCompat.getColor(this, R.color.colorAccent))
+               .setContentTitle(getResources()
+               .getString(R.string.app_name))    //title of the notification
+               .setAutoCancel(true)    //clears notification after user clicks on it
+               .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNotificationManager.notify((int) messageID, builder.build());
         Log.d(TAG, "Finished pushing notification.");
-
-
-/*        Log.d("Alarm", "in sendPictureMMS()");
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            Log.d("SendMMS", "launching activity");
-            startActivity(Intent.createChooser(intent, "Send MMS"));
-        }*/
     }
 
+    // Sends a text message to the specified recipients as a group
     public void sendGroupMMS(String phonenums, String message) {
         String TAG = "sendGroupMMS";
         Intent intent = new Intent(Intent.ACTION_SENDTO);
@@ -152,24 +151,30 @@ public class AlarmReceiver extends Service {
         PendingIntent pending =
                 PendingIntent.getActivity(this, (int) messageID, Intent.createChooser(intent, getResources()
                         .getString(R.string.mms_chooser_text)), 0);
+        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.launcher_icon);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setContentIntent(pending).setSmallIcon(R.drawable.notification_icon)
-                .setContentTitle(getResources().getString(R.string.app_name))//title of the notification
-                .setAutoCancel(true)//clears notification after user clicks on it
-                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
+        builder.setContentIntent(pending).setSmallIcon(R.drawable.text_icon)
+               .setLargeIcon(largeIcon)
+               .setColor(ContextCompat.getColor(this, R.color.colorAccent))
+               .setContentTitle(getResources().getString(R.string.app_name))    //title of the notification
+               .setAutoCancel(true)    //clears notification after user clicks on it
+               .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         mNotificationManager.notify((int) messageID, builder.build());
         Log.d(TAG, "Finished pushing notification.");
     }
 
+    // Notifies the user of the success/failure of SMS delivery.
     public void sendDeliveryNotification(String result){
         //TODO: change notification icon and customize text to display message
         //this intent defines where the user goes after they click the notification
         Intent resultIntent = new Intent(this, MainActivity.class);
         PendingIntent pendInt = PendingIntent.getActivity(this, (int) messageID, resultIntent, 0);
-
+        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.launcher_icon);
         NotificationCompat.Builder  mBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.notification_icon)
+                .setSmallIcon(R.drawable.text_icon)
+                .setLargeIcon(largeIcon)
+                .setColor(ContextCompat.getColor(this, R.color.colorAccent))
                 .setContentTitle("Future Messenger")//title of the notification
                 .setContentText(result)//actual notification content
                 .setContentIntent(pendInt)

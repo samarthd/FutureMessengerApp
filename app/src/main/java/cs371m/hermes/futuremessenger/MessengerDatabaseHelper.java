@@ -273,6 +273,10 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
             String recip_nums = resultCursor.getString(resultCursor.getColumnIndex("RECIPIENT_NUMBERS"));
             String message = resultCursor.getString(resultCursor.getColumnIndex(MESSAGE_TXT_CONTENT));
             String image_path = resultCursor.getString(resultCursor.getColumnIndex(MESSAGE_IMG_PATH));
+            if (image_path == null)
+                Log.d(TAG, "Retrieved image path is null");
+            else
+                Log.d(TAG, "Retrieved image path is " + image_path);
             int group_flag = resultCursor.getInt(resultCursor.getColumnIndex(MESSAGE_GROUP));
             String dateTime = resultCursor.getString(resultCursor.getColumnIndex(MESSAGE_DATETIME));
             String[] dateTimeSplit = dateTime.split(" ");

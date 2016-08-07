@@ -7,14 +7,19 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.ContactsContract;
 import android.provider.OpenableColumns;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -42,6 +47,10 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
         LinearLayout layout_ib = (LinearLayout) findViewById(R.id.layout_attachment);
         layout_ib.setVisibility(View.VISIBLE);
 
+        // Because picture messages only allow one recipient, update the TextView to be singular.
+        TextView recip_tv = (TextView) findViewById(R.id.recipients_tv);
+        recip_tv.setText(R.string.recipient_tv_singular);
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             String uri_path = getIntent().getStringExtra("image_path");
@@ -49,6 +58,45 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
         }
     }
 
+    // Conditional version of the contact chooser button that only allows one recipient
+    @Override
+    protected void initializeContactChooserButton() {
+        CardView choose_contact = (CardView) findViewById(R.id.choose_contact_button);
+        choose_contact.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (currently_selected_contacts.size() >= 1)
+                    Toast.makeText(getBaseContext(), R.string.restricted_to_one_recipient,
+                                   Toast.LENGTH_SHORT).show();
+                else {
+                    Intent contactPickerIntent =
+                            new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI);
+                    contactPickerIntent.setType(ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE);
+                    startActivityForResult(contactPickerIntent, CONTACT_PICKER_REQUEST);
+                }
+            }
+        });
+    }
+
+    // Conditional version of the phone number button that only allows one recipient.
+    @Override
+    protected void initializePhoneNumberButton() {
+        CardView add_number = (CardView) findViewById(R.id.enter_number_button);
+        add_number.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (currently_selected_contacts.size() >= 1)
+                    Toast.makeText(getBaseContext(), R.string.restricted_to_one_recipient,
+                                   Toast.LENGTH_SHORT).show();
+                else {
+                    EnterPhoneNumberDialogFragment enterNumFragment =
+                            new EnterPhoneNumberDialogFragment();
+                    enterNumFragment.show(getFragmentManager(),
+                                          getResources().getString(R.string.enter_phone_number));
+                }
+            }
+        });
+    }
 //    @Override
 //    protected void initializeScheduleButton() {
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -61,7 +109,7 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
 ////                    Log.d(TAG, path);
 ////                    String saved_path = "/storage/emulated/0/Android/data/cs371m.hermes.futuremessenger/files/PSX_20151124_021724.jpg";
 ////                    deleteCopiedFile(saved_path);
-//                    sendMMS(getNumbersFromContactsSelected(), get_message_text());
+//                    sendPictureMMS(getNumbersFromContactsSelected(), get_message_text());
 //                }
 //            }
 //        });
@@ -79,7 +127,7 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
          */
         Log.d(TAG + "scheduleMsg", "scheduling message");
         //String path = copyImage(_image_uri);
-        super.scheduleMessage(id, message, _image_uri.toString(), MessengerDatabaseHelper.IS_GROUP_MESSAGE);
+        super.scheduleMessage(id, message, _image_uri.toString(), MessengerDatabaseHelper.NOT_GROUP_MESSAGE);
     }
 
     // https://stackoverflow.com/questions/2507898/how-to-pick-an-image-from-gallery-sd-card-for-my-app
@@ -158,15 +206,15 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
                         BitmapFactory.decodeStream(imageStream, null, options);
 
                         /* Tries to "efficiently" get the sample size, but not quite there, I think */
-                        ImageButton ib = (ImageButton) findViewById(R.id.button_attachment);
+                        ImageView iv = (ImageView) findViewById(R.id.thumbnail);
 
                         //height and width are the minimum size we want of the image
-                        options.inSampleSize = calculateInSampleSize(options, ib.getMaxHeight(), ib.getWidth());
+                        options.inSampleSize = calculateInSampleSize(options, iv.getMaxHeight(), iv.getWidth());
                         options.inJustDecodeBounds = false;
                         imageStream = getContentResolver().openInputStream(selectedImage);
                         Bitmap scaledImage = BitmapFactory.decodeStream(imageStream, null, options);
 
-                        ib.setImageBitmap(scaledImage);
+                        iv.setImageBitmap(scaledImage);
                     } catch (FileNotFoundException e) {
                         Log.d(TAG + "onActivityResult", "FILE NOT FOUND");
                     }

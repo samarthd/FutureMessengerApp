@@ -60,13 +60,13 @@ public class EditTextMessageActivity extends AppCompatActivity
     protected long last_clicked_message_id;
 
     // Request code for starting the contact picker activity
-    private static final int CONTACT_PICKER_REQUEST = 9999;
+    protected static final int CONTACT_PICKER_REQUEST = 9999;
 
     // Request code for starting the select preset activity
     private static final int POPULATE_FROM_PRESET_REQUEST = 9998;
 
     // List that holds the currently selected contacts
-    private ArrayList<Contact> currently_selected_contacts;
+    protected ArrayList<Contact> currently_selected_contacts;
 
     // Adapter to populated currently selected contacts list
     private ContactListAdapter contactAdapter;
@@ -136,7 +136,7 @@ public class EditTextMessageActivity extends AppCompatActivity
     }
 
     // When the contact button is clicked, launch the contact picker.
-    private void initializeContactChooserButton() {
+    protected void initializeContactChooserButton() {
         CardView choose_contact = (CardView) findViewById(R.id.choose_contact_button);
         choose_contact.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,7 +150,7 @@ public class EditTextMessageActivity extends AppCompatActivity
     }
 
     // When the phone number button is clicked, launch the phone number input fragment.
-    private void initializePhoneNumberButton() {
+    protected void initializePhoneNumberButton() {
         CardView add_number = (CardView) findViewById(R.id.enter_number_button);
         add_number.setOnClickListener(new View.OnClickListener() {
             @Override

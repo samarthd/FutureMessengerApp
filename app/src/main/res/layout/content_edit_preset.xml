@@ -45,14 +45,14 @@
             android:id="@+id/edit_preset_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textCapSentences|textMultiLine"
+            android:inputType="textCapSentences|textImeMultiLine|textMultiLine"
             android:minLines="1"
             android:maxLines="5"
             android:scrollHorizontally="false"
             android:imeOptions="actionDone"
             android:hint="@string/hint_preset_message"
             android:textSize="18sp"
-            android:paddingTop="8dp"/>
+            android:paddingTop="8dp" />
     </LinearLayout>
 
 </RelativeLayout>

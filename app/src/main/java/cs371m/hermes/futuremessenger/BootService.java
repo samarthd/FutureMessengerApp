@@ -26,7 +26,6 @@ public class BootService extends Service {
     public void onStart(Intent intent, int startId){
         super.onStart(intent, startId);
         Log.d("BootService", "onStart");
-        Toast.makeText(this, "BOOT SERVICE WORKING", Toast.LENGTH_LONG).show();
         resetAlarms();
     }
 

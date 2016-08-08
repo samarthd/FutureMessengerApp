@@ -209,7 +209,7 @@ public class EditTextMessageActivity extends AppCompatActivity
         for (Contact thisContact : currently_selected_contacts) {
             numbers.add(thisContact.getPhoneNum());
         }
-        return stringJoin(numbers, "; ");
+        return stringJoin(numbers, ";");
     }
 
 

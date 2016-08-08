@@ -145,7 +145,7 @@ public class AlarmReceiver extends Service {
     public void sendGroupMMS(String phonenums, String message) {
         String TAG = "sendGroupMMS";
         Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mmsto:" + phonenums));
+        intent.setData(Uri.parse("smsto:" + phonenums));
         intent.putExtra("sms_body", message);
 
         PendingIntent pending =

@@ -178,8 +178,7 @@ public class AlarmReceiver extends Service {
                 .setContentTitle("Future Messenger")//title of the notification
                 .setContentText(result)//actual notification content
                 .setContentIntent(pendInt)
-                .setAutoCancel(true)//clears notification after user clicks on it
-                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
+                .setAutoCancel(true); //clears notification after user clicks on it
 
         //DO NOT REMOVE THIS CODE
         /*TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);

@@ -46,6 +46,11 @@
     <string name="no_message_entered">No message entered</string>
     <string name="bad_date_entered">Date not set to future!</string>
     <string name="edit_error">Something went wrong with that contact.</string>
+    <string name="send_success">Message successfully sent</string>
+    <string name="send_fail">Message failed to send</string>
+    <string name="radio_off">Radio was off, message failed</string>
+    <string name="no_pdu">No PDU defined, message failed</string>
+    <string name="no_service">No service, message failed</string>
     <string-array name="group_choice">
         <item>@string/group_group</item>
         <item>@string/group_indiv</item>

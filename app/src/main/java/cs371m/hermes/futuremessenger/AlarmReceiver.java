@@ -171,7 +171,7 @@ public class AlarmReceiver extends Service {
     }
 
     // Notifies the user of the success/failure of SMS delivery.
-    public void sendDeliveryNotification(long messageID, String result){
+    public void sendDeliveryNotification(long messageID, String result, String message){
         //TODO: change notification icon and customize text to display message
         //this intent defines where the user goes after they click the notification
         Intent resultIntent = new Intent(this, MainActivity.class);
@@ -184,6 +184,7 @@ public class AlarmReceiver extends Service {
                 .setColor(ContextCompat.getColor(this, R.color.colorAccent))
                 .setContentTitle(getResources().getString(R.string.app_name))//title of the notification
                 .setContentText(result)//actual notification content
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(result + ":\n\"" + message + "\""))
                 .setContentIntent(pendInt)
                 .setAutoCancel(true); //clears notification after user clicks on it
 
@@ -222,7 +223,7 @@ public class AlarmReceiver extends Service {
         sendSMS(phoneNum, message);
     }*/
 
-    private void sendSMS(final long messageID, String phoneNum, String message) {
+    private void sendSMS(final long messageID, String phoneNum, final String message) {
         try {
             Log.d("sendSMS", phoneNum + " " + message);
             String SENT = "sent " + " " + messageID + " " + phoneNum + " " + message;
@@ -238,25 +239,26 @@ public class AlarmReceiver extends Service {
                 @Override
                 public void onReceive(Context context, Intent intent) {
                     String result = "";
+                    Resources curResources = getResources();
                     switch (getResultCode()) {
                         case Activity.RESULT_OK:
-                            result = "Message successfully sent.";
+                            result = curResources.getString(R.string.send_success);
                             break;
                         case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                            result = "Message failed to send.";
+                            result = curResources.getString(R.string.send_fail);
                             break;
                         case SmsManager.RESULT_ERROR_RADIO_OFF:
-                            result = "Radio off";
+                            result = curResources.getString(R.string.radio_off);
                             break;
                         case SmsManager.RESULT_ERROR_NULL_PDU:
-                            result = "No PDU defined";
+                            result = curResources.getString(R.string.no_pdu);
                             break;
                         case SmsManager.RESULT_ERROR_NO_SERVICE:
-                            result = "No service";
+                            result = curResources.getString(R.string.no_service);
                             break;
                     }
                     //Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
-                    sendDeliveryNotification(messageID, result);
+                    sendDeliveryNotification(messageID, result, message);
                     unregisterReceiver(this);
                 }
             }, new IntentFilter(SENT));

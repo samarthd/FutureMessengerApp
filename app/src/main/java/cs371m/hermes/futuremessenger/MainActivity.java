@@ -81,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.currently_scheduled_tv);
-
         // Create our database.
         mDb = new MessengerDatabaseHelper(MainActivity.this);
         ListView scheduledListView = (ListView) findViewById(R.id.scheduled_messages_list);
@@ -163,8 +162,8 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Toast.makeText(this, "Beta feature!", Toast.LENGTH_SHORT).show();
+        if (id == R.id.action_about) {
+            //TODO add About page
             return true;
         }
 

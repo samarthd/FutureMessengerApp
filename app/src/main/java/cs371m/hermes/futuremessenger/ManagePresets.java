@@ -29,7 +29,7 @@ public class ManagePresets extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        mDb = new MessengerDatabaseHelper(this);
+        mDb = MessengerDatabaseHelper.getInstance(this);
         fillPresetList();
 
         setUpContextMenu();
@@ -118,18 +118,20 @@ public class ManagePresets extends AppCompatActivity {
         Cursor presetCursor = mDb.getAllPresets();
         ListView preset_lv = (ListView) findViewById(R.id.presets_lv);
 
-        String[] fromCols = {mDb.PRESET_NAME, mDb.PRESET_CONTENT};
+        String[] fromCols = {MessengerDatabaseHelper.PRESET_NAME, MessengerDatabaseHelper.PRESET_CONTENT};
         int[] toViews = {R.id.preset_name_tv, R.id.preset_content_tv};
         SimpleCursorAdapter adapter =
                 new SimpleCursorAdapter(getBaseContext(), R.layout.listed_preset_layout,
                                         presetCursor, fromCols, toViews);
         preset_lv.setAdapter(adapter);
         preset_lv.setEmptyView(findViewById(R.id.empty_preset_tv));
+        mDb.close();
     }
 
     private void editPreset() {
         // Get the message's data.
         String[] preset_info = mDb.getPresetData(last_clicked_preset_id);
+        mDb.close();
         if (preset_info != null) {
 
             String name = preset_info[0];
@@ -152,6 +154,7 @@ public class ManagePresets extends AppCompatActivity {
 
     private void deletePreset() {
         mDb.deletePreset(last_clicked_preset_id);
+        mDb.close();
         // Force a refresh of the listView so that the changes will be reflected in the ListView.
         fillPresetList();
     }

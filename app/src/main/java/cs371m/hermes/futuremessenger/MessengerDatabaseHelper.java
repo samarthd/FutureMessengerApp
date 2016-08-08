@@ -22,6 +22,9 @@ import java.util.Date;
  */
 public class MessengerDatabaseHelper extends SQLiteOpenHelper {
 
+    // A single instance of the MessengerDatabaseHelper.
+    private static MessengerDatabaseHelper mDb = null;
+
     public static final String DATABASE_NAME = "futuremessenger.db";
 
     //Names of columns in the Recipient table in the database.
@@ -59,9 +62,25 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String TAG = "IN DATABASE HELPER";
 
-    // Constructor.
-    public MessengerDatabaseHelper(Context context) {
+    /** Private constructor so the database can't be instantiated directly.
+     *  Make a call to the MessengerDatabaseHelper.getInstance() method if
+     *  you need it.
+     */
+    private MessengerDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
+    }
+
+    /**
+     * @param context
+     * @return The one and only instance of MessengerDatabaseHelper
+     *
+     * This design ensures there are no context leaks or connection leaks.
+     */
+    public static MessengerDatabaseHelper getInstance(Context context) {
+        if (mDb == null) {
+            mDb = new MessengerDatabaseHelper(context.getApplicationContext());
+        }
+        return mDb;
     }
 
     @Override

@@ -69,7 +69,7 @@ public class AlarmReceiver extends Service {
         }catch(NullPointerException e){
             Log.d(TAG, "NullPointerException");
         }
-        MessengerDatabaseHelper mdb = new MessengerDatabaseHelper(this);
+        MessengerDatabaseHelper mdb = MessengerDatabaseHelper.getInstance(this);
         Bundle results = mdb.getScheduledMessageData(messageID);
         if (results == null) {
             Log.d(TAG, "No message data found.");
@@ -99,9 +99,8 @@ public class AlarmReceiver extends Service {
                 sendIndividualSMS(names, numbers, messageText);
             }
             // Delete the message from our database after sending has been completed
-            MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
-            mDb.deleteMessage(messageID);
-            mDb.close();
+            mdb.deleteMessage(messageID);
+            mdb.close();
             broadcastRefreshLV();
         }
     }

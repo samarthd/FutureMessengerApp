@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.currently_scheduled_tv);
         // Create our database.
-        mDb = new MessengerDatabaseHelper(MainActivity.this);
+        mDb = MessengerDatabaseHelper.getInstance(this);
         ListView scheduledListView = (ListView) findViewById(R.id.scheduled_messages_list);
         scheduledListView.setEmptyView(findViewById(R.id.empty_messages_list_tv));
 
@@ -198,6 +198,7 @@ public class MainActivity extends AppCompatActivity {
     private void editScheduledMessage() {
         // Get the message's data.
         Bundle message_info = mDb.getScheduledMessageData(last_clicked_message_id);
+        mDb.close();
         if (message_info != null) {
             String recip_names = message_info.getString("recip_names");
             String recip_nums = message_info.getString("recip_nums");
@@ -242,6 +243,7 @@ public class MainActivity extends AppCompatActivity {
     private void deleteScheduledMessage() {
         stopAlarm(last_clicked_message_id);
         mDb.deleteMessage(last_clicked_message_id);
+        mDb.close();
         // Force a refresh of the listView so that the changes will be reflected in the ListView.
         fillListView();
     }
@@ -261,7 +263,6 @@ public class MainActivity extends AppCompatActivity {
     /* Populate the ListView from our database with all of the currently scheduled messages. */
     private void fillListView() {
         Cursor cursor = mDb.getAllScheduledMessages();
-
         ContactDatabaseAdapter adapter =
                 new ContactDatabaseAdapter(getBaseContext(), cursor, R.layout.listed_message_layout);
         ListView messagesListView = (ListView) findViewById(R.id.scheduled_messages_list);
@@ -292,6 +293,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+        mDb.close();
     }
 
     @Override

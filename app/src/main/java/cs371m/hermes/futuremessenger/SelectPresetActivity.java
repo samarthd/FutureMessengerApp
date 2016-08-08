@@ -22,7 +22,7 @@ public class SelectPresetActivity extends AppCompatActivity {
         setContentView(R.layout.activity_select_preset);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mDb = new MessengerDatabaseHelper(this);
+        mDb = MessengerDatabaseHelper.getInstance(this);
         fillSelectedPresetList();
 
     }
@@ -31,8 +31,7 @@ public class SelectPresetActivity extends AppCompatActivity {
     private void fillSelectedPresetList() {
         Cursor presetCursor = mDb.getAllPresets();
         ListView preset_lv = (ListView) findViewById(R.id.presets_lv);
-
-        String[] fromCols = {mDb.PRESET_NAME, mDb.PRESET_CONTENT};
+        String[] fromCols = {MessengerDatabaseHelper.PRESET_NAME, MessengerDatabaseHelper.PRESET_CONTENT};
         int[] toViews = {R.id.preset_name_tv, R.id.preset_content_tv};
         SimpleCursorAdapter adapter =
                 new SimpleCursorAdapter(getBaseContext(), R.layout.listed_preset_layout,
@@ -50,5 +49,6 @@ public class SelectPresetActivity extends AppCompatActivity {
                 finish();
             }
         });
+        mDb.close();
     }
 }

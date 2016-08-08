@@ -90,7 +90,7 @@ public class EditPreset extends AppCompatActivity {
 
     // Save the preset in our database.
     private void savePreset(String name, String message) {
-        MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
+        MessengerDatabaseHelper mDb = MessengerDatabaseHelper.getInstance(this);
         long result = mDb.storeNewPreset(name, message);
         Log.d("SAVE NEW PRESET", "Preset stored under id: " + result);
         mDb.close();
@@ -101,7 +101,7 @@ public class EditPreset extends AppCompatActivity {
 
     // updatePreset
     private void updatePreset(String name, String message) {
-        MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(this);
+        MessengerDatabaseHelper mDb = MessengerDatabaseHelper.getInstance(this);
         mDb.editPreset(last_clicked_preset_id, name, message);
         Log.d("EDIT PRESET", "Edited preset with id " + last_clicked_preset_id);
         mDb.close();

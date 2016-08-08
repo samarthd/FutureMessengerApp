@@ -414,7 +414,7 @@ public class EditTextMessageActivity extends AppCompatActivity
 
             //Save the message
             String dateTime = getDateTime();
-            MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(EditTextMessageActivity.this);
+            MessengerDatabaseHelper mDb = MessengerDatabaseHelper.getInstance(this);
             result = mDb.storeNewMessage(currently_selected_contacts, dateTime, message, image_path,
                                          group_flag);
             mDb.close();
@@ -435,7 +435,7 @@ public class EditTextMessageActivity extends AppCompatActivity
 
         //Save the message
         String dateTime = getDateTime();
-        MessengerDatabaseHelper mDb = new MessengerDatabaseHelper(EditTextMessageActivity.this);
+        MessengerDatabaseHelper mDb = MessengerDatabaseHelper.getInstance(this);
         long result = mDb.updateExistingMessage(last_clicked_message_id, currently_selected_contacts,
                                             dateTime, message, image_path, group_flag);
         mDb.close();

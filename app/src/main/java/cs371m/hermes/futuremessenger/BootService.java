@@ -37,7 +37,7 @@ public class BootService extends Service {
     }
 
     private void resetAlarms(){
-        MessengerDatabaseHelper mdb = new MessengerDatabaseHelper(this);
+        MessengerDatabaseHelper mdb = MessengerDatabaseHelper.getInstance(this);
         Cursor cursor = mdb.getAllScheduledMessages();
 
         while (cursor.moveToNext()) {
@@ -49,6 +49,7 @@ public class BootService extends Service {
             setAlarm(id, dateTime);
             Log.d("BootService", dateTime);
         }
+        mdb.close();
     }
     //date starts in YYYY-MM-DD HH:MM:SS format
     private void setAlarm(long id, String date){

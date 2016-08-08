@@ -2,11 +2,14 @@ package cs371m.hermes.futuremessenger;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Typeface;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 
@@ -35,22 +38,43 @@ public class ContactDatabaseAdapter extends CursorAdapter {
         TextView messageContentTV = (TextView) view.findViewById(R.id.message_txt_tv);
         TextView dateTime = (TextView) view.findViewById(R.id.datetime_tv);
 
-        messageContentTV.setText(cursor.getString(cursor.getColumnIndex("TEXT_CONTENT")));
-        dateTime.setText(cursor.getString(cursor.getColumnIndex("FORMATTED_DATETIME")));
+        String message_content = cursor.getString(cursor.getColumnIndex(MessengerDatabaseHelper.MESSAGE_TXT_CONTENT));
+        if (message_content == null || message_content.equals("")) {
+/*            message_content = context.getResources().getString(R.string.no_text_content);
+            messageContentTV.setTypeface(null, Typeface.ITALIC);*/
+            view.findViewById(R.id.message_layout).setVisibility(View.GONE);
+        }
+        else {
+            view.findViewById(R.id.message_layout).setVisibility(View.VISIBLE);
+        }
+        messageContentTV.setText(message_content);
+        dateTime.setText(cursor.getString(cursor.getColumnIndex(MessengerDatabaseHelper.MESSAGE_FORMATTED_DT)));
 
+        ImageView messThumbNail = (ImageView) view.findViewById(R.id.message_thumbnail);
+        String img_path = cursor.getString(cursor.getColumnIndex(MessengerDatabaseHelper.MESSAGE_IMG_PATH));
+        if (img_path == null)
+            messThumbNail.setImageResource(R.drawable.text_icon);
+        else
+            messThumbNail.setImageResource(R.drawable.picture_icon);
         TextView recipientNames = (TextView) view.findViewById(R.id.recipient_names_tv);
         Log.d(TAG, "Unfiltered names: " + cursor.getString(cursor.getColumnIndex("RECIPIENT_NAMES")));
         Log.d(TAG, "Unfiltered nums: " + cursor.getString(cursor.getColumnIndex("RECIPIENT_NUMBERS")));
         String[] all_recip_names = cursor.getString(cursor.getColumnIndex("RECIPIENT_NAMES")).split(";");
         String[] all_recip_nums = cursor.getString(cursor.getColumnIndex("RECIPIENT_NUMBERS")).split(";");
-
         ArrayList<String> namesList = new ArrayList<>();
-        if (all_recip_names.length != all_recip_nums.length) {
+        int numRecipNames = all_recip_names.length;
+        int numRecipNums = all_recip_nums.length;
+        if (numRecipNames != numRecipNums) {
             Log.d(TAG, "Names and numbers lengths didn't match.");
-            Log.d(TAG, "Names length: " + all_recip_names.length);
-            Log.d(TAG, "Nums length: " + all_recip_nums.length);
+            Log.d(TAG, "Names length: " + numRecipNames);
+            Log.d(TAG, "Nums length: " + numRecipNums);
         }
         else {
+            TextView recipientTV = (TextView) view.findViewById(R.id.recipient_label);
+            if (numRecipNames == 1)
+                recipientTV.setText(R.string.recipient_tv_singular);
+            else
+                recipientTV.setText(R.string.recipients_lv);
             for (int i = 0; i < all_recip_names.length; i++) {
                 // If the recipient doesn't have a name, they weren't a contact. Use their
                 // number as their "name" instead.

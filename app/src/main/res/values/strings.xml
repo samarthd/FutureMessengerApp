@@ -13,7 +13,7 @@
     <string name="title_activity_text_message">Text Message</string>
     <string name="message">Message&#160;</string>
     <string name="date_and_time">Date &#038; Time to Send&#160;</string>
-    <string name="recipients_lv">Recipient(s)&#160;</string>
+    <string name="recipients_lv">Recipients</string>
     <string name="recipient_ids">Recipient ID in database:&#160;</string>
     <string name="currently_scheduled_tv">Scheduled Messages</string>
     <string name="add_phone_number">ADD A PHONE NUMBER</string>

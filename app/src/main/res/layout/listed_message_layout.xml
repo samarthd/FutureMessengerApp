@@ -17,6 +17,8 @@
             android:id="@+id/message_thumbnail"
             android:layout_width="60dp"
             android:layout_height="match_parent"
+            android:padding="8dp"
+            android:layout_gravity="center"
             android:background="@color/colorAccent"/>
 
         <LinearLayout
@@ -25,6 +27,7 @@
             android:padding="5dp">
 
             <LinearLayout
+                android:id="@+id/message_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -46,6 +49,7 @@
                 android:orientation="vertical"
                 android:padding="5dp">
                 <TextView
+                    android:id="@+id/recipient_label"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/recipients_lv"

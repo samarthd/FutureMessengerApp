@@ -228,6 +228,7 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
                             "M." + MESSAGE_TXT_CONTENT + ", " +
                             "M." + MESSAGE_FORMATTED_DT + ", " +
                             "M." + MESSAGE_DATETIME + ", " +
+                            "M." + MESSAGE_IMG_PATH + ", " +
                             "GROUP_CONCAT(" + "R." + RECIPIENT_ID + ", ';') AS RECIPIENT_IDS, " +
                             "GROUP_CONCAT(" + "R." + RECIPIENT_NAME + ", ';') AS RECIPIENT_NAMES, " +
                             "GROUP_CONCAT(" + "R." + RECIPIENT_PHONE_NUMBER + ", ';') AS RECIPIENT_NUMBERS " +

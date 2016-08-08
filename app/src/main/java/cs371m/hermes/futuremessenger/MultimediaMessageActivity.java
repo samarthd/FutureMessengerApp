@@ -54,7 +54,8 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             String uri_path = getIntent().getStringExtra("image_path");
-            _image_uri = Uri.parse(uri_path);
+            Log.d(TAG + "onCreate", uri_path);
+            setImageButton(Uri.parse(uri_path));
         }
     }
 
@@ -198,28 +199,30 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
             case SELECT_IMAGE:
                 if (resultCode == RESULT_OK) {
                     Uri selectedImage = imageReturnedIntent.getData();
-                    _image_uri = selectedImage;
-                    try {
-                        InputStream imageStream = getContentResolver().openInputStream(selectedImage);
-                        BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inJustDecodeBounds = true;
-                        BitmapFactory.decodeStream(imageStream, null, options);
-
-                        /* Tries to "efficiently" get the sample size, but not quite there, I think */
-                        ImageView iv = (ImageView) findViewById(R.id.thumbnail);
-
-                        //height and width are the minimum size we want of the image
-                        options.inSampleSize = calculateInSampleSize(options, iv.getMaxHeight(), iv.getWidth());
-                        options.inJustDecodeBounds = false;
-                        imageStream = getContentResolver().openInputStream(selectedImage);
-                        Bitmap scaledImage = BitmapFactory.decodeStream(imageStream, null, options);
-
-                        iv.setImageBitmap(scaledImage);
-                    } catch (FileNotFoundException e) {
-                        Log.d(TAG + "onActivityResult", "FILE NOT FOUND");
-                    }
-
+                    setImageButton(selectedImage);
                 }
+        }
+    }
+
+    protected void setImageButton(Uri image_uri) {
+        _image_uri = image_uri;
+        try {
+            InputStream imageStream = getContentResolver().openInputStream(image_uri);
+            /* Tries to "efficiently" get the sample size, but not quite there, I think */
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(imageStream, null, options);
+            ImageView iv = (ImageView) findViewById(R.id.thumbnail);
+
+            //height and width are the minimum size we want of the image
+            options.inSampleSize = calculateInSampleSize(options, iv.getMaxHeight(), iv.getWidth());
+            options.inJustDecodeBounds = false;
+            imageStream = getContentResolver().openInputStream(image_uri);
+            Bitmap scaledImage = BitmapFactory.decodeStream(imageStream, null, options);
+
+            iv.setImageBitmap(scaledImage);
+        } catch (FileNotFoundException e) {
+            Log.d(TAG + "onActivityResult", "FILE NOT FOUND");
         }
     }
 

@@ -210,7 +210,16 @@ public class MainActivity extends AppCompatActivity {
             String dateTime = message_info.getString("dateTime");
 
             // Place the data in an intent.
-            Intent intent = new Intent(this, EditTextMessageActivity.class);
+            Intent intent;
+            if (image_path == null || image_path.equals("")) {
+                // assume SMS
+                Log.d("edit SMS", "image_path is null, or equals empty string");
+                intent = new Intent(this, EditTextMessageActivity.class);
+            } else {
+                //assume MMS?
+                Log.d("edit MMS", image_path);
+                intent = new Intent(this, MultimediaMessageActivity.class);
+            }
             intent.putExtra("recip_names", recip_names);
             intent.putExtra("recip_nums", recip_nums);
             intent.putExtra("message", message);

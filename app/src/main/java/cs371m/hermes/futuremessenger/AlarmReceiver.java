@@ -225,7 +225,7 @@ public class AlarmReceiver extends Service {
     private void sendSMS(final long messageID, String phoneNum, String message) {
         try {
             Log.d("sendSMS", phoneNum + " " + message);
-            String SENT = "sent";
+            String SENT = "sent " + " " + messageID + " " + phoneNum + " " + message;
             String DELIVERED = "delivered";
 
             /* Create pending intents */
@@ -257,6 +257,7 @@ public class AlarmReceiver extends Service {
                     }
                     //Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
                     sendDeliveryNotification(messageID, result);
+                    unregisterReceiver(this);
                 }
             }, new IntentFilter(SENT));
 

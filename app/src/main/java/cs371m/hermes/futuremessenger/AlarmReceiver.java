@@ -80,6 +80,7 @@ public class AlarmReceiver extends Service {
             String messageText = results.getString("message");
             int groupFlag = results.getInt("group_flag");
             String img_path = results.getString("image_path");
+
             if (img_path != null)
                 Log.d(TAG, img_path);
 
@@ -132,8 +133,8 @@ public class AlarmReceiver extends Service {
                .setSmallIcon(R.drawable.picture_icon)
                .setLargeIcon(largeIcon)
                .setColor(ContextCompat.getColor(this, R.color.colorAccent))
-               .setContentTitle(getResources()
-               .getString(R.string.app_name))    //title of the notification
+               .setContentTitle(getResources().getString(R.string.app_name))    //title of the notification
+               .setContentText("Click to send your picture message.")//actual notification content
                .setAutoCancel(true)    //clears notification after user clicks on it
                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -157,6 +158,7 @@ public class AlarmReceiver extends Service {
                .setLargeIcon(largeIcon)
                .setColor(ContextCompat.getColor(this, R.color.colorAccent))
                .setContentTitle(getResources().getString(R.string.app_name))    //title of the notification
+               .setContentText("Click to send your group message.")//actual notification content
                .setAutoCancel(true)    //clears notification after user clicks on it
                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -169,13 +171,14 @@ public class AlarmReceiver extends Service {
         //TODO: change notification icon and customize text to display message
         //this intent defines where the user goes after they click the notification
         Intent resultIntent = new Intent(this, MainActivity.class);
+        //resultIntent.setAction(""+System.currentTimeMillis());
         PendingIntent pendInt = PendingIntent.getActivity(this, (int) messageID, resultIntent, 0);
         Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.launcher_icon);
         NotificationCompat.Builder  mBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.text_icon)
                 .setLargeIcon(largeIcon)
                 .setColor(ContextCompat.getColor(this, R.color.colorAccent))
-                .setContentTitle("Future Messenger")//title of the notification
+                .setContentTitle(getResources().getString(R.string.app_name))//title of the notification
                 .setContentText(result)//actual notification content
                 .setContentIntent(pendInt)
                 .setAutoCancel(true); //clears notification after user clicks on it

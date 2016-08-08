@@ -417,6 +417,7 @@ public class EditTextMessageActivity extends AppCompatActivity
             MessengerDatabaseHelper mDb = MessengerDatabaseHelper.getInstance(this);
             result = mDb.storeNewMessage(currently_selected_contacts, dateTime, message, image_path,
                                          group_flag);
+            Log.d(TAG, "Saved a new message and its ID is " + result);
             mDb.close();
 
         } catch (Exception ex) {

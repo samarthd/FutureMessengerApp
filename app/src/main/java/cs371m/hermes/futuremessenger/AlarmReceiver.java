@@ -29,7 +29,7 @@ import java.util.ArrayList;
  */
 public class AlarmReceiver extends Service {
     String phoneNum, message;
-    long messageID;
+
     // Action to broadcast for refreshing listview
     private static final String REFRESH_LV_ACTION = "cs371m.hermes.futuremessenger.refreshlv";
 
@@ -63,6 +63,8 @@ public class AlarmReceiver extends Service {
         super.onStart(intent, startId);
         //check if extras even exist; this suppresses null pointer exceptions that happen
         //due to checking for null extras.
+        long messageID = -1;
+
         try {
             Bundle bundle = intent.getExtras();
             messageID = bundle.getLong("message_id");
@@ -88,15 +90,15 @@ public class AlarmReceiver extends Service {
 
             if(img_path != null){
                 Log.d(TAG, "about to send picture MMS");
-                sendPictureMMS(numbers, messageText, img_path);
+                sendPictureMMS(messageID, numbers, messageText, img_path);
             }
             else if (groupFlag==MessengerDatabaseHelper.IS_GROUP_MESSAGE){
                 Log.d(TAG, "about to send group MMS");
-                sendGroupMMS(numbers, messageText);
+                sendGroupMMS(messageID, numbers, messageText);
             }
             else {
                 Log.d(TAG, "About to send SMS");
-                sendIndividualSMS(names, numbers, messageText);
+                sendIndividualSMS(messageID, names, numbers, messageText);
             }
             // Delete the message from our database after sending has been completed
             mdb.deleteMessage(messageID);
@@ -105,16 +107,16 @@ public class AlarmReceiver extends Service {
         }
     }
     // Sends individual SMS messages to all listed recipients (same message)
-    public void sendIndividualSMS(String names, String numbers, String messageText){
+    public void sendIndividualSMS(long messageID, String names, String numbers, String messageText){
         String[] numbersArray = numbers.split(";");
 
         for(String number : numbersArray) {
-            sendSMS(number, messageText);
+            sendSMS(messageID, number, messageText);
         }
     }
 
     // Sends a picture message to the specified recipient
-    public void sendPictureMMS(String phonenum, String message, String uri_path) {
+    public void sendPictureMMS(long messageID, String phonenum, String message, String uri_path) {
         String TAG = "sendPictureMMS";
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.putExtra("address", phonenum);
@@ -137,12 +139,14 @@ public class AlarmReceiver extends Service {
                .setAutoCancel(true)    //clears notification after user clicks on it
                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        Log.d("Picture notify ID", "" + messageID);
+
         mNotificationManager.notify((int) messageID, builder.build());
         Log.d(TAG, "Finished pushing notification.");
     }
 
     // Sends a text message to the specified recipients as a group
-    public void sendGroupMMS(String phonenums, String message) {
+    public void sendGroupMMS(long messageID, String phonenums, String message) {
         String TAG = "sendGroupMMS";
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("smsto:" + phonenums));
@@ -161,12 +165,13 @@ public class AlarmReceiver extends Service {
                .setAutoCancel(true)    //clears notification after user clicks on it
                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        Log.d("Group notify ID", "" + messageID);
         mNotificationManager.notify((int) messageID, builder.build());
         Log.d(TAG, "Finished pushing notification.");
     }
 
     // Notifies the user of the success/failure of SMS delivery.
-    public void sendDeliveryNotification(String result){
+    public void sendDeliveryNotification(long messageID, String result){
         //TODO: change notification icon and customize text to display message
         //this intent defines where the user goes after they click the notification
         Intent resultIntent = new Intent(this, MainActivity.class);
@@ -192,6 +197,7 @@ public class AlarmReceiver extends Service {
 
         NotificationManager notification =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        Log.d("Delivery notify ID", "" + messageID);
         //notification ids are the same as the message ids
         notification.notify((int)messageID, mBuilder.build());
     }
@@ -216,7 +222,7 @@ public class AlarmReceiver extends Service {
         sendSMS(phoneNum, message);
     }*/
 
-    private void sendSMS(String phoneNum, String message) {
+    private void sendSMS(final long messageID, String phoneNum, String message) {
         try {
             Log.d("sendSMS", phoneNum + " " + message);
             String SENT = "sent";
@@ -250,9 +256,9 @@ public class AlarmReceiver extends Service {
                             break;
                     }
                     //Toast.makeText(getApplicationContext(), result, Toast.LENGTH_LONG).show();
-                    sendDeliveryNotification(result);
+                    sendDeliveryNotification(messageID, result);
                 }
-            }, new IntentFilter("sent"));
+            }, new IntentFilter(SENT));
 
             registerReceiver(new BroadcastReceiver() {
                 @Override

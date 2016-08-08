@@ -280,8 +280,24 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
     }
 
     @Override
-    protected boolean isNoMessageEntered() {
-        boolean prev_result = super.isNoMessageEntered();
-        return prev_result && _image_uri == null;
+    protected boolean isEntryFieldsFilled() {
+        boolean result = false;
+        if (isNoContactEntered()) {
+            Toast.makeText(getApplicationContext(),
+                    R.string.no_contacts_entered, Toast.LENGTH_SHORT).show();
+        } else if (isImageEmpty()) {
+            Toast.makeText(getApplicationContext(),
+                    "Must select an image", Toast.LENGTH_SHORT).show();
+        } else if (isDateInPast()) {
+            Toast.makeText(getApplicationContext(),
+                    R.string.bad_date_entered, Toast.LENGTH_SHORT).show();
+        } else {
+            result = true;
+        }
+        return result;
+    }
+
+    protected boolean isImageEmpty() {
+        return _image_uri == null;
     }
 }

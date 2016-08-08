@@ -45,7 +45,7 @@ public class AlarmReceiver extends Service {
 
     @Override
     public IBinder onBind(Intent intent){
-        Toast.makeText(this, "onBind", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "onBind", Toast.LENGTH_LONG).show();
         Log.d("AlarmReciever: onBind", "");
         return null;
     }
@@ -195,7 +195,7 @@ public class AlarmReceiver extends Service {
     }
     @Override
     public boolean onUnbind(Intent intent){
-        Toast.makeText(this, "onUnbind", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this, "onUnbind", Toast.LENGTH_LONG).show();
         Log.d("AlarmReciever: onUnbind", "");
         return super.onUnbind(intent);
     }
@@ -255,7 +255,7 @@ public class AlarmReceiver extends Service {
             registerReceiver(new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    Toast.makeText(getApplicationContext(), "Delivered", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(), "Delivered", Toast.LENGTH_LONG).show();
                 }
             }, new IntentFilter("delivered"));
 

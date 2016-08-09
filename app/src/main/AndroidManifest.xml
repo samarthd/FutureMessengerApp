@@ -91,6 +91,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="cs371m.hermes.futuremessenger.MainActivity" />
         </activity>
+        <activity android:name=".SplashActivity"></activity>
     </application>
 
 </manifest>

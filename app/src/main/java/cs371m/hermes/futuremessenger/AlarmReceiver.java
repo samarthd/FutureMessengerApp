@@ -124,19 +124,21 @@ public class AlarmReceiver extends Service {
         intent.putExtra(Intent.EXTRA_STREAM, Uri.parse(uri_path));
         intent.setType("image/*");
 
+        Resources curResources = getResources();
         //TODO customize the text of this notification to inform the user it's a picture message.
         PendingIntent pending =
                 PendingIntent.getActivity(this, (int) messageID, Intent.createChooser(intent, getResources()
                                                           .getString(R.string.mms_chooser_text)), 0);
-        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.launcher_icon);
+        Bitmap largeIcon = BitmapFactory.decodeResource(curResources, R.mipmap.launcher_icon);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
         builder.setContentIntent(pending)
                .setSmallIcon(R.drawable.picture_icon)
                .setLargeIcon(largeIcon)
                .setColor(ContextCompat.getColor(this, R.color.colorAccent))
-               .setContentTitle(getResources().getString(R.string.app_name))    //title of the notification
-               .setContentText("Click to send your picture message.")//actual notification content
+               .setContentTitle(curResources.getString(R.string.app_name))    //title of the notification
+               .setContentText(curResources.getString(R.string.send_picture_message))//actual notification content
                .setAutoCancel(true)    //clears notification after user clicks on it
+               .setOngoing(true)
                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Log.d("Picture notify ID", "" + messageID);
@@ -151,17 +153,22 @@ public class AlarmReceiver extends Service {
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("smsto:" + phonenums));
         intent.putExtra("sms_body", message);
+        Resources curResources = getResources();
 
         PendingIntent pending =
                 PendingIntent.getActivity(this, (int) messageID, Intent.createChooser(intent, getResources()
                         .getString(R.string.mms_chooser_text)), 0);
-        Bitmap largeIcon = BitmapFactory.decodeResource(getResources(), R.mipmap.launcher_icon);
+        Bitmap largeIcon = BitmapFactory.decodeResource(curResources, R.mipmap.launcher_icon);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
-        builder.setContentIntent(pending).setSmallIcon(R.drawable.text_icon)
+        builder.setContentIntent(pending)
+               .setSmallIcon(R.drawable.text_icon)
                .setLargeIcon(largeIcon)
                .setColor(ContextCompat.getColor(this, R.color.colorAccent))
-               .setContentTitle(getResources().getString(R.string.app_name))    //title of the notification
-               .setContentText("Click to send your group message.")//actual notification content
+               .setContentTitle(curResources.getString(R.string.app_name))    //title of the notification
+               .setContentText(curResources.getString(R.string.group_ready))//actual notification content
+               .setStyle(new NotificationCompat.BigTextStyle()
+                         .bigText(curResources.getString(R.string.open_mms_app) + " \"" + message + "\""))
+               .setOngoing(true)
                .setAutoCancel(true)    //clears notification after user clicks on it
                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);

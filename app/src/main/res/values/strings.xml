@@ -51,6 +51,10 @@
     <string name="radio_off">Radio was off, message failed</string>
     <string name="no_pdu">No PDU defined, message failed</string>
     <string name="no_service">No service, message failed</string>
+    <string name="group_ready">Group message is ready for sending</string>
+    <string name="open_mms_app">Click here to send group message: </string>
+    <string name="cancel_message">Cancel and delete message</string>
+    <string name="send_picture_message">Click to send your picture message</string>
     <string-array name="group_choice">
         <item>@string/group_group</item>
         <item>@string/group_indiv</item>

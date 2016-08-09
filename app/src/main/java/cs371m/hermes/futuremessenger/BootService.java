@@ -31,7 +31,6 @@ public class BootService extends Service {
 
     @Override
     public IBinder onBind(Intent intent){
-        Toast.makeText(this, "onBind", Toast.LENGTH_LONG).show();
         Log.d("BootService", "onBind");
         return null;
     }

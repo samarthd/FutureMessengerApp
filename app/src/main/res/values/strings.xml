@@ -65,4 +65,6 @@
     <string name="restricted_to_one_recipient">You can only send picture messages to one recipient at a time.</string>
     <string name="recipient_tv_singular">Recipient</string>
     <string name="title_activity_about">AboutActivity</string>
+    <string name="about_text_first">Future Messenger</string>
+    <string name="about_text_second">Created by: \n\nSamarth Dhruva\nBilly Do\nArthur Storey</string>
 </resources>

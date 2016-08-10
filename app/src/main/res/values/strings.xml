@@ -66,16 +66,37 @@
     <string name="recipient_tv_singular">Recipient</string>
     <string name="title_activity_about">AboutActivity</string>
     <string name="about_text_welcome">Welcome to Future Messenger!</string>
-    <string name="about_text_welcome2">Here are some tips to get you started</string>
-    <string name="about_text_created_by">Created by: \n\nSamarth Dhruva\nBilly Do\nArthur Storey</string>
+    <string name="some_tips">Some tips to get you started:</string>
+    <string name="about_text_created_by">Future Messenger created and developed by:</string>
+    <string name="dev_names">Samarth Dhruva\nBilly Do\nArthur Storey\n\n</string>
     <string name="about_text_title">About</string>
-    <string name="about_text_tip1">You can send three types of messages with Future Messenger:
-        SMS (text message), Group text messages, and individual Picture messages.</string>
-    <string name="about_text_tip2">Text messages sent individually to one or more recipients will be sent automatically
-    for you at the time you set.</string>
-    <string name="about_text_tip3">Group text messages and Picture messages will send a notification at the time you set,
-    at which time you must click the notification and choose which app you would like to use
-    to send the message. Then, simply send your message from the chosen app.</string>
-    <string name="about_text_tip4">You can create preset messages of things you send often to quickly fill in a message.</string>
+    <string name="three_types_detail">You can schedule basic SMS text messages, group MMS text messages, and
+        picture messages.</string>
+    <string name="text_delivery_options">Multi-Recipient Options</string>
+    <string name="text_delivery_detail">If you request a text message be sent to more than one recipient,
+        you can choose from two delivery methods. You can send each message \"individually,\" where
+        every recipient gets an independent copy of the message as if you sent it to them
+        one-on-one. Alternatively, you can select the \"group\" option to send the message as
+        a group MMS, where all recipients can participate in a single conversation with yourself
+        and each other. All messages and replies in this conversation are visible to every recipient.</string>
+    <string name="mms_delivery_detail">If you schedule a group MMS text message or a picture message,
+        Future Messenger will push a notification at the time you specified.
+        Click this notification and choose which app you would like to use to send the
+        message. Future Messenger will build your message in the chosen app as you saved it, so all
+        you have to do is hit send!</string>
+    <string name="preset_details">We all get tired of typing from time to time. If you find yourself
+        typing a certain message often, you can create a preset for it! Once you have a preset saved,
+        you can use it to help you fill in the text field of messages as you\'re editing or drafting them.
+        (That\'s what the \"Populate from Preset\" button is for!) You can even chain multiple
+        presets together&#8212;try it out!</string>
     <string name="group_dialog_title">Send as a group conversation?</string>
+    <string name="what_is_fumes_detail">Future Messenger is a pre-scheduled messaging utility that
+        allows you to schedule your messages ahead of time.</string>
+    <string name="three_types">3 Types of Messages</string>
+    <string name="mms_delivery">MMS Delivery</string>
+    <string name="sms_delivery">SMS Delivery</string>
+    <string name="sms_delivery_detail">If you schedule a text message for one recipient or specify
+        multiple recipients to receive a text message \"individually,\" Future Messenger will automatically
+        send the message and notify you upon doing so.</string>
+    <string name="about_preset">Message Presets</string>
 </resources>

@@ -27,7 +27,7 @@
         android:text="@string/about_text_welcome"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:paddingBottom="20dp"
+        android:paddingBottom="10dp"
         android:textColor="@color/plain_white"/>
 
     <TextView

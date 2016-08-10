@@ -8,8 +8,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.Toast;
-
 import java.util.Calendar;
 
 /**
@@ -40,9 +38,6 @@ public class BootService extends Service {
         Cursor cursor = mdb.getAllScheduledMessages();
 
         while (cursor.moveToNext()) {
-            String[] all_recip_names =  cursor.getString(cursor.getColumnIndex("RECIPIENT_NAMES")).split(";");
-            String[] all_recip_nums =  cursor.getString(cursor.getColumnIndex("RECIPIENT_NUMBERS")).split(";");
-            String text_content = cursor.getString(cursor.getColumnIndex("TEXT_CONTENT"));
             String dateTime = cursor.getString(cursor.getColumnIndex("DATETIME"));
             long id = cursor.getLong(cursor.getColumnIndex("_id"));
             setAlarm(id, dateTime);
@@ -50,7 +45,13 @@ public class BootService extends Service {
         }
         mdb.close();
     }
-    //date starts in YYYY-MM-DD HH:MM:SS format
+
+
+    /**
+     * Sets an alarm for a particular message at a certain time.
+     * @param id, the ID of the message
+     * @param date, starts in YYYY-MM-DD HH:MM:SS format
+     */
     private void setAlarm(long id, String date){
         int year = Integer.parseInt(date.substring(0,4));
         int month = Integer.parseInt(date.substring(5,7)) - 1;//minus once since Jan = 0
@@ -69,8 +70,6 @@ public class BootService extends Service {
         AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
         /* Set calendar dates */
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.clear();
         calendar.set(year, month, day, hour, minute);
         alarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
         Log.d("resetAlarm", "Message id = " + Long.toString(id));

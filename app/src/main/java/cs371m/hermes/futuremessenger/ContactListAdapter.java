@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -29,15 +28,18 @@ public class ContactListAdapter extends ArrayAdapter<Contact> {
     public View getView(int position, View convertView, final ViewGroup parent) {
         //Get the contact at this position.
         Contact current = getItem(position);
+
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.selected_contact_layout,
                                                                     parent, false);
         }
-        // Lookup view for data population
+
+        // Get the views that we will be populating data into
         TextView contactName = (TextView) convertView.findViewById(R.id.contact_name);
         TextView contactNumber = (TextView) convertView.findViewById(R.id.contact_num);
-        // Populate the data into the template view using the data object
+
+        // Populate the data into the views
         contactName.setText(current.getName());
         contactNumber.setText(current.getPhoneNum());
 
@@ -71,8 +73,6 @@ public class ContactListAdapter extends ArrayAdapter<Contact> {
                 }
             }
         });
-
-        // Return the completed view to render on screen
         return convertView;
     }
 }

@@ -34,22 +34,20 @@ public class EditTextMessageActivity extends AppCompatActivity
         DatePickerFragment.DatePickerListener, TimePickerFragment.TimePickerListener,
         GroupDialogFragment.GroupDialogListener {
 
-    /**
-     *
-     */
+    // Debugging tag
     private String TAG = "EditTextMessageActivity ";
 
+    // Views for date, time, and message field
     private TextView _date_button;
     private TextView _time_button;
     private EditText _message_field;
 
-    /**
-     * _calendar holds the Date that the Buttons are displaying
-     */
+
+    // _calendar holds the Date that the Buttons are displaying
     private Calendar _calendar;
-    /**
-     * some common DateFormat objects we will use
-     */
+
+
+    // Some common DateFormat objects we will use
     public static final DateFormat DF_DATE     = DateFormat.getDateInstance(DateFormat.MEDIUM);
     public static final DateFormat DF_TIME     = DateFormat.getTimeInstance(DateFormat.SHORT);
     public static final DateFormat DF_DATETIME = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -57,7 +55,7 @@ public class EditTextMessageActivity extends AppCompatActivity
     /* Are we making a brand new message?
      * If we're editing/deleting an existing message, store the ID of it here.
      * Otherwise it will be -1. */
-    protected long last_clicked_message_id;
+    protected long mLast_clicked_message_id;
 
     // Request code for starting the contact picker activity
     protected static final int CONTACT_PICKER_REQUEST = 9999;
@@ -66,10 +64,10 @@ public class EditTextMessageActivity extends AppCompatActivity
     private static final int POPULATE_FROM_PRESET_REQUEST = 9998;
 
     // List that holds the currently selected contacts
-    protected ArrayList<Contact> currently_selected_contacts;
+    protected ArrayList<Contact> mCurrently_selected_contacts;
 
     // Adapter to populated currently selected contacts list
-    private ContactListAdapter contactAdapter;
+    private ContactListAdapter mContactAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,17 +82,17 @@ public class EditTextMessageActivity extends AppCompatActivity
         _time_button = (TextView) findViewById(R.id.button_time).findViewById(R.id.button_time_text);
         _calendar = Calendar.getInstance();
 
-        /* TODO: If editing scheduled message, cancel previous version first */
         Intent intent = getIntent();
         Bundle extras = intent.getExtras();
+        /* If we are given values, then we populate the fields from the existing message that
+        *  we are editing. */
         if (extras != null) {
-            //TODO: Initialize currently selected contacts to have all the existing contacts.
+            // Set the contact list to have the existing values
             buildContactListFromExisting(intent.getStringExtra("recip_names"),
                                          intent.getStringExtra("recip_nums"));
 
-            last_clicked_message_id = intent.getLongExtra("message_id", -1);
+            mLast_clicked_message_id = intent.getLongExtra("message_id", -1);
             _message_field.setText(intent.getStringExtra("message"));
-            //TODO: Intent should send in date & time as one string
             String datetime = intent.getStringExtra("date") + " " + intent.getStringExtra("time");
             Log.d(TAG + "editing text", datetime);
             try {
@@ -107,16 +105,16 @@ public class EditTextMessageActivity extends AppCompatActivity
             }
         }
         else {
-            // brand new contacts list
-            currently_selected_contacts = new ArrayList<>();
-            last_clicked_message_id = -1;
+            // We are making a brand new message, so create a brand new contacts list
+            mCurrently_selected_contacts = new ArrayList<>();
+            mLast_clicked_message_id = -1;
         }
         updateDateButtonText();
         updateTimeButtonText();
 
         ListView contactsLV = (ListView) findViewById(R.id.selected_contacts_list);
 
-        // Ensure the listview's touches won't be stopped by the scrollview
+        // Ensure the ListView's touches won't be intercepted by the scrollview
         contactsLV.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -125,8 +123,8 @@ public class EditTextMessageActivity extends AppCompatActivity
             }
         });
 
-        contactAdapter = new ContactListAdapter(this, currently_selected_contacts);
-        contactsLV.setAdapter(contactAdapter);
+        mContactAdapter = new ContactListAdapter(this, mCurrently_selected_contacts);
+        contactsLV.setAdapter(mContactAdapter);
         adjustListHeight(contactsLV);
 
         preventEditTextTouchIntercept();
@@ -171,10 +169,11 @@ public class EditTextMessageActivity extends AppCompatActivity
                 Log.d(TAG + "FAButton", "Message Send button pressed.");
 
                 if (isEntryFieldsFilled()) {
-                    if (currently_selected_contacts.size() >= 2) {
+                    if (mCurrently_selected_contacts.size() >= 2) {
                         showGroupDialog();
                     } else {
-                        scheduleMessage(last_clicked_message_id, get_message_text(), null, MessengerDatabaseHelper.NOT_GROUP_MESSAGE);
+                        scheduleMessage(mLast_clicked_message_id, get_message_text(), null,
+                                MessengerDatabaseHelper.NOT_GROUP_MESSAGE);
                         returnToMainActivity();
                     }
                 }
@@ -183,8 +182,8 @@ public class EditTextMessageActivity extends AppCompatActivity
     }
 
     /**
-     * checks to see if entry fields were filled, and makes a Toast if something is not
-     * also checks to see if the Date is set in the future
+     * Checks to see if entry fields were filled, and makes a Toast if something is not.
+     * Also checks to see if the Date/Time is set in the future.
      * @return false if a field is missing or incorrect
      */
     protected boolean isEntryFieldsFilled() {
@@ -204,36 +203,40 @@ public class EditTextMessageActivity extends AppCompatActivity
         return result;
     }
 
+    /**
+     * Retrieve the numbers from the selected contacts list.
+     * @return A string of all of the phone numbers delimited by semicolons.
+     */
     protected final String getNumbersFromContactsSelected() {
-        ArrayList<String> numbers = new ArrayList<String>();
-        for (Contact thisContact : currently_selected_contacts) {
+        ArrayList<String> numbers = new ArrayList<>();
+        for (Contact thisContact : mCurrently_selected_contacts) {
             numbers.add(thisContact.getPhoneNum());
         }
         return stringJoin(numbers, ";");
     }
 
 
-    // Builds the selected contacts list from given names and numbers delimited by strings.
+    // Builds the selected contacts list from given names and numbers delimited by semicolons.
     private void buildContactListFromExisting(String recip_names, String recip_nums) {
         Log.d(TAG + "Build contact string", "Names: " + recip_names);
         Log.d(TAG + "Build contact string", "Numbers: " + recip_nums);
 
         String[] name_array = recip_names.split(";");
         String[] num_array = recip_nums.split(";");
-        currently_selected_contacts = new ArrayList<>();
+        mCurrently_selected_contacts = new ArrayList<>();
         if (name_array.length != num_array.length) {
             Log.d(TAG + "BuildContactsList", "Lengths of names and numbers are not equal.");
         }
         else {
             for (int i = 0; i < name_array.length; i++) {
                 Contact new_contact = new Contact(name_array[i], num_array[i]);
-                currently_selected_contacts.add(new_contact);
+                mCurrently_selected_contacts.add(new_contact);
             }
         }
     }
 
     // The entire activity is in a ScrollView, so it intercepts other scrollable items.
-    // This enables the message edittext to be scrolled.
+    // This enables the message EditText to be scrolled.
     private void preventEditTextTouchIntercept() {
         EditText textContentInput = (EditText) findViewById(R.id.message_field);
         textContentInput.setOnTouchListener(new View.OnTouchListener() {
@@ -245,7 +248,6 @@ public class EditTextMessageActivity extends AppCompatActivity
         });
 
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -266,20 +268,18 @@ public class EditTextMessageActivity extends AppCompatActivity
 
     // Update the selected contacts list after a user selects a contact.
     private void receiveContactAndAddToList(Intent data) {
-
         boolean showErrorToast = false;
         Uri contact_uri = data.getData();
 
         // Get the contact's name.
-        Cursor cursor = getContentResolver()
-                .query(contact_uri, null,
-                null, null, null);
+        Cursor cursor = getContentResolver().query(contact_uri, null, null, null, null);
         String name = "";
         if (cursor.moveToFirst()) {
             int nameIndex = cursor.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME);
             name = cursor.getString(nameIndex);
         }
         else {
+            // There was an error with the contact
             showErrorToast = true;
         }
 
@@ -296,13 +296,15 @@ public class EditTextMessageActivity extends AppCompatActivity
             phoneNumber = PhoneNumberUtils.formatNumber(phoneNumber);
         }
         else {
+            // There was an error with the contact
             showErrorToast = true;
         }
 
-
+        // Show the error toast if something ever went wrong
         if (showErrorToast)
             Toast.makeText(this, R.string.edit_error, Toast.LENGTH_SHORT).show();
         else {
+            // Otherwise, add the contact's information to our selected list
             Contact current_contact = new Contact(name, phoneNumber);
             addContactToRecipientList(current_contact);
         }
@@ -312,12 +314,12 @@ public class EditTextMessageActivity extends AppCompatActivity
     private void addContactToRecipientList (Contact new_contact) {
         ListView contactsLV = (ListView) findViewById(R.id.selected_contacts_list);
         // Only add this new contact if we haven't already added it.
-        if (!currently_selected_contacts.contains(new_contact)) {
-            currently_selected_contacts.add(new_contact);
+        if (!mCurrently_selected_contacts.contains(new_contact)) {
+            mCurrently_selected_contacts.add(new_contact);
             adjustListHeight(contactsLV);
-            contactAdapter.notifyDataSetChanged();
+            mContactAdapter.notifyDataSetChanged();
             // Make sure the most recently added item is in view by scrolling to the bottom.
-            contactsLV.setSelection(contactAdapter.getCount() - 1);
+            contactsLV.setSelection(mContactAdapter.getCount() - 1);
         }
         else {
             Toast.makeText(this, R.string.already_recipient, Toast.LENGTH_SHORT).show();
@@ -330,16 +332,16 @@ public class EditTextMessageActivity extends AppCompatActivity
        http://stackoverflow.com/questions/14020859/change-height-of-a-listview-dynamicallyandroid */
     private void adjustListHeight(ListView contactsLV) {
         LinearLayout.LayoutParams list = (LinearLayout.LayoutParams) contactsLV.getLayoutParams();
-        int numRows = contactAdapter.getCount();
+        int numRows = mContactAdapter.getCount();
         if (numRows > 3) {
-            View item = contactAdapter.getView(0, null, contactsLV);
+            View item = mContactAdapter.getView(0, null, contactsLV);
             item.measure(0,0);
             list.height = (int) (3.5 * item.getMeasuredHeight());
         }
         else {
             int sumHeight = 0;
             for (int i = 0; i < numRows; i++) {
-                View item = contactAdapter.getView(i, null, contactsLV);
+                View item = mContactAdapter.getView(i, null, contactsLV);
                 item.measure(0, 0);
                 sumHeight += item.getMeasuredHeight();
             }
@@ -359,7 +361,7 @@ public class EditTextMessageActivity extends AppCompatActivity
     }
 
     /**
-     * set an alarm for when to send the message
+     * Set an alarm for when to send the message.
      * @param id the id in the database with the message and numbers to send
      * @param when set to when the alarm is set
      */
@@ -379,7 +381,7 @@ public class EditTextMessageActivity extends AppCompatActivity
     }
 
     /**
-     * store the message in the database and set an alarm to send the message
+     * Store the message in the database and set an alarm to send the message
      * @param id         database id of message; -1 if new message
      * @param message    message to be sent
      * @param image_path file path for an image
@@ -415,7 +417,7 @@ public class EditTextMessageActivity extends AppCompatActivity
             //Save the message
             String dateTime = getDateTime();
             MessengerDatabaseHelper mDb = MessengerDatabaseHelper.getInstance(this);
-            result = mDb.storeNewMessage(currently_selected_contacts, dateTime, message, image_path,
+            result = mDb.storeNewMessage(mCurrently_selected_contacts, dateTime, message, image_path,
                                          group_flag);
             Log.d(TAG, "Saved a new message and its ID is " + result);
             mDb.close();
@@ -432,12 +434,12 @@ public class EditTextMessageActivity extends AppCompatActivity
     // new, updated version.
     private long updateMessage(String message, String image_path, int group_flag) {
         //cancel the previous alarm
-        cancelAlarm(last_clicked_message_id);
+        cancelAlarm(mLast_clicked_message_id);
 
         //Save the message
         String dateTime = getDateTime();
         MessengerDatabaseHelper mDb = MessengerDatabaseHelper.getInstance(this);
-        long result = mDb.updateExistingMessage(last_clicked_message_id, currently_selected_contacts,
+        long result = mDb.updateExistingMessage(mLast_clicked_message_id, mCurrently_selected_contacts,
                                             dateTime, message, image_path, group_flag);
         mDb.close();
         return result;
@@ -456,8 +458,8 @@ public class EditTextMessageActivity extends AppCompatActivity
     }
 
     /**
-     * cancel a scheduled message alarm
-     * @param id the database id to cancel
+     * Cancel a scheduled message alarm
+     * @param id the database id of the message to cancel
      */
     private void cancelAlarm(long id){
         Intent alarmIntent = new Intent(this, AlarmReceiver.class);
@@ -536,7 +538,13 @@ public class EditTextMessageActivity extends AppCompatActivity
         // 0 == Group, 1 == Individual
 
         String message = get_message_text();
-        scheduleMessage(last_clicked_message_id, message, null, (i==1)?MessengerDatabaseHelper.NOT_GROUP_MESSAGE:MessengerDatabaseHelper.IS_GROUP_MESSAGE);
+        int group_flag;
+        if (i == 1)
+            group_flag = MessengerDatabaseHelper.NOT_GROUP_MESSAGE;
+        else
+            group_flag = MessengerDatabaseHelper.IS_GROUP_MESSAGE;
+
+        scheduleMessage(mLast_clicked_message_id, message, null, group_flag);
         returnToMainActivity();
     }
 
@@ -553,7 +561,7 @@ public class EditTextMessageActivity extends AppCompatActivity
     }
 
     protected boolean isNoContactEntered() {
-        return currently_selected_contacts.isEmpty();
+        return mCurrently_selected_contacts.isEmpty();
     }
 
     protected boolean isNoMessageEntered() {

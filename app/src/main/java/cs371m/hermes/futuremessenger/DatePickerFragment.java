@@ -13,6 +13,7 @@ import java.util.Calendar;
  * Created by dob on 7/17/2016.
  */
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+
     DatePickerListener mListener;
     public interface DatePickerListener {
         void onDateSelected (int year, int month, int dayOfMonth);
@@ -25,7 +26,6 @@ public class DatePickerFragment extends DialogFragment implements DatePickerDial
         args.putInt("month", month);
         args.putInt("day", day);
         f.setArguments(args);
-
         return f;
     }
 

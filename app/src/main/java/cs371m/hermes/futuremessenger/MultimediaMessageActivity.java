@@ -6,16 +6,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.ContactsContract;
 import android.provider.OpenableColumns;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.CardView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -66,7 +62,7 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
         choose_contact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (currently_selected_contacts.size() >= 1)
+                if (mCurrently_selected_contacts.size() >= 1)
                     Toast.makeText(getBaseContext(), R.string.restricted_to_one_recipient,
                                    Toast.LENGTH_SHORT).show();
                 else {
@@ -86,7 +82,7 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
         add_number.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (currently_selected_contacts.size() >= 1)
+                if (mCurrently_selected_contacts.size() >= 1)
                     Toast.makeText(getBaseContext(), R.string.restricted_to_one_recipient,
                                    Toast.LENGTH_SHORT).show();
                 else {

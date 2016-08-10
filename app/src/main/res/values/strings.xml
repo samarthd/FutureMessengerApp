@@ -66,7 +66,7 @@
     <string name="recipient_tv_singular">Recipient</string>
     <string name="title_activity_about">AboutActivity</string>
     <string name="about_text_welcome">Welcome to Future Messenger!</string>
-    <string name="about_text_welcome2">Here are some tips to get you started:</string>
+    <string name="about_text_welcome2">Here are some tips to get you started</string>
     <string name="about_text_created_by">Created by: \n\nSamarth Dhruva\nBilly Do\nArthur Storey</string>
     <string name="about_text_title">About</string>
     <string name="about_text_tip1">You can send three types of messages with Future Messenger:

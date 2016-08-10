@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_marginTop="55dp"
+    android:gravity="center_horizontal">
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -21,6 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAlignment="center"
+        android:layout_gravity="center"
         android:text="@string/about_text_welcome"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -32,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/about_first_tv"
         android:text="@string/about_text_welcome2"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:textStyle="bold"
         android:paddingBottom="10dp"
         android:textColor="@color/plain_white"/>

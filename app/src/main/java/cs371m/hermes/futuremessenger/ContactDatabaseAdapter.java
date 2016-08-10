@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Samarth on 8/1/2016.
- * This adapter is used to build the listview on the MainActivity.
+ * This adapter is used to build the ListView on the MainActivity.
  * Guidance provided by:
  * https://coderwall.com/p/fmavhg/android-cursoradapter-with-custom-layout-and-how-to-use-it
  *

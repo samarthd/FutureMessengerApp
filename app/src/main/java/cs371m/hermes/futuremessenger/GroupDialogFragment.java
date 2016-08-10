@@ -10,6 +10,7 @@ import android.util.Log;
 
 /**
  * Created by dob on 8/3/2016.
+ * Fragment that asks users whether they want to send messages as a group MMS.
  */
 public class GroupDialogFragment extends DialogFragment {
 

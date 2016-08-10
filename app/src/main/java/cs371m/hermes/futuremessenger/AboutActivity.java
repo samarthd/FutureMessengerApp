@@ -6,7 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 /**
- *
+ * Activity that shows some information about the app and how to use it.
  */
 public class AboutActivity extends AppCompatActivity {
 

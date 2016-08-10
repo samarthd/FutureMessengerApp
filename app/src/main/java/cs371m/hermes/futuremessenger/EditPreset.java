@@ -10,6 +10,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+/**
+ * Editing activity for presets.
+ * Allows for composition of new presets or editing of existing presets, and then saves them in
+ * the database.
+ */
 public class EditPreset extends AppCompatActivity {
 
     private final String TAG = "EditPreset";

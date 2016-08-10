@@ -10,6 +10,9 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+/**
+ * Activity that allows users to choose a preset to populate the text field in an editing activity.
+ */
 public class SelectPresetActivity extends AppCompatActivity {
 
     private MessengerDatabaseHelper mDb;

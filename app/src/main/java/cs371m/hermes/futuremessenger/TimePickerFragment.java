@@ -10,6 +10,7 @@ import android.widget.TimePicker;
 
 /**
  * Created by dob on 7/17/2016.
+ * Time picker fragment that allows users to select a time to schedule a message for.
  */
 public class TimePickerFragment extends DialogFragment implements TimePickerDialog.OnTimeSetListener {
     TimePickerListener mListener;

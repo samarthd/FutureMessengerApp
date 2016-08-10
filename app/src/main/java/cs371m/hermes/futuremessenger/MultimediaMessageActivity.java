@@ -23,9 +23,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.DateFormat;
-import java.util.Calendar;
 
+/**
+ * Picture message editing activity.
+ * An extension of EditTextMessageActivity with some picture message specific functionality.
+ */
 public class MultimediaMessageActivity extends EditTextMessageActivity {
 
     private static String TAG = "MMSActivity ";

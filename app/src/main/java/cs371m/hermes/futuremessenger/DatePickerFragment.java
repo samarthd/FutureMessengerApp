@@ -11,6 +11,7 @@ import java.util.Calendar;
 
 /**
  * Created by dob on 7/17/2016.
+ * Allows users to pick the date to send a message.
  */
 public class DatePickerFragment extends DialogFragment implements DatePickerDialog.OnDateSetListener {
 

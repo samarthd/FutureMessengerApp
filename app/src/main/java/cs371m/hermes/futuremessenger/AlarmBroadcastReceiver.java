@@ -7,6 +7,9 @@ import android.util.Log;
 
 /**
  * Created by Drew on 7/30/2016.
+ * Broadcast receiver that listens for BOOT COMPLETED broadcast from Android.
+ * Registered in the Manifest.
+ * Starts the BootService on receipt.
  */
 public class AlarmBroadcastReceiver extends BroadcastReceiver{
     @Override

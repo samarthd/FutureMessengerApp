@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+/**
+ * Currently unused activity that was intended to display a Splash screen.
+ */
 public class SplashActivity extends AppCompatActivity {
 
     @Override

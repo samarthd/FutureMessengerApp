@@ -17,6 +17,7 @@ import java.util.Date;
 /**
  * Created by Samarth on 7/11/2016.
  * Database for storage of messages, recipients, and presets for Future Messenger.
+ * Implements methods that allow storage, updates, and deletion of existing values.
  *
  */
 public class MessengerDatabaseHelper extends SQLiteOpenHelper {

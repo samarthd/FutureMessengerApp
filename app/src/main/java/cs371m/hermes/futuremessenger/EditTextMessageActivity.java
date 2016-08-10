@@ -29,6 +29,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 
+/**
+ * Text message editing activity.
+ * Allows users to compose a new text message or edit an existing one, then saves it in the database
+ * and sets an alarm for it.
+ */
 public class EditTextMessageActivity extends AppCompatActivity
         implements EnterPhoneNumberDialogFragment.EnterPhoneNumberListener,
         DatePickerFragment.DatePickerListener, TimePickerFragment.TimePickerListener,

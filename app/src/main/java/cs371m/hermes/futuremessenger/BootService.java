@@ -12,6 +12,8 @@ import java.util.Calendar;
 
 /**
  * Created by Drew on 8/3/2016.
+ * Resets all message alarms after the system is rebooted.
+ * Necessary because the alarms will be cancelled on system shutdown.
  */
 public class BootService extends Service {
 
@@ -45,7 +47,6 @@ public class BootService extends Service {
         }
         mdb.close();
     }
-
 
     /**
      * Sets an alarm for a particular message at a certain time.

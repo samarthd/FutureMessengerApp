@@ -24,6 +24,8 @@ import java.util.ArrayList;
 
 /**
  * Created by Drew on 7/18/2016.
+ * Service that is started when a message's alarm goes off.
+ * Performs the sending and post-send deletion of messages.
  */
 public class AlarmReceiver extends Service {
 
@@ -76,7 +78,6 @@ public class AlarmReceiver extends Service {
         else {
             Log.d(TAG, "onStart, " + Long.toString(messageID));
 
-            String names = results.getString("recip_names");
             String numbers = results.getString("recip_nums");
             String messageText = results.getString("message");
             int groupFlag = results.getInt("group_flag");

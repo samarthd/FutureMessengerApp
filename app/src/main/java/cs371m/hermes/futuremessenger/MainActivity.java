@@ -23,7 +23,10 @@ import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
-
+/**
+ * Main activity of the app. Shows a list of scheduled messages and presets a menu
+ * for creating new messages/presets.
+ */
 public class MainActivity extends AppCompatActivity {
 
     // Future Messenger's database helper.

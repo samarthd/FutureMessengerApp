@@ -68,7 +68,7 @@
     <string name="about_text_welcome">Welcome to Future Messenger!</string>
     <string name="about_text_welcome2">Here are some tips to get you started:</string>
     <string name="about_text_created_by">Created by: \n\nSamarth Dhruva\nBilly Do\nArthur Storey</string>
-    <string name="about_text_title">About Future Messenger</string>
+    <string name="about_text_title">About</string>
     <string name="about_text_tip1">You can send three types of messages with Future Messenger:
         SMS (text message), Group text messages, and individual Picture messages.</string>
     <string name="about_text_tip2">Text messages sent individually to one or more recipients will be sent automatically

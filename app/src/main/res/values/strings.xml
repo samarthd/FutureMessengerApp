@@ -62,7 +62,8 @@
     <string name="group_group">Group</string>
     <string name="group_indiv">Individually</string>
     <string name="mms_chooser_text">Send MMS</string>
-    <string name="restricted_to_one_recipient">You can only send picture messages to one recipient at a time.</string>
+    <string name="restricted_to_one_recipient">You can only send picture messages to one recipient
+        at a time.</string>
     <string name="recipient_tv_singular">Recipient</string>
     <string name="title_activity_about">AboutActivity</string>
     <string name="about_text_welcome">Welcome to Future Messenger!</string>

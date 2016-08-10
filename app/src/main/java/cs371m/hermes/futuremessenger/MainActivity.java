@@ -19,28 +19,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class MainActivity extends AppCompatActivity {
 
-    // Future Messenger's database.
-    public MessengerDatabaseHelper mDb;
+    // Future Messenger's database helper.
+    private MessengerDatabaseHelper mDb;
 
     // ID of the message in the ListView that was clicked last.
-    private long last_clicked_message_id;
+    private long mLast_clicked_message_id;
 
-    // When a message gets sent, the alarm receiver will broadcast this action to refresh
-    // the ListView.
+    /* When a message gets sent, the alarm receiver will broadcast this action to refresh
+       the ListView. */
     private static final String REFRESH_LV_ACTION = "cs371m.hermes.futuremessenger.refreshlv";
 
-    // Receiver for refresh list view broadcasts
+    // Receiver for refresh ListView broadcasts
     BroadcastReceiver refreshLVReceiver =  new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -48,9 +44,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    /*
-     *  Inflate the individual message edit/delete menu.
-     *  */
+    // Inflate the individual message edit/delete menu.
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
@@ -82,22 +76,21 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.currently_scheduled_tv);
+
         // Create our database.
         mDb = MessengerDatabaseHelper.getInstance(this);
         ListView scheduledListView = (ListView) findViewById(R.id.scheduled_messages_list);
         scheduledListView.setEmptyView(findViewById(R.id.empty_messages_list_tv));
 
-        // Populate the listview from the database.
+        // Populate the ListView from the database.
         fillListView();
 
         initializeFloatingMenu();
         registerRefreshReceiver();
-
-
     }
 
-    // Registers a receiver to update the list view if a message gets sent off and deleted
-    // while the activity is open.
+    /* Registers a receiver to update the list view if a message gets sent off and deleted
+       while the activity is open. */
     private void registerRefreshReceiver() {
         LocalBroadcastManager.getInstance(this).registerReceiver(
                 refreshLVReceiver, new IntentFilter (REFRESH_LV_ACTION));
@@ -108,10 +101,11 @@ public class MainActivity extends AppCompatActivity {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(refreshLVReceiver);
     }
 
-    // Initalize the floating actions menu.
+    // Initialize the floating actions menu and its buttons.
     private void initializeFloatingMenu() {
         final FloatingActionsMenu main_menu = (FloatingActionsMenu) findViewById(R.id.main_menu);
 
+        // Initialize the preset button
         com.getbase.floatingactionbutton.FloatingActionButton preset_button =
                 (com.getbase.floatingactionbutton.FloatingActionButton) findViewById(R.id.create_preset_button);
         preset_button.setIconDrawable(getResources().getDrawable(R.drawable.preset_icon));
@@ -123,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Initialize the text message button
         com.getbase.floatingactionbutton.FloatingActionButton text_button =
                 (com.getbase.floatingactionbutton.FloatingActionButton) findViewById(R.id.new_text_button);
         text_button.setIconDrawable(getResources().getDrawable(R.drawable.text_icon));
@@ -134,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Initialize the picture message button
         com.getbase.floatingactionbutton.FloatingActionButton pic_button =
                 (com.getbase.floatingactionbutton.FloatingActionButton) findViewById(R.id.new_pic_button);
         pic_button.setIconDrawable(getResources().getDrawable(R.drawable.picture_icon));
@@ -141,12 +137,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 main_menu.collapse();
-                // Toast.makeText(MainActivity.this, "Beta feature!", Toast.LENGTH_SHORT).show();
                 createPictureMessage();
             }
         });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -162,14 +156,11 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_about) {
-            //TODO add About page
             Intent intent = new Intent(this, AboutActivity.class);
             startActivity(intent);
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -197,10 +188,12 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, 1);
     }
 
-    /* Edit a currently scheduled message. */
+    /* User requested to edit a currently scheduled message.
+    *  Package the selected message's data into a bundle and start the
+    *  edit activity. */
     private void editScheduledMessage() {
         // Get the message's data.
-        Bundle message_info = mDb.getScheduledMessageData(last_clicked_message_id);
+        Bundle message_info = mDb.getScheduledMessageData(mLast_clicked_message_id);
         mDb.close();
         if (message_info != null) {
             String recip_names = message_info.getString("recip_names");
@@ -215,11 +208,11 @@ public class MainActivity extends AppCompatActivity {
             // Place the data in an intent.
             Intent intent;
             if (image_path == null || image_path.equals("")) {
-                // assume SMS
+                // text message, because no image was specified
                 Log.d("edit SMS", "image_path is null, or equals empty string");
                 intent = new Intent(this, EditTextMessageActivity.class);
             } else {
-                //assume MMS?
+                // picture message, because an image was specified
                 Log.d("edit MMS", image_path);
                 intent = new Intent(this, MultimediaMessageActivity.class);
             }
@@ -231,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("date", date);
             intent.putExtra("time", time);
             intent.putExtra("message_datetime", dateTime);
-            intent.putExtra("message_id", last_clicked_message_id);
+            intent.putExtra("message_id", mLast_clicked_message_id);
 
             // Start the edit message activity through this intent.
             startActivityForResult(intent, 1);
@@ -244,8 +237,8 @@ public class MainActivity extends AppCompatActivity {
 
     /* Delete a currently scheduled message. */
     private void deleteScheduledMessage() {
-        stopAlarm(last_clicked_message_id);
-        mDb.deleteMessage(last_clicked_message_id);
+        stopAlarm(mLast_clicked_message_id);
+        mDb.deleteMessage(mLast_clicked_message_id);
         mDb.close();
         // Force a refresh of the listView so that the changes will be reflected in the ListView.
         fillListView();
@@ -260,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
                 (int) message_id, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
         AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
         alarmManager.cancel(pendingIntent);
-        Log.d("Alarm", "Alarm canceled");
+        Log.d("MainActivity stopalarm", "Alarm canceled");
     }
 
     /* Populate the ListView from our database with all of the currently scheduled messages. */
@@ -271,7 +264,6 @@ public class MainActivity extends AppCompatActivity {
         ListView messagesListView = (ListView) findViewById(R.id.scheduled_messages_list);
         messagesListView.setAdapter(adapter);
 
-
         /* Make the list items clickable for their context menu */
         registerForContextMenu(findViewById(R.id.scheduled_messages_list));
 
@@ -279,26 +271,26 @@ public class MainActivity extends AppCompatActivity {
         messagesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
-                last_clicked_message_id = id;
+                mLast_clicked_message_id = id;
                 openContextMenu(findViewById(R.id.scheduled_messages_list));
-                Log.d("Short Click", "Last clicked message id just set to " + last_clicked_message_id);
+                Log.d("Short Click", "Last clicked message id just set to " + mLast_clicked_message_id);
             }
         });
-
 
         // Allow long clicks to open the context menu.
         messagesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                            int pos, long id) {
-                last_clicked_message_id = id;
-                Log.d("Long Click", "Last clicked message id just set to " + last_clicked_message_id);
+                mLast_clicked_message_id = id;
+                Log.d("Long Click", "Last clicked message id just set to " + mLast_clicked_message_id);
                 return false;
             }
         });
         mDb.close();
     }
 
+    // An edit activity just returned after saving something, so we will refresh the ListView
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {

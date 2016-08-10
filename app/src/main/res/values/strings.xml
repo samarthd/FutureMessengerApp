@@ -77,4 +77,5 @@
     at which time you must click the notification and choose which app you would like to use
     to send the message. Then, simply send your message from the chosen app.</string>
     <string name="about_text_tip4">You can create preset messages of things you send often to quickly fill in a message.</string>
+    <string name="group_dialog_title">Send as a group conversation?</string>
 </resources>

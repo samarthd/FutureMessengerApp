@@ -3,8 +3,6 @@ package cs371m.hermes.futuremessenger;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -24,10 +22,9 @@ public class SelectPresetActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         mDb = MessengerDatabaseHelper.getInstance(this);
         fillSelectedPresetList();
-
     }
 
-    // Populate the preset list
+    // Populate the preset list from our database
     private void fillSelectedPresetList() {
         Cursor presetCursor = mDb.getAllPresets();
         ListView preset_lv = (ListView) findViewById(R.id.presets_lv);
@@ -38,6 +35,7 @@ public class SelectPresetActivity extends AppCompatActivity {
                         presetCursor, fromCols, toViews);
         preset_lv.setAdapter(adapter);
         preset_lv.setEmptyView(findViewById(R.id.no_selectable_tv));
+        // Listen for the item the user clicks on, and return its content to the calling activity
         preset_lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long preset_id) {

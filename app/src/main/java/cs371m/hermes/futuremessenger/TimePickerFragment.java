@@ -23,7 +23,6 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
         args.putInt("hour", hour);
         args.putInt("minute", minute);
         f.setArguments(args);
-
         return f;
     }
 
@@ -37,7 +36,7 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
     }
 
     /**
-     * called when the user has chosen the time in the picker
+     * Called when the user has chosen the time in the picker
      * @param timePicker
      * @param hour the hour selected
      * @param minute the minute selected
@@ -45,7 +44,6 @@ public class TimePickerFragment extends DialogFragment implements TimePickerDial
     @Override
     public void onTimeSet(TimePicker timePicker, int hour, int minute) {
         mListener.onTimeSelected(hour, minute);
-        //((EditTextMessageActivity)getActivity()).setTimeButton(hour, minute);
     }
 
     @Override

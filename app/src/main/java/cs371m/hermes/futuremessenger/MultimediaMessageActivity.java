@@ -36,10 +36,6 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_edit_text_message);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         LinearLayout layout_ib = (LinearLayout) findViewById(R.id.layout_attachment);
         layout_ib.setVisibility(View.VISIBLE);
 
@@ -48,6 +44,7 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
         recip_tv.setText(R.string.recipient_tv_singular);
 
         Bundle extras = getIntent().getExtras();
+        // If editing an existing message, populate the image view with the existing image
         if (extras != null) {
             String uri_path = getIntent().getStringExtra("image_path");
             Log.d(TAG + "onCreate", uri_path);
@@ -94,36 +91,17 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
             }
         });
     }
-//    @Override
-//    protected void initializeScheduleButton() {
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Log.d(TAG, "Message Send button pressed.");
-//                if (_image_uri != null) {
-////                    String path = copyImage(_image_uri);
-////                    Log.d(TAG, path);
-////                    String saved_path = "/storage/emulated/0/Android/data/cs371m.hermes.futuremessenger/files/PSX_20151124_021724.jpg";
-////                    deleteCopiedFile(saved_path);
-//                    sendPictureMMS(getNumbersFromContactsSelected(), get_message_text());
-//                }
-//            }
-//        });
-//    }
 
+    /**
+     * Schedule the message
+     * @param id database id of message; -1 if new message
+     * @param message message to be sent
+     * @param image_path file path for an image
+     * @param group_flag 0 == group message, 1 == individual, ??? == neither
+     */
     @Override
     protected void scheduleMessage(long id, String message, String image_path, int group_flag) {
-        /** ORDER OF EVENTS
-         * copy image
-         * get copied image path
-         * get numbers from contacts
-         * get message text
-         * create/update database entry
-         * set an alarm, with database entry id
-         */
         Log.d(TAG + "scheduleMsg", "scheduling message");
-        //String path = copyImage(_image_uri);
         String uri_string = null;
         if (_image_uri != null) {
             uri_string = _image_uri.toString();
@@ -131,18 +109,22 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
         super.scheduleMessage(id, message, uri_string, MessengerDatabaseHelper.NOT_GROUP_MESSAGE);
     }
 
-    // https://stackoverflow.com/questions/2507898/how-to-pick-an-image-from-gallery-sd-card-for-my-app
+    /* This solution was guided by:
+       https://stackoverflow.com/questions/2507898/how-to-pick-an-image-from-gallery-sd-card-for-my-app */
     public void selectAttachment(View v) {
         Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
         photoPickerIntent.setType("image/*"); //TODO: Videos, audio files, etc?
         startActivityForResult(photoPickerIntent, SELECT_IMAGE);
     }
 
-    //SOURCE: https://stackoverflow.com/questions/10854211/android-store-inputstream-in-file
+    /**
+     * THIS METHOD IS NOT USED
+     */
     @Nullable
     private String copyImage(Uri uri) {
-        // String state = Environment.getExternalStorageState();
-        // String rootExtDir = Environment.getExternalStorageDirectory().toString();
+        /* Source: https://stackoverflow.com/questions/10854211/android-store-inputstream-in-file
+           String state = Environment.getExternalStorageState();
+           String rootExtDir = Environment.getExternalStorageDirectory().toString(); */
         if (uri == null) {
             return null;
         }
@@ -181,14 +163,22 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
         }
     }
 
+    /**
+     * THIS METHOD IS NOT USED
+     */
     public static boolean deleteCopiedFile(String path) {
         File file = new File(path);
         return file.delete();
     }
 
+    /**
+     * This method is currently not being called because the recipients list is never allowed
+     * to grow to a size more than 1 (picture messages can only have one recipient).
+     * @return
+     */
     @Override
     public int showGroupDialog() {
-        onGroupSelected(0); //Always considered a Group Message
+        onGroupSelected(0); //Always considered a group message
         return 0;
     }
 
@@ -204,17 +194,21 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
         }
     }
 
+    /**
+     * Set the image button to display a thumbnail of the specified image.
+     * @param image_uri, image to display
+     */
     protected void setImageButton(Uri image_uri) {
         _image_uri = image_uri;
         try {
             InputStream imageStream = getContentResolver().openInputStream(image_uri);
-            /* Tries to "efficiently" get the sample size, but not quite there, I think */
+            /* Tries to efficiently get the sample size */
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
             BitmapFactory.decodeStream(imageStream, null, options);
             ImageView iv = (ImageView) findViewById(R.id.thumbnail);
 
-            //height and width are the minimum size we want of the image
+            // Height and width are the minimum size we want of the image
             options.inSampleSize = calculateInSampleSize(options, iv.getMaxHeight(), iv.getWidth());
             options.inJustDecodeBounds = false;
             imageStream = getContentResolver().openInputStream(image_uri);
@@ -226,6 +220,13 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
         }
     }
 
+    /**
+     * Gets the largest sample size for an image that scales it to a minimum size.
+     * @param options, options containing dimensions of the image
+     * @param reqWidth, minimum desired width
+     * @param reqHeight, minimum desired height
+     * @return the sample size of the image
+     */
     public static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
         final int height = options.outHeight;
@@ -237,8 +238,8 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
             final int halfHeight = height / 2;
             final int halfWidth = width / 2;
 
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
+            /* Calculate the largest inSampleSize value that is a power of 2 and keeps both
+               height and width larger than the requested height and width.  */
             while ((halfHeight / inSampleSize) >= reqHeight
                     && (halfWidth / inSampleSize) >= reqWidth) {
                 inSampleSize *= 2;
@@ -249,6 +250,11 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
         return inSampleSize;
     }
 
+    /**
+     * Get the file name for a URI
+     * @param uri, the URI whose file name is requested
+     * @return the file name
+     */
     public String getFileName(Uri uri) {
         String result = null;
         if (uri.getScheme().equals("content")) {
@@ -271,10 +277,11 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
         return result;
     }
 
-    public static void logPrintCalendar(Calendar c, DateFormat df) {
-        Log.d(TAG + "print", df.format(c.getTime()));
-    }
-
+    /**
+     * Ensures that the required fields are completed to ensure that incomplete
+     * messages are never scheduled.
+     * @return True if all required fields are filled out, False otherwise.
+     */
     @Override
     protected boolean isEntryFieldsFilled() {
         boolean result = false;
@@ -293,6 +300,7 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
         return result;
     }
 
+    // Ensures the image_uri is not null
     protected boolean isImageEmpty() {
         return _image_uri == null;
     }

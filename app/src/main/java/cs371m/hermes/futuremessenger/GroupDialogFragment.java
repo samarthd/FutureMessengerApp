@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,7 +14,7 @@ import android.util.Log;
 public class GroupDialogFragment extends DialogFragment {
 
     public interface GroupDialogListener {
-        public void onGroupSelected(int i);
+        void onGroupSelected(int i);
     }
 
     GroupDialogListener mListener;
@@ -23,15 +22,14 @@ public class GroupDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Send as Group Conversation?")
-                .setItems(R.array.group_choice, new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.group_dialog_title)
+               .setItems(R.array.group_choice, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        //TODO: Send back data to activity
                         Log.d("Group Fragment", Integer.toString(i));
                         mListener.onGroupSelected(i);
                     }
-                });
+               });
         return builder.create();
     }
 

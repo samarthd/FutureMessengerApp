@@ -16,15 +16,15 @@ import java.util.Date;
 
 /**
  * Created by Samarth on 7/11/2016.
- *
- * Database for storage of messages and other information for Future Messenger.
+ * Database for storage of messages, recipients, and presets for Future Messenger.
  *
  */
 public class MessengerDatabaseHelper extends SQLiteOpenHelper {
 
-    // A single instance of the MessengerDatabaseHelper.
+    // Only a single instance of this helper is ever available (singleton pattern)
     private static MessengerDatabaseHelper mDb = null;
 
+    // Name of our database.
     public static final String DATABASE_NAME = "futuremessenger.db";
 
     //Names of columns in the Recipient table in the database.
@@ -42,6 +42,7 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
     public static final String MESSAGE_IMG_PATH = "IMAGE_PATH";
     public static final String MESSAGE_GROUP = "GROUP_FLAG";
 
+    // Constants that are used to flag whether a message is a group MMS or not
     public static final int NOT_GROUP_MESSAGE = 0;
     public static final int IS_GROUP_MESSAGE = 1;
 
@@ -58,7 +59,6 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
     public static final String PRESET_ID = "ID";
     public static final String PRESET_NAME = "NAME";
     public static final String PRESET_CONTENT = "CONTENT";
-
 
     private static final String TAG = "IN DATABASE HELPER";
 
@@ -86,10 +86,6 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        /* TODO:
-           For beta, we also need a column to determine whether the message will be
-           sent as a group or individually.*/
-
         // Create the Recipients table that will hold our recipients.
         final String createRecipTable =
                 "create table " + RECIPIENT_TABLE_NAME + "(" +
@@ -98,7 +94,6 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
                 RECIPIENT_NAME + " TEXT)";
         Log.d(TAG, "CREATING RECIP TABLE: " + createRecipTable);
         db.execSQL(createRecipTable);
-
 
         // Create the Message table that will hold our messages.
         final String createMessTable =
@@ -112,15 +107,14 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         Log.d(TAG, "CREATING MESSAGE TABLE: " + createMessTable);
         db.execSQL(createMessTable);
 
-         /* Create the Recipients_Messages table that will hold associations
-            between Messages and Recipients. (A message can have many recipients
-            and a recipient could have many associated messages.) */
+        /* Create the Recipients_Messages table that will hold associations
+           between Messages and Recipients. (A message can have many recipients
+           and a recipient could have many associated messages.) */
         final String createRecMessTable =
                 "create table " + REC_MESS_TABLE_NAME + "(" +
                 RECIP_ID + " INTEGER NOT NULL," +
                 MESS_ID + " INTEGER NOT NULL," +
                 "PRIMARY KEY(" + RECIP_ID + ", " + MESS_ID + "))";
-
         Log.d(TAG, "CREATING ASSOC TABLE: " + createRecMessTable);
         db.execSQL(createRecMessTable);
 
@@ -130,9 +124,9 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
                 PRESET_NAME + " TEXT," +
                 PRESET_CONTENT + " TEXT)");
         Log.d(TAG, "CREATING PRESET TABLE");
-
     }
 
+    // In case the database is ever upgraded
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
         db.execSQL("DROP TABLE IF EXISTS " + RECIPIENT_TABLE_NAME);
@@ -142,19 +136,27 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    /* Store a new message to be sent to one or more recipient phone numbers.
-     * Returns ID of the message on success, -1 on failure. */
+    /**
+     * Store a new message to be sent to one or more recipients.
+     * Returns ID of the message on success, -1 on failure.
+     * @param recipients_list, a list of contacts
+     * @param dateTime, the date and time to send the message
+     * @param message, the text content of the message
+     * @param image_path, the image path (if specified) to the image attached to the message
+     * @param group_flag, flag that specifies whether or not a message is to be sent via group MMS
+     * @return
+     */
     public long storeNewMessage(ArrayList<Contact> recipients_list, String dateTime, String message,
-                                 String image_path, int group_message) {
+                                 String image_path, int group_flag) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         // Store the message in the database.
-        long message_id = storeMessageData(dateTime, message, image_path, group_message);
+        long message_id = storeMessageData(dateTime, message, image_path, group_flag);
         if (message_id == -1)
             return -1;
 
         for (Contact recipient : recipients_list) {
-            //Store this recipient in the database.
+            // Store this recipient in the database.
             long recipient_id = storeRecipient(recipient);
 
             //Store an association between this recipient and the message.
@@ -169,11 +171,13 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         return message_id;
     }
 
-    /* This method takes data for a recipient, and attempts to insert that
-       recipient into the database. If the phone number for that recipient
-       already exists in a record, returns the existing recipient ID. Otherwise
-       it will store a new recipient in the database and return the newly
-       created recipient ID. If an error occurs, it will return -1.
+    /**
+     * Attempt to insert a new recipient into the database. If the phone number
+     * for the recipient already exists in a record, returns the existing recipient ID.
+     * Otherwise, it will store a new recipient in the database and return the newly
+     * created recipient ID.
+     * @param recipient, a Contact object with a name and phone number
+     * @return the recipient ID in the database. Will return -1 if error occurs.
      */
     private long storeRecipient(Contact recipient) {
         SQLiteDatabase db = getWritableDatabase();
@@ -186,10 +190,10 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
 
         // Variable used to store the current recipient id
         long recipient_id;
-            /* If no matching phone number was found in our database, make a new entry
-             * in the recipient table. */
+
+        /* If no matching phone number was found in our database, insert a new entry
+         * in the recipient table. */
         if (cursor.getCount() == 0) {
-            // make new recipient
             ContentValues recipContentValues = new ContentValues();
             Log.d("Store Recipient", "Name = " + name);
             Log.d("Store Recipient", "Number = " + phoneNumber);
@@ -198,15 +202,21 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
             recipient_id = db.insert(RECIPIENT_TABLE_NAME, null, recipContentValues);
         }
         else {
-            // The recipient exists, so we can just pull his id from the database
+            // The recipient exists, so we can just pull the id from the database
             cursor.moveToFirst();
             recipient_id = cursor.getLong(0);
             Log.d(TAG, "RECIPIENT EXISTS, ID is: " + recipient_id);
         }
         return recipient_id;
     }
-    /* Stores data about a message in the database, and returns its message id. If
-       there was an error in storing the message, returns -1.
+
+    /**
+     * Stores data about a message (no recipient information).
+     * @param dateTime, the date and time to send the message
+     * @param message, the text content of the message
+     * @param image_path, the image path of the picture attachment (if specified)
+     * @param group_flag, a flag dictating whether or not to send this message as a group MMS
+     * @return the message ID in the database, or -1 on error
      */
     private long storeMessageData(String dateTime, String message, String image_path,
                                   int group_flag) {
@@ -237,12 +247,20 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
 
     /* Retrieve all scheduled messages and some associated data in a Cursor. This will be
      * passed to an adapter that will then populate the ListView with this data. */
+
+    /**
+     * Retrieve all scheduled messages and some associated data in a Cursor. This will be
+     * passed to an adapter that will then populate the ListView with this data.
+     * @return a Cursor that can be used to iterate over each message
+     */
     public Cursor getAllScheduledMessages() {
         SQLiteDatabase db = getWritableDatabase();
+
         /* This will join the tables together and get many rows of messages. Each row will have columns
-         * for IDs, names, and numbers. Each of those columns holds one big string delimited by
-         * semicolons that has data for all of the message's associated recipients. There is also a
-         * column holding the formatted datetime of the message. */
+         * for specific message-related information. Each of those columns holds one big string
+         * delimited by semicolons that has data for all of the message's associated recipients.
+         * Resulting columns include _id, message text content, message formatted date and time,
+         * non-formatted date and time, image path of picture attachment. */
         String sql_select = "SELECT M." + MESSAGE_ID + " AS _id, "+
                             "M." + MESSAGE_TXT_CONTENT + ", " +
                             "M." + MESSAGE_FORMATTED_DT + ", " +
@@ -262,13 +280,16 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         return db.rawQuery(sql_select, null);
     }
 
-    /* Get some basic data about only one message. Used to populate fields in the
-     * message editing activities. */
+    /**
+     * Get some basic data about only one message. Used to populate fields in the
+     * message editing activities.
+     * @param message_id, the ID of the message whose data is requested
+     * @return a Bundle containing the message's information
+     */
     public Bundle getScheduledMessageData(long message_id){
-
         SQLiteDatabase db = getWritableDatabase();
 
-        //Make a query for that message and its basic information.
+        // Make a query for that message and its basic information.
         String sql_select = "SELECT M."+ MESSAGE_ID + ", M." + MESSAGE_DATETIME + ", " +
                 "M." + MESSAGE_TXT_CONTENT + ", " +
                 "M." + MESSAGE_IMG_PATH + ", " +
@@ -287,6 +308,7 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
             return null;
         }
         else {
+            // Pack all of the message's data into a bundle.
             resultCursor.moveToFirst();
             assert(resultCursor.getLong(0) == message_id);
             String recip_names = resultCursor.getString(resultCursor.getColumnIndex("RECIPIENT_NAMES"));
@@ -311,19 +333,22 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
             result.putString("date", date);
             result.putString("time", time);
             result.putString("dateTime", dateTime);
-           // String[] result = new String[] {recip_names, recip_nums, message, date, time, dateTime};
             resultCursor.close();
             return result;
         }
 
     }
 
-
-    /* Delete a message from the database. Delete the associations between this message and its
-    *  recipients, and if the recipients have no other scheduled messages, then delete them
-    *  from the database. */
+    /**
+     * Delete a message from the database. Delete the associations between this message and its
+     * recipients, and if the recipients have no other scheduled messages, then delete them
+     * from the database.
+     * @param message_id, the ID of the message to delete
+     * @return True if deletion was successful, false otherwise
+     */
     public boolean deleteMessage(long message_id) {
         SQLiteDatabase db = getWritableDatabase();
+
         //Get all of the recipients of the message.
         String sql_select = "SELECT R." + RECIPIENT_ID + " FROM " + RECIPIENT_TABLE_NAME + " AS R" +
                 " LEFT JOIN " + REC_MESS_TABLE_NAME + " AS RM ON RM." + RECIP_ID + "=R." + RECIPIENT_ID +
@@ -348,7 +373,7 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
                         " WHERE R." + RECIPIENT_ID + "=?";
                 Cursor countRecip = db.rawQuery(subQuery, new String[] {thisRecipient});
                 countRecip.moveToFirst();
-                // how many messages is this recipient attached to?
+                // How many messages is this recipient attached to?
                 int numMessagesAttachedTo = countRecip.getInt(0);
                 Log.d(TAG, "Count of recip's messages" + numMessagesAttachedTo);
                 /* If the number is 1, then this message is the only one that recipient
@@ -358,9 +383,11 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
                     Log.d(TAG, "Deleting recipient: " + thisRecipient);
                 }
             }
+
             // Delete all the association entries for this message (for all recipients).
             int numDelAssoc = db.delete(REC_MESS_TABLE_NAME, MESS_ID + "=?", new String[] {"" + message_id});
             Log.d(TAG, "Deleted assocs count: " + numDelAssoc);
+
             // Delete this message from the message table.
             db.delete(MESSAGE_TABLE_NAME, MESSAGE_ID + "=?", new String[] {"" + message_id});
             Log.d(TAG, "Deleted message: " + message_id);
@@ -368,9 +395,17 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    /* This method will delete the message with the given ID and create a new one with the
-    *  new values and return its ID. Before calling this method, make sure you've updated/cancelled
-    *  the existing alarm used to schedule it. */
+    /**
+     * Delete the message with the given ID and create a new one with the new values. Before calling
+     * this method, make sure you've updated/cancelled the existing alarm used to schedule it.
+     * @param message_id, the message ID of the message to update
+     * @param recipients_list, list of the new recipients
+     * @param dateTime, new date and time of the message
+     * @param message, new text content of the message
+     * @param image_path, new image_path of the attached picture (if specified)
+     * @param group_flag, whether or not the message will be sent as a group MMS
+     * @return the ID of the new, updated message
+     */
     public long updateExistingMessage(long message_id, ArrayList<Contact> recipients_list,
                                       String dateTime, String message, String image_path,
                                       int group_flag) {
@@ -408,7 +443,10 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         return new String[] {name, content};
     }
 
-    // Return a cursor over all the presets.
+    /**
+     * Get all the presets.
+     * @return a Cursor over all of the presets
+     */
     public Cursor getAllPresets() {
         SQLiteDatabase db = getWritableDatabase();
         String sql_select = "SELECT " + PRESET_ID + " AS _id, " +
@@ -419,6 +457,12 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
         return db.rawQuery(sql_select, null);
     }
 
+    /**
+     * Edit an existing preset and update its values.
+     * @param preset_id, the ID of the preset to update
+     * @param new_name, the new name of the preset
+     * @param new_content, the new content of the preset
+     */
     public void editPreset(long preset_id, String new_name, String new_content){
         SQLiteDatabase db = getWritableDatabase();
         ContentValues newVals = new ContentValues();

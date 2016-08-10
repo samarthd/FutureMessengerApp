@@ -65,6 +65,16 @@
     <string name="restricted_to_one_recipient">You can only send picture messages to one recipient at a time.</string>
     <string name="recipient_tv_singular">Recipient</string>
     <string name="title_activity_about">AboutActivity</string>
-    <string name="about_text_first">Future Messenger</string>
-    <string name="about_text_second">Created by: \n\nSamarth Dhruva\nBilly Do\nArthur Storey</string>
+    <string name="about_text_welcome">\n\nWelcome to Future Messenger!</string>
+    <string name="about_text_welcome2">Here are some tips to get you started:</string>
+    <string name="about_text_created_by">Created by: \n\nSamarth Dhruva\nBilly Do\nArthur Storey</string>
+    <string name="about_text_title">About Future Messenger</string>
+    <string name="about_text_tip1">You can send three types of messages with Future Messenger:
+        SMS (text message), Group text messages, and individual Picture messages.</string>
+    <string name="about_text_tip2">Text messages sent individually to one or more recipients will be sent automatically
+    for you at the time you set.</string>
+    <string name="about_text_tip3">Group text messages and Picture messages will send a notification at the time you set,
+    at which time you must click the notification and choose which app you would like to use
+    to send the message. Then, simply send your message from the chosen app.</string>
+    <string name="about_text_tip4">You can create preset messages of things you send often to quickly fill in a message.</string>
 </resources>

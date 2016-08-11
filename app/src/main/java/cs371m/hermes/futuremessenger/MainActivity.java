@@ -1,9 +1,14 @@
 package cs371m.hermes.futuremessenger;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -14,58 +19,52 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
+/**
+ * Main activity of the app. Shows a list of scheduled messages and presets a menu
+ * for creating new messages/presets.
+ */
 public class MainActivity extends AppCompatActivity {
 
-    // Future Messenger's database.
-    public MessengerDatabaseHelper mDb;
+    // Future Messenger's database helper.
+    private MessengerDatabaseHelper mDb;
 
-    //ID of the message in the ListView that was clicked last.
-    private long last_clicked_message_id;
+    // ID of the message in the ListView that was clicked last.
+    private long mLast_clicked_message_id;
 
-    /*
-     *  Determine which context menu should be inflated: FAB's context menu, or
-     *  the individual message edit/delete menu.
-     *  */
+    /* When a message gets sent, the alarm receiver will broadcast this action to refresh
+       the ListView. */
+    private static final String REFRESH_LV_ACTION = "cs371m.hermes.futuremessenger.refreshlv";
+
+    // Receiver for refresh ListView broadcasts
+    BroadcastReceiver refreshLVReceiver =  new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            fillListView();
+        }
+    };
+
+    // Inflate the individual message edit/delete menu.
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v,
                                     ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
-
-        switch (v.getId()) {
-            case R.id.scheduled_messages_list:
-                inflater.inflate(R.menu.message_menu, menu);
-                break;
-            case R.id.fab:
-                inflater.inflate(R.menu.creation_menu, menu);
-                break;
-        }
+        inflater.inflate(R.menu.message_menu, menu);
     }
 
-    // Menu options.
+    // Message context menu options.
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // The following cases apply to the message menu.
             case R.id.edit:
-                editScheduledMessage(last_clicked_message_id);
+                editScheduledMessage();
                 return true;
             case R.id.delete:
-                deleteScheduledMessage(last_clicked_message_id);
-                return true;
-            // The following cases apply to the creation menu.
-            case R.id.manage_presets:
-                Toast.makeText(this, "Beta feature!", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.new_text_message:
-                createTextMessage();
-                return true;
-            case R.id.new_picture_message:
-                Toast.makeText(this, "Beta feature!", Toast.LENGTH_SHORT).show();
+                deleteScheduledMessage();
                 return true;
             default:
                 return super.onContextItemSelected(item);
@@ -75,24 +74,75 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.AppTheme_NoActionBar);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.currently_scheduled_tv);
 
         // Create our database.
-        mDb = new MessengerDatabaseHelper(MainActivity.this);
+        mDb = MessengerDatabaseHelper.getInstance(this);
+        ListView scheduledListView = (ListView) findViewById(R.id.scheduled_messages_list);
+        scheduledListView.setEmptyView(findViewById(R.id.empty_messages_list_tv));
 
-        // Populate the listview from the database.
+        // Populate the ListView from the database.
         fillListView();
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        registerForContextMenu(fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+
+        initializeFloatingMenu();
+        registerRefreshReceiver();
+    }
+
+    /* Registers a receiver to update the list view if a message gets sent off and deleted
+       while the activity is open. */
+    private void registerRefreshReceiver() {
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                refreshLVReceiver, new IntentFilter (REFRESH_LV_ACTION));
+    }
+
+    // Unregister the refreshLV receiver
+    private void unregisterRefreshReceiver() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(refreshLVReceiver);
+    }
+
+    // Initialize the floating actions menu and its buttons.
+    private void initializeFloatingMenu() {
+        final FloatingActionsMenu main_menu = (FloatingActionsMenu) findViewById(R.id.main_menu);
+
+        // Initialize the preset button
+        com.getbase.floatingactionbutton.FloatingActionButton preset_button =
+                (com.getbase.floatingactionbutton.FloatingActionButton) findViewById(R.id.create_preset_button);
+        preset_button.setIconDrawable(getResources().getDrawable(R.drawable.preset_icon));
+        preset_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                view.showContextMenu();
+                main_menu.collapse();
+                launchPresetActivity();
             }
         });
 
+        // Initialize the text message button
+        com.getbase.floatingactionbutton.FloatingActionButton text_button =
+                (com.getbase.floatingactionbutton.FloatingActionButton) findViewById(R.id.new_text_button);
+        text_button.setIconDrawable(getResources().getDrawable(R.drawable.text_icon));
+        text_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                main_menu.collapse();
+                createTextMessage();
+            }
+        });
+
+        // Initialize the picture message button
+        com.getbase.floatingactionbutton.FloatingActionButton pic_button =
+                (com.getbase.floatingactionbutton.FloatingActionButton) findViewById(R.id.new_pic_button);
+        pic_button.setIconDrawable(getResources().getDrawable(R.drawable.picture_icon));
+        pic_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                main_menu.collapse();
+                createPictureMessage();
+            }
+        });
     }
 
     @Override
@@ -109,12 +159,11 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Toast.makeText(this, "Beta feature!", Toast.LENGTH_SHORT).show();
+        if (id == R.id.action_about) {
+            Intent intent = new Intent(this, AboutActivity.class);
+            startActivity(intent);
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -123,70 +172,128 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         // Close the database connection.
         mDb.close();
+        unregisterRefreshReceiver();
     }
 
+
+    private void launchPresetActivity(){
+        Intent intent = new Intent(this, ManagePresets.class);
+        startActivity(intent);
+    }
 
     private void createTextMessage() {
         Intent intent = new Intent(this, EditTextMessageActivity.class);
         startActivityForResult(intent, 1);
     }
 
-    /* Edit a currently scheduled message. */
-    private void editScheduledMessage(long message_id) {
-        // Get the message's data.
-        String[] message_info = mDb.getScheduledMessageData(message_id);
-        String phonenums = message_info[0];
-        String date = message_info[1];
-        String time = message_info[2];
-        String message = message_info[3];
-        String dateTime = message_info[4];
-        // Place the data in an intent.
-        Intent intent  = new Intent(this, EditTextMessageActivity.class);
-        intent.putExtra("num", phonenums);
-        intent.putExtra("date", date);
-        intent.putExtra("time", time);
-        intent.putExtra("message", message);
-        intent.putExtra("message_id", message_id);
-        intent.putExtra("message_datetime", dateTime);
-        // Start the edit message activity through this intent.
+    private void createPictureMessage() {
+        Intent intent = new Intent(this, MultimediaMessageActivity.class);
         startActivityForResult(intent, 1);
     }
 
+    /* User requested to edit a currently scheduled message.
+    *  Package the selected message's data into a bundle and start the
+    *  edit activity. */
+    private void editScheduledMessage() {
+        // Get the message's data.
+        Bundle message_info = mDb.getScheduledMessageData(mLast_clicked_message_id);
+        mDb.close();
+        if (message_info != null) {
+            String recip_names = message_info.getString("recip_names");
+            String recip_nums = message_info.getString("recip_nums");
+            String message = message_info.getString("message");
+            String image_path = message_info.getString("image_path");
+            int group_flag = message_info.getInt("group_flag");
+            String date = message_info.getString("date");
+            String time = message_info.getString("time");
+            String dateTime = message_info.getString("dateTime");
+
+            // Place the data in an intent.
+            Intent intent;
+            if (image_path == null || image_path.equals("")) {
+                // text message, because no image was specified
+                Log.d("edit SMS", "image_path is null, or equals empty string");
+                intent = new Intent(this, EditTextMessageActivity.class);
+            } else {
+                // picture message, because an image was specified
+                Log.d("edit MMS", image_path);
+                intent = new Intent(this, MultimediaMessageActivity.class);
+            }
+            intent.putExtra("recip_names", recip_names);
+            intent.putExtra("recip_nums", recip_nums);
+            intent.putExtra("message", message);
+            intent.putExtra("image_path", image_path);
+            intent.putExtra("group_flag", group_flag);
+            intent.putExtra("date", date);
+            intent.putExtra("time", time);
+            intent.putExtra("message_datetime", dateTime);
+            intent.putExtra("message_id", mLast_clicked_message_id);
+
+            // Start the edit message activity through this intent.
+            startActivityForResult(intent, 1);
+        }
+        else {
+            Toast.makeText(MainActivity.this, "That message can't be edited.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
     /* Delete a currently scheduled message. */
-    private void deleteScheduledMessage(long last_clicked_message_id) {
-        mDb.deleteMessage(last_clicked_message_id);
+    private void deleteScheduledMessage() {
+        stopAlarm(mLast_clicked_message_id);
+        mDb.deleteMessage(mLast_clicked_message_id);
+        mDb.close();
         // Force a refresh of the listView so that the changes will be reflected in the ListView.
         fillListView();
+    }
+
+    /* Delete a currently scheduled alarm (called from deleteScheduledMessage())
+    * For alarm cancel to work, pending intent MUST match the
+    * pending intent used to create the alarm */
+    public void stopAlarm(long message_id){
+        Intent alarmIntent = new Intent(this, AlarmReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getService(getApplicationContext(),
+                (int) message_id, alarmIntent, PendingIntent.FLAG_ONE_SHOT);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+        alarmManager.cancel(pendingIntent);
+        Log.d("MainActivity stopalarm", "Alarm canceled");
     }
 
     /* Populate the ListView from our database with all of the currently scheduled messages. */
     private void fillListView() {
         Cursor cursor = mDb.getAllScheduledMessages();
-        String[] fromColumns = {mDb.MESSAGE_TXT_CONTENT,
-                                mDb.MESSAGE_FORMATTED_DT,
-                                "RECIPIENT_NUMBERS"};
-
-        int[] toViews = new int[] {R.id.message_txt_tv, R.id.datetime_tv, R.id.recipient_nums_tv};
-        SimpleCursorAdapter adapter =
-                new SimpleCursorAdapter(getBaseContext(), R.layout.listed_message_layout, cursor,
-                                        fromColumns, toViews, 0);
+        ContactDatabaseAdapter adapter =
+                new ContactDatabaseAdapter(getBaseContext(), cursor, R.layout.listed_message_layout);
         ListView messagesListView = (ListView) findViewById(R.id.scheduled_messages_list);
         messagesListView.setAdapter(adapter);
 
-        //Any time the message is long pressed, we should save its ID so it can be passed
-        //to the editScheduledMessage() method.
+        /* Make the list items clickable for their context menu */
+        registerForContextMenu(findViewById(R.id.scheduled_messages_list));
+
+        // Allow short clicks to open the context menu
+        messagesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int pos, long id) {
+                mLast_clicked_message_id = id;
+                openContextMenu(findViewById(R.id.scheduled_messages_list));
+                Log.d("Short Click", "Last clicked message id just set to " + mLast_clicked_message_id);
+            }
+        });
+
+        // Allow long clicks to open the context menu.
         messagesListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
                                            int pos, long id) {
-                last_clicked_message_id = id;
-                Log.d("Long Click", "Last clicked message id just set to " + last_clicked_message_id);
+                mLast_clicked_message_id = id;
+                Log.d("Long Click", "Last clicked message id just set to " + mLast_clicked_message_id);
                 return false;
             }
         });
-        registerForContextMenu(findViewById(R.id.scheduled_messages_list));
+        mDb.close();
     }
 
+    // An edit activity just returned after saving something, so we will refresh the ListView
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
@@ -201,5 +308,18 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         // Force a refresh on the ListView
         fillListView();
+        registerRefreshReceiver();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterRefreshReceiver();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterRefreshReceiver();
     }
 }

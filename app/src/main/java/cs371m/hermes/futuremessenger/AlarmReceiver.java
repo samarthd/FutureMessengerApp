@@ -141,7 +141,8 @@ public class AlarmReceiver extends Service {
             }
             else if (groupFlag == MessengerDatabaseHelper.IS_GROUP_MESSAGE){
                 Log.d(TAG, "onStart, about to send group MMS");
-                sendGroupMMS(messageID, numbers, messageText);
+                //sendGroupMMS(messageID, numbers, messageText);
+                handleMMS(messageText, indivNums, new Bitmap[]{}, new String[] {}, "", messageID);
             }
             else {
                 Log.d(TAG, "onStart, about to send SMS");
@@ -426,6 +427,7 @@ public class AlarmReceiver extends Service {
                 writer = new FileOutputStream(sendingFile);
                 writer.write(new PduComposer(this, curReq).make());
                 contentUri = writerUri;
+
             } catch (final IOException e) {
                 com.klinker.android.logger.Log.e(TAG, "Error writing send file", e);
             } finally {
@@ -520,7 +522,7 @@ public class AlarmReceiver extends Service {
             size += addTextPart(body, part, i);
         }
 
-        // add a SMIL document for compatibility
+    /*    // add a SMIL document for compatibility
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         SmilXmlSerializer.serialize(SmilHelper.createSmilDocument(body), out);
         PduPart smilPart = new PduPart();
@@ -529,7 +531,7 @@ public class AlarmReceiver extends Service {
         smilPart.setContentType(ContentType.APP_SMIL.getBytes());
         smilPart.setData(out.toByteArray());
         body.addPart(0, smilPart);
-
+*/
         req.setBody(body);
         // Message size
         req.setMessageSize(size);

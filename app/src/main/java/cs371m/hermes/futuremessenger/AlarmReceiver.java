@@ -400,7 +400,7 @@ public class AlarmReceiver extends Service {
     private void processMMSSending (SendReq curReq, final long messageID, final String messageText) {
 
         final String fileName = "send." + String.valueOf(Math.abs(new Random().nextLong())) + ".dat";
-        File sendingFile = new File (this.getExternalFilesDir(null), fileName);
+        File sendingFile = new File (this.getCacheDir(), fileName);
         PduPersister persister = PduPersister.getPduPersister(this);
         try {
  /*          This method only works if you're the default SMS app.
@@ -416,7 +416,7 @@ public class AlarmReceiver extends Service {
 
             //Write the data to the file
             Uri writerUri = (new Uri.Builder())
-                   // .authority(this.getPackageName() + ".MmsFileProvider")
+                    .authority(this.getPackageName() + ".MmsFileProvider")
                     .path(fileName)
                     .scheme(ContentResolver.SCHEME_CONTENT)
                     .build();
@@ -437,9 +437,11 @@ public class AlarmReceiver extends Service {
                 }
             }
 
-            //Bundle configOverrides = new Bundle();
-            //configOverrides.putBoolean(SmsManager.MMS_CONFIG_GROUP_MMS_ENABLED, true);
+            Bundle configOverrides = new Bundle();
+            configOverrides.putBoolean(SmsManager.MMS_CONFIG_GROUP_MMS_ENABLED, true);
             if (contentUri != null) {
+                Log.d("AlarmReceiver", "ContentURI found to be :" + contentUri.toString());
+                Log.d("AlarmReceiver", "File path: " + new File(contentUri.toString()).getAbsolutePath());
                 /* Register to listen for MMS send action in order to notify the user on send status */
                 registerReceiver(new BroadcastReceiver() {
                     @Override
@@ -471,7 +473,7 @@ public class AlarmReceiver extends Service {
 
 
                 SmsManager.getDefault().sendMultimediaMessage(this,
-                        contentUri, null, null, pendingIntent);
+                        contentUri, null, configOverrides, pendingIntent);
             } else {
                 com.klinker.android.logger.Log.e(TAG, "Error writing sending Mms");
                 try {

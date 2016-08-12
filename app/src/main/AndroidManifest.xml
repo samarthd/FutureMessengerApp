@@ -24,6 +24,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <provider android:name="com.klinker.android.send_message.MmsFileProvider"
+            android:authorities="${applicationId}.MmsFileProvider"
+            android:enabled="true"
+            android:grantUriPermissions="true"
+            android:exported="false" />
+
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"

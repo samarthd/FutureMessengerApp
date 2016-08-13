@@ -70,6 +70,9 @@ public class AlarmReceiver extends Service {
     // Action to broadcast for refreshing the MainActivity's scheduled messages ListView
     private static final String REFRESH_LV_ACTION = "cs371m.hermes.futuremessenger.refreshlv";
 
+    // Max size of an MMS in bytes
+    public static final int MAX_MMS_SIZE = 512000;
+
     // Broadcast to the MainActivity that the message list has been updated
     private void broadcastRefreshLV() {
         LocalBroadcastManager.getInstance(this).sendBroadcast(new Intent (REFRESH_LV_ACTION));
@@ -377,15 +380,21 @@ public class AlarmReceiver extends Service {
 
         // Get all images from the bitmap array and put them in the MMS
         for (int i = 0; i < images.length; i++) {
-            // Convert bitmap to bytes for storage
-            byte[] imageBytes = Message.bitmapToByteArray(images[i]);
-            // Is this a jpeg, a png, ??
-            MMSPart curImagePart = new MMSPart();
-            /** TODO: Compress the image to fit carrier restrictions. */
-            curImagePart.MimeType = imgMimeTypes[i];
-            curImagePart.Name = "image" + i;
-            curImagePart.Data = imageBytes;
-            data.add(curImagePart);
+
+            if (images[i] != null) {
+                ByteArrayOutputStream imgByteStream = new ByteArrayOutputStream();
+                // Compress the bitmap into a JPEG
+                images[i].compress(Bitmap.CompressFormat.JPEG, 85, imgByteStream);
+                // Convert JPEG to bytes for storage
+                byte[] byteArray = imgByteStream.toByteArray();
+                if (byteArray.length <= MAX_MMS_SIZE) {
+                    MMSPart curImagePart = new MMSPart();
+                    curImagePart.MimeType = "image/jpeg";
+                    curImagePart.Name = "image" + i;
+                    curImagePart.Data = byteArray;
+                    data.add(curImagePart);
+                }
+            }
         }
 
         // Get the text part of the message if it exists
@@ -546,16 +555,18 @@ public class AlarmReceiver extends Service {
             size += addTextPart(body, part, i);
         }
 
-    /*    // add a SMIL document for compatibility
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        SmilXmlSerializer.serialize(SmilHelper.createSmilDocument(body), out);
-        PduPart smilPart = new PduPart();
-        smilPart.setContentId("smil".getBytes());
-        smilPart.setContentLocation("smil.xml".getBytes());
-        smilPart.setContentType(ContentType.APP_SMIL.getBytes());
-        smilPart.setData(out.toByteArray());
-        body.addPart(0, smilPart);
-*/
+       // if (recipients.length > 1) {
+            // add a SMIL document for compatibility
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            SmilXmlSerializer.serialize(SmilHelper.createSmilDocument(body), out);
+            PduPart smilPart = new PduPart();
+            smilPart.setContentId("smil".getBytes());
+            smilPart.setContentLocation("smil.xml".getBytes());
+            smilPart.setContentType(ContentType.APP_SMIL.getBytes());
+            smilPart.setData(out.toByteArray());
+            body.addPart(0, smilPart);
+       // }
+
         req.setBody(body);
         // Message size
         req.setMessageSize(size);

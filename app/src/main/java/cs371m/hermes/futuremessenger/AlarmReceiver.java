@@ -128,6 +128,7 @@ public class AlarmReceiver extends Service {
                 //sendPictureMMS(messageID, numbers, messageText, img_path);
 
                 try {
+                    // TODO: Compress the image to fit carrier size restrictions
                     Uri imageUri = Uri.parse(img_path);
                     Bitmap image = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
                     //Jpeg, png, ??
@@ -142,6 +143,7 @@ public class AlarmReceiver extends Service {
             else if (groupFlag == MessengerDatabaseHelper.IS_GROUP_MESSAGE){
                 Log.d(TAG, "onStart, about to send group MMS");
                 //sendGroupMMS(messageID, numbers, messageText);
+                //TODO: Try using the SMIL document for sending group messages (leave it out for images)
                 handleMMS(messageText, indivNums, new Bitmap[]{}, new String[] {}, "", messageID);
             }
             else {
@@ -352,16 +354,22 @@ public class AlarmReceiver extends Service {
     }
 
 
-    /* MMS Sending. Code taken from
-    https://github.com/klinker41/android-smsmms
+    /**
+     * Method that processes MMS.
+     * This code is used to build and send an MMS message to some recipients.
+     * Uses and is heavily based on Jacob Klinker's implementation from https://github.com/klinker41
+     * and the Google MmsMessagingDemo from the Android source repo.
+     * Custom modifications were necessary in order to get it working on a non-default SMS app
+     * like my own.
+     * @param messageText
+     * @param recipientNums
+     * @param images
+     * @param imgMimeTypes
+     * @param subject
+     * @param messageID
      */
-
-    /* This code is used to build and send an MMS message to a recipient.
-    *  Heavily based on Jacob Klinker's own implementation from https://github.com/klinker41
-     *  Made my own modifications to some of his internal methods to get it working in addition
-     *  to using some helpful classes that he made. Started with sendMmsMessage method in
-      *  Transaction.java*/
-    private void handleMMS (String messageText, String[] recipientNums, Bitmap[] images, String[] imgMimeTypes, String subject, final long messageID) {
+    private void handleMMS (String messageText, String[] recipientNums, Bitmap[] images,
+                            String[] imgMimeTypes, String subject, final long messageID) {
 
 
         // Data chunks for the actual MMS
@@ -373,8 +381,7 @@ public class AlarmReceiver extends Service {
             byte[] imageBytes = Message.bitmapToByteArray(images[i]);
             // Is this a jpeg, a png, ??
             MMSPart curImagePart = new MMSPart();
-            /** TODO: Properly set the type based on what kind of image it is (the calling method should
-               automatically get this from the URI */
+            /** TODO: Compress the image to fit carrier restrictions. */
             curImagePart.MimeType = imgMimeTypes[i];
             curImagePart.Name = "image" + i;
             curImagePart.Data = imageBytes;
@@ -395,9 +402,16 @@ public class AlarmReceiver extends Service {
         processMMSSending(curReq, messageID, messageText);
     }
 
-    /* Again, this code is heavily based on Jacob Klinker's own implementation in
-       https://github.com/klinker41. I have made small adjustments to fit my needs.
-     *  */
+
+    /**
+     * Method that deals with sending an MMS message.
+     * Again, this code uses and is heavily based on Jacob Klinker's implementation in
+     * https://github.com/klinker41
+     * Small adjustments were made to fit the needs of Future Messenger.
+     * @param curReq
+     * @param messageID
+     * @param messageText
+     */
     private void processMMSSending (SendReq curReq, final long messageID, final String messageText) {
 
         final String fileName = "send." + String.valueOf(Math.abs(new Random().nextLong())) + ".dat";
@@ -406,7 +420,7 @@ public class AlarmReceiver extends Service {
         try {
  /*          This method only works if you're the default SMS app.
                 Uri messageUri = persister.persist(curReq, Uri.parse("content://mms/outbox"),
-                    true, true, null);*/
+                    true, true, null);              */
 
             // Build an intent for the sent receiver
             String MMS_SENT_ACTION = "mms sent " + messageID;
@@ -493,7 +507,17 @@ public class AlarmReceiver extends Service {
     }
 
 
-    /* Code copied and modified slightly from Jacob Klinker */
+
+    /**
+     * Builds the PDU that will be sent in the MMS.
+     * Uses and is heavily based on Jacob Klinker's implementation in https://github.com/klinker41
+     * with slight modifications.
+     * @param context
+     * @param recipients
+     * @param subject
+     * @param parts
+     * @return
+     */
     private static SendReq buildPdu(Context context, String[] recipients, String subject,
                                     List<MMSPart> parts) {
         final SendReq req = new SendReq();
@@ -551,7 +575,15 @@ public class AlarmReceiver extends Service {
         return req;
     }
 
-    // Entirely Jacob Klinker
+
+    /**
+     * Adds a text part to the MMS.
+     * Uses Jacob Klinker's implementation from https://github.com/klinker41
+     * @param pb
+     * @param p
+     * @param id
+     * @return
+     */
     private static int addTextPart(PduBody pb, MMSPart p, int id) {
         String filename = p.MimeType.split("/")[0] + "_" + id + ".mms";
         final PduPart part = new PduPart();

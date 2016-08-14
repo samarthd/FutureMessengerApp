@@ -1,11 +1,14 @@
 package cs371m.hermes.futuremessenger;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -117,4 +120,33 @@ public class EditPreset extends AppCompatActivity {
         finish();
     }
 
+    // Ensure that the user doesn't accidentally quit without saving their changes.
+    @Override
+    public void onBackPressed() {
+        showExitDialog();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case android.R.id.home:
+                showExitDialog();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showExitDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.exit_dialog_title)
+                .setMessage(R.string.exit_confirmation_message)
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                })
+                .setNegativeButton(R.string.no, null)
+                .show();
+    }
 }

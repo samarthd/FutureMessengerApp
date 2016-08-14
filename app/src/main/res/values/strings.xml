@@ -42,9 +42,9 @@
     <string name="no_selectable_presets_message">You don\'t have any presets saved.</string>
     <string name="populate_from_preset">POPULATE FROM PRESET</string>
     <string name="no_scheduled_messages">No messages are currently scheduled.</string>
-    <string name="no_contacts_entered">No contact entered</string>
-    <string name="no_message_entered">No message entered</string>
-    <string name="bad_date_entered">Date not set to future!</string>
+    <string name="no_contacts_entered">No recipient specified!</string>
+    <string name="no_message_entered">No message entered!</string>
+    <string name="bad_date_entered">The message isn\'t scheduled for the future!</string>
     <string name="edit_error">Something went wrong with that contact.</string>
     <string name="send_success">Message successfully sent</string>
     <string name="send_fail">Message failed to send</string>

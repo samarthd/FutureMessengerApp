@@ -547,6 +547,7 @@ public class AlarmReceiver extends Service {
         req.setDate(System.currentTimeMillis() / 1000);
         // Body
         PduBody body = new PduBody();
+        
         // Add text part. Always add a smil part for compatibility, without it there
         // may be issues on some carriers/client apps
         int size = 0;
@@ -555,17 +556,15 @@ public class AlarmReceiver extends Service {
             size += addTextPart(body, part, i);
         }
 
-       // if (recipients.length > 1) {
-            // add a SMIL document for compatibility
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            SmilXmlSerializer.serialize(SmilHelper.createSmilDocument(body), out);
-            PduPart smilPart = new PduPart();
-            smilPart.setContentId("smil".getBytes());
-            smilPart.setContentLocation("smil.xml".getBytes());
-            smilPart.setContentType(ContentType.APP_SMIL.getBytes());
-            smilPart.setData(out.toByteArray());
-            body.addPart(0, smilPart);
-       // }
+        // add a SMIL document for compatibility
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        SmilXmlSerializer.serialize(SmilHelper.createSmilDocument(body), out);
+        PduPart smilPart = new PduPart();
+        smilPart.setContentId("smil".getBytes());
+        smilPart.setContentLocation("smil.xml".getBytes());
+        smilPart.setContentType(ContentType.APP_SMIL.getBytes());
+        smilPart.setData(out.toByteArray());
+        body.addPart(0, smilPart);
 
         req.setBody(body);
         // Message size

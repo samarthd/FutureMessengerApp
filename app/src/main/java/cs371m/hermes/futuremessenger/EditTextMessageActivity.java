@@ -462,7 +462,7 @@ public class EditTextMessageActivity extends AppCompatActivity
     private void populateTextFieldFromPreset(Intent data) {
         String preset_content = data.getStringExtra("preset_content");
         EditText textField = (EditText) findViewById(R.id.message_field);
-        textField.append(preset_content);
+        textField.getText().insert(textField.getSelectionStart(), preset_content);
     }
 
     /**

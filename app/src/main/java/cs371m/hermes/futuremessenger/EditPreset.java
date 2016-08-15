@@ -80,10 +80,10 @@ public class EditPreset extends AppCompatActivity {
         EditText message = (EditText) findViewById(R.id.edit_preset_message);
         if (name.getText().toString().equals("")) {
             Toast.makeText(getApplicationContext(),
-                    "Preset needs a name", Toast.LENGTH_SHORT).show();
-        } else if (message.getText().toString().equals("")) {
+                    R.string.no_preset_name, Toast.LENGTH_SHORT).show();
+        } else if (message.getText().toString().trim().equals("")) {
             Toast.makeText(getApplicationContext(),
-                    "No message set", Toast.LENGTH_SHORT).show();
+                    R.string.no_preset_message, Toast.LENGTH_SHORT).show();
         } else {
             result = false;
         }

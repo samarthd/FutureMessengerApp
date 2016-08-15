@@ -98,4 +98,6 @@
     <string name="yes">YES</string>
     <string name="no">NO</string>
     <string name="must_select_image">You haven\'t selected an image!</string>
+    <string name="no_preset_name">You haven\'t given this preset a name!</string>
+    <string name="no_preset_message">You haven\'t entered a message for this preset!</string>
 </resources>

@@ -78,7 +78,7 @@ public class EditPreset extends AppCompatActivity {
         boolean result = true;
         EditText name = (EditText) findViewById(R.id.edit_preset_name);
         EditText message = (EditText) findViewById(R.id.edit_preset_message);
-        if (name.getText().toString().equals("")) {
+        if (name.getText().toString().trim().equals("")) {
             Toast.makeText(getApplicationContext(),
                     R.string.no_preset_name, Toast.LENGTH_SHORT).show();
         } else if (message.getText().toString().trim().equals("")) {

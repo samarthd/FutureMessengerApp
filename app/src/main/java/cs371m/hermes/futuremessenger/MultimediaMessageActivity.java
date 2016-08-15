@@ -292,7 +292,7 @@ public class MultimediaMessageActivity extends EditTextMessageActivity {
                     R.string.no_contacts_entered, Toast.LENGTH_SHORT).show();
         } else if (isImageEmpty()) {
             Toast.makeText(getApplicationContext(),
-                    "Must select an image", Toast.LENGTH_SHORT).show();
+                    R.string.must_select_image, Toast.LENGTH_SHORT).show();
         } else if (isDateInPast()) {
             Toast.makeText(getApplicationContext(),
                     R.string.bad_date_entered, Toast.LENGTH_SHORT).show();

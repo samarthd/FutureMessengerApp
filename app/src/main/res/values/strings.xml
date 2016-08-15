@@ -10,11 +10,9 @@
     <string name="create_manage_presets">Create/Manage Presets</string>
     <string name="new_text_message">New Text Message</string>
     <string name="new_picture_message">New Picture Message</string>
-    <string name="title_activity_text_message">Text Message</string>
     <string name="message">Message&#160;</string>
     <string name="date_and_time">Date &#038; Time to Send&#160;</string>
     <string name="recipients_lv">Recipients</string>
-    <string name="recipient_ids">Recipient ID in database:&#160;</string>
     <string name="currently_scheduled_tv">Scheduled Messages</string>
     <string name="add_phone_number">ADD A PHONE NUMBER</string>
     <string name="enter_phone_number">Enter a phone number</string>
@@ -25,9 +23,6 @@
     <string name="empty_number">You can\'t leave this blank!</string>
     <string name="already_recipient">Already a recipient!</string>
     <string name="title_activity_multimedia_message">Edit Picture Message</string>
-    <string name="hint_recipients">Enter recipients</string>
-    <string name="hint_message">Enter message</string>
-    <string name="header_datetime">Date &amp; Time</string>
     <string name="error">ERROR</string>
     <string name="header_image">Image</string>
     <string name="header_text">Text</string>
@@ -64,7 +59,6 @@
     <string name="restricted_to_one_recipient">You can only send picture messages to one recipient
         at a time.</string>
     <string name="recipient_tv_singular">Recipient</string>
-    <string name="title_activity_about">AboutActivity</string>
     <string name="about_text_welcome">Welcome to Future Messenger!</string>
     <string name="some_tips">Some tips to get you started:</string>
     <string name="about_text_created_by">Future Messenger created and developed by:</string>
@@ -103,4 +97,5 @@
     <string name="exit_confirmation_message">Are you sure you want to exit without saving?</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
+    <string name="must_select_image">You haven\'t selected an image!</string>
 </resources>

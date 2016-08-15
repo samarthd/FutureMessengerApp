@@ -9,7 +9,6 @@
     tools:context="cs371m.hermes.futuremessenger.ManagePresets"
     tools:showIn="@layout/activity_manage_presets">
 
-
     <ListView
         android:id="@+id/presets_lv"
         android:layout_width="match_parent"

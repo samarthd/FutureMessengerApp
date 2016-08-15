@@ -40,8 +40,16 @@ public class ContactListAdapter extends ArrayAdapter<Contact> {
         TextView contactNumber = (TextView) convertView.findViewById(R.id.contact_num);
 
         // Populate the data into the views
-        contactName.setText(current.getName());
-        contactNumber.setText(current.getPhoneNum());
+        String currentName = current.getName();
+        if (currentName.length() >= 20) {
+            currentName = currentName.substring(0, 15) + "...";
+        }
+        String currentNum = current.getPhoneNum();
+        if (currentNum.length() >= 15) {
+            currentNum = currentNum.substring(0, 12) + "...";
+        }
+        contactName.setText(currentName);
+        contactNumber.setText(currentNum);
 
         // Allow this row to be deleted by the delete selected contact button.
         // Code based on:

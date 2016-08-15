@@ -198,6 +198,9 @@ public class MessengerDatabaseHelper extends SQLiteOpenHelper {
             ContentValues recipContentValues = new ContentValues();
             Log.d("Store Recipient", "Name = " + name);
             Log.d("Store Recipient", "Number = " + phoneNumber);
+            // Clear semicolons from name if they exist to prevent parse errors later on.
+            name = name.replace(";", "");
+            Log.d("Store recipient", "Name after semicolon removal: " + name);
             recipContentValues.put(RECIPIENT_NAME, name);
             recipContentValues.put(RECIPIENT_PHONE_NUMBER, phoneNumber);
             recipient_id = db.insert(RECIPIENT_TABLE_NAME, null, recipContentValues);

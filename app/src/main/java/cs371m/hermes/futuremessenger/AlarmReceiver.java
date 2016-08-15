@@ -20,6 +20,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.SmsManager;
 import android.util.Log;
+
 import java.util.ArrayList;
 
 /**
@@ -77,7 +78,18 @@ public class AlarmReceiver extends Service {
         }
         else {
             Log.d(TAG, "onStart, " + Long.toString(messageID));
-
+            String[] nameArray = results.getString("recip_names").split(";");
+            String[] numArray = results.getString("recip_nums").split(";");
+            ArrayList<String> namesList = new ArrayList<>();
+            /* For each recipient, if they don't have a given name (aren't a contact), display
+               their phone number instead. */
+            for (int i = 0; i < nameArray.length; i++) {
+                if (nameArray[i].equals(" "))
+                    namesList.add(numArray[i]);
+                else
+                    namesList.add(nameArray[i]);
+            }
+            String names = android.text.TextUtils.join(", ", namesList);
             String numbers = results.getString("recip_nums");
             String messageText = results.getString("message");
             int groupFlag = results.getInt("group_flag");
@@ -86,11 +98,11 @@ public class AlarmReceiver extends Service {
             if(img_path != null){
                 Log.d(TAG, "onStart, " + img_path);
                 Log.d(TAG, "onStart, about to send picture MMS");
-                sendPictureMMS(messageID, numbers, messageText, img_path);
+                sendPictureMMS(messageID, names, numbers, messageText, img_path);
             }
             else if (groupFlag == MessengerDatabaseHelper.IS_GROUP_MESSAGE){
                 Log.d(TAG, "onStart, about to send group MMS");
-                sendGroupMMS(messageID, numbers, messageText);
+                sendGroupMMS(messageID, names, numbers, messageText);
             }
             else {
                 Log.d(TAG, "onStart, about to send SMS");
@@ -113,7 +125,7 @@ public class AlarmReceiver extends Service {
     }
 
     // Sends a picture message to the specified recipient
-    public void sendPictureMMS(long messageID, String phonenum, String message, String uri_path) {
+    public void sendPictureMMS(long messageID, String name, String phonenum, String message, String uri_path) {
         String TAG = "sendPictureMMS";
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.putExtra("address", phonenum);
@@ -136,7 +148,7 @@ public class AlarmReceiver extends Service {
                .setLargeIcon(largeIcon)
                .setColor(ContextCompat.getColor(this, R.color.colorAccent))
                .setContentTitle(curResources.getString(R.string.app_name))
-               .setContentText(curResources.getString(R.string.send_picture_message))
+               .setContentText(curResources.getString(R.string.send_picture_message) + " to " + name)
                .setAutoCancel(true)  // Clear the notification after user clicks on it
                .setOngoing(true) // Prevent this notification from being cleared via swipe
                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);
@@ -149,7 +161,7 @@ public class AlarmReceiver extends Service {
     }
 
     // Sends a text message to the specified recipients as a group
-    public void sendGroupMMS(long messageID, String phonenums, String message) {
+    public void sendGroupMMS(long messageID, String names, String phonenums, String message) {
         String TAG = "sendGroupMMS";
         Intent intent = new Intent(Intent.ACTION_SENDTO);
         intent.setData(Uri.parse("smsto:" + phonenums));
@@ -171,7 +183,7 @@ public class AlarmReceiver extends Service {
                .setContentTitle(curResources.getString(R.string.app_name))
                .setContentText(curResources.getString(R.string.group_ready))
                .setStyle(new NotificationCompat.BigTextStyle() // On expansion, show the message to be sent
-                         .bigText(curResources.getString(R.string.open_mms_app) + " \"" + message + "\""))
+                         .bigText(curResources.getString(R.string.group_ready) + " to " + names + ": \"" + message + "\""))
                .setOngoing(true)  // Prevent this notification from being cleared by a swipe
                .setAutoCancel(true)   // Clears notification after user clicks on it
                .setSound(Settings.System.DEFAULT_NOTIFICATION_URI);

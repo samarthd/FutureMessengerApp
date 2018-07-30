@@ -16,10 +16,9 @@ public interface MessageRecipientJoinDao {
     /**
      * Insert a row into this table and create an association between a Message and a Recipient.
      * @param messageRecipientJoin
-     * @return The number of rows that were inserted.
      */
     @Insert
-    public Long insert(MessageRecipientJoin messageRecipientJoin);
+    public void insert(MessageRecipientJoin messageRecipientJoin);
 
     /**
      * Get all of the messages for a particular recipient.
@@ -30,7 +29,7 @@ public interface MessageRecipientJoinDao {
             "FROM messages " +
             "INNER JOIN messages_recipients_join as m_r_join ON messages.id = m_r_join.message_id " +
             "WHERE m_r_join.recipient_id = :recipientID")
-    public List<Message> getMessagesForRecipient(Long recipientID);
+    public List<Message> findMessagesForRecipient(Long recipientID);
 
     /**
      * Returns a count of the number of messages a recipient is currently associated with.
@@ -48,7 +47,7 @@ public interface MessageRecipientJoinDao {
             "FROM recipients " +
             "INNER JOIN messages_recipients_join as m_r_join ON recipients.id = m_r_join.recipient_id " +
             "WHERE m_r_join.message_id = :messageID")
-    public List<Recipient> getRecipientsForMessage(Long messageID);
+    public List<Recipient> findRecipientsForMessage(Long messageID);
 
 
 

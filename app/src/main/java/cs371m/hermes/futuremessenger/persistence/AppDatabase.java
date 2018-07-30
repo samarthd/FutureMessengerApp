@@ -6,7 +6,7 @@ import android.arch.persistence.room.TypeConverters;
 
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
-import cs371m.hermes.futuremessenger.persistence.entities.embedded.Status;
+import cs371m.hermes.futuremessenger.persistence.entities.join.MessageRecipientJoin;
 import cs371m.hermes.futuremessenger.persistence.repositories.isolated.MessageDao;
 import cs371m.hermes.futuremessenger.persistence.repositories.isolated.RecipientDao;
 import cs371m.hermes.futuremessenger.persistence.repositories.joined.MessageRecipientJoinDao;
@@ -15,7 +15,7 @@ import cs371m.hermes.futuremessenger.persistence.typeconverters.CalendarConverte
 /**
  * @author samarthd
  */
-@Database(version = 1, entities = {Message.class, Recipient.class, Status.class})
+@Database(version = 1, entities = {Message.class, Recipient.class, MessageRecipientJoin.class})
 @TypeConverters({CalendarConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -24,4 +24,5 @@ public abstract class AppDatabase extends RoomDatabase {
     abstract public RecipientDao recipientDao();
 
     abstract public MessageRecipientJoinDao messageRecipientJoinDao();
+
 }

@@ -20,6 +20,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode
 public class Status {
 
     @Ignore

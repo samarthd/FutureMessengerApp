@@ -169,6 +169,9 @@ public class DaoTests {
     }
 
 
+    /**
+     * Very basic sanity checks on the relationship.
+     */
     @Test
     public void testMessageRecipientRelationship() {
         Calendar calendar = createAndInitializeCalendar(1);
@@ -187,27 +190,96 @@ public class DaoTests {
                 createAndInitializeMessageRecipientJoin(messageID,recipientID);
 
         // sanity check
+        assertEquals(0, mMessageRecipientJoinDao.findAllRelationships().size());
         assertEquals(0, mMessageRecipientJoinDao.findRecipientsForMessage(messageID).size());
         assertEquals(0, mMessageRecipientJoinDao.findMessagesForRecipient(recipientID).size());
 
         mMessageRecipientJoinDao.insert(messageRecipientJoin);
+        assertEquals(1, mMessageRecipientJoinDao.findAllRelationships().size());
         assertEquals(1, mMessageRecipientJoinDao.findRecipientsForMessage(messageID).size());
         assertEquals(1, mMessageRecipientJoinDao.findMessagesForRecipient(recipientID).size());
 
         assertEquals(recipient, mMessageRecipientJoinDao.findRecipientsForMessage(messageID).get(0));
         assertEquals(message, mMessageRecipientJoinDao.findMessagesForRecipient(recipientID).get(0));
+        assertEquals(messageRecipientJoin, mMessageRecipientJoinDao.findAllRelationships().get(0));
+        assertEquals(1, mMessageRecipientJoinDao.findAllRelationships().size());
+
+    }
+
+    /**
+     * Tests relationship.
+     * What if you delete message only? Should delete join table row, but not recipient.
+     */
+    @Test
+    public void testMessageRecipientRelationshipDeleteMessage() {
+        Calendar calendar = createAndInitializeCalendar(1);
+        Status status = createAndInitializeStatus(Status.SCHEDULED, "Description");
+
+        Message message = createAndInitializeMessage("Content", calendar, status);
+        Recipient recipient = createAndInitializeRecipient("Name", "Phone");
 
 
-        //update, delete
-        // what happens if you delete a message only?
-        // what happens if you delete a recipient only?
-        // what happens if you delete both at once?
-        // what happens if you delete the relationship but not the values?
-        // confirm that mutating any non-ID values will not change the relationship
-        generateAndInsertMessageAndRecipientRelationships(10);
+        // insert message, recipient, and relationship
+        Long messageID = mMessageDao.createOrUpdateMessage(message);
+        Long recipientID = mRecipientDao.createOrUpdateRecipient(recipient);
+
+        // create relationship
+        MessageRecipientJoin messageRecipientJoin =
+                createAndInitializeMessageRecipientJoin(messageID,recipientID);
+
+        mMessageRecipientJoinDao.insert(messageRecipientJoin);
+
+        message.setId(messageID); // ID is null to begin with, so have to set it.
+        int deletedMessageCount = mMessageDao.deleteMessage(message);
+        assertEquals(1, deletedMessageCount);
+        assertEquals(0, mMessageRecipientJoinDao.findAllRelationships().size());
+        assertEquals(0, mMessageRecipientJoinDao.findMessagesForRecipient(recipientID).size());
+        assertEquals(0, mMessageRecipientJoinDao.findRecipientsForMessage(messageID).size());
+        assertEquals(1, mRecipientDao.findAllRecipients().size()); // ensure recipient wasn't affected
+        assertEquals(recipient, mRecipientDao.findAllRecipients().get(0));
 
 
     }
 
+
+    /**
+     * Tests relationship.
+     * What if you delete recipient only? Should delete join table row, but not message.
+     */
+    @Test
+    public void testMessageRecipientRelationshipDeleteRecipient() {
+        Calendar calendar = createAndInitializeCalendar(1);
+        Status status = createAndInitializeStatus(Status.SCHEDULED, "Description");
+
+        Message message = createAndInitializeMessage("Content", calendar, status);
+        Recipient recipient = createAndInitializeRecipient("Name", "Phone");
+
+
+        // insert message, recipient, and relationship
+        Long messageID = mMessageDao.createOrUpdateMessage(message);
+        Long recipientID = mRecipientDao.createOrUpdateRecipient(recipient);
+
+        // create relationship
+        MessageRecipientJoin messageRecipientJoin =
+                createAndInitializeMessageRecipientJoin(messageID,recipientID);
+
+        mMessageRecipientJoinDao.insert(messageRecipientJoin);
+
+        recipient.setId(recipientID); // ID is null to begin with, so have to set it.
+        int deletedRecipientCount = mRecipientDao.deleteRecipient(recipient);
+        assertEquals(1, deletedRecipientCount);
+        assertEquals(0, mMessageRecipientJoinDao.findAllRelationships().size());
+        assertEquals(0, mMessageRecipientJoinDao.findMessagesForRecipient(recipientID).size());
+        assertEquals(0, mMessageRecipientJoinDao.findRecipientsForMessage(messageID).size());
+        assertEquals(1, mMessageDao.findAllMessages().size()); // ensure message wasn't affected
+        assertEquals(message, mMessageDao.findAllMessages().get(0));
+
+    }
+
+    // TODO more tests on relationships
+    // what happens if you delete both at once?
+    // what happens if you delete the relationship but not the values?
+    // confirm that mutating any non-ID values will not change the relationship
+    //generateAndInsertMessageAndRecipientRelationships(10);
 
 }

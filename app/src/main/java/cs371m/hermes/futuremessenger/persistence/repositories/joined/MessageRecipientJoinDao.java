@@ -49,6 +49,12 @@ public interface MessageRecipientJoinDao {
             "WHERE m_r_join.message_id = :messageID")
     public List<Recipient> findRecipientsForMessage(Long messageID);
 
+    /**
+     * Get all of the rows in the table.
+     */
+    @Query("SELECT * FROM messages_recipients_join")
+    public List<MessageRecipientJoin> findAllRelationships();
+
 
 
 }

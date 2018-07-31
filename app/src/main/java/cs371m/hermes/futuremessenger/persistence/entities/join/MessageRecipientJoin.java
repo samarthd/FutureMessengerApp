@@ -3,6 +3,7 @@ package cs371m.hermes.futuremessenger.persistence.entities.join;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Index;
 import android.support.annotation.NonNull;
 
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
@@ -21,10 +22,14 @@ import lombok.ToString;
         foreignKeys = {
             @ForeignKey(entity = Message.class,
                         parentColumns = "id",
-                        childColumns = "message_id"),
+                        childColumns = "message_id",
+                        onUpdate = ForeignKey.CASCADE,
+                        onDelete = ForeignKey.CASCADE),
             @ForeignKey(entity = Recipient.class,
                         parentColumns = "id",
-                        childColumns = "recipient_id")
+                        childColumns = "recipient_id",
+                        onUpdate = ForeignKey.CASCADE,
+                        onDelete = ForeignKey.CASCADE)
         })
 public class MessageRecipientJoin {
 

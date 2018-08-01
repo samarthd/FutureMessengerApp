@@ -25,8 +25,7 @@ public interface MessageRecipientJoinDao {
      * Get all of the messages for a particular recipient.
      * @param recipientID
      */
-    @Query("SELECT messages.id, messages.text_content, messages.scheduled_datetime, " +
-                  "messages.status_code, messages.status_description " +
+    @Query("SELECT messages.* " +
             "FROM messages " +
             "INNER JOIN messages_recipients_join as m_r_join ON messages.id = m_r_join.message_id " +
             "WHERE m_r_join.recipient_id = :recipientID")
@@ -44,7 +43,7 @@ public interface MessageRecipientJoinDao {
      * Get all of the recipients for a particular message.
      * @param messageID
      */
-    @Query("SELECT recipients.id, recipients.name, recipients.phone_number " +
+    @Query("SELECT recipients.* " +
             "FROM recipients " +
             "INNER JOIN messages_recipients_join as m_r_join ON recipients.id = m_r_join.recipient_id " +
             "WHERE m_r_join.message_id = :messageID")

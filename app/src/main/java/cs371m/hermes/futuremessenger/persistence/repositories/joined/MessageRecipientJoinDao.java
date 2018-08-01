@@ -1,6 +1,7 @@
 package cs371m.hermes.futuremessenger.persistence.repositories.joined;
 
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 
@@ -55,6 +56,11 @@ public interface MessageRecipientJoinDao {
     @Query("SELECT * FROM messages_recipients_join")
     public List<MessageRecipientJoin> findAllRelationships();
 
+    /**
+     * Delete a particular row in the table.
+     */
+    @Delete
+    public int deleteRelationship(MessageRecipientJoin messageRecipientJoin);
 
 
 }

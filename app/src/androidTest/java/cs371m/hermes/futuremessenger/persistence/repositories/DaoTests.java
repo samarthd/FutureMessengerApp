@@ -88,27 +88,6 @@ public class DaoTests {
         return messageRecipientJoin;
     }
 
-    /**
-     * Creates and inserts a message, a recipient, and their association in the database the given
-     * number of times.
-     * @param numberOfTriplesToGenerate
-     */
-    void generateAndInsertMessageAndRecipientRelationships(int numberOfTriplesToGenerate) {
-        for (int i = 0; i < numberOfTriplesToGenerate; i++) {
-            Status status = createAndInitializeStatus("Status Code " + i, "Status Description " + i);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(i);
-
-            Message message = createAndInitializeMessage("Message Content " + i, calendar, status);
-            Recipient recipient = createAndInitializeRecipient("Recipient " + i, "Phone number " + i);
-            Long messageID = mMessageDao.createOrUpdateMessage(message);
-            Long recipientID = mRecipientDao.createOrUpdateRecipient(recipient);
-
-            MessageRecipientJoin messageRecipientJoin = createAndInitializeMessageRecipientJoin(messageID, recipientID);
-            mMessageRecipientJoinDao.insert(messageRecipientJoin);
-        }
-    }
-
     @Test
     public void testMessageCrud() {
 
@@ -276,10 +255,38 @@ public class DaoTests {
 
     }
 
-    // TODO more tests on relationships
-    // what happens if you delete both at once?
-    // what happens if you delete the relationship but not the values?
-    // confirm that mutating any non-ID values will not change the relationship
-    //generateAndInsertMessageAndRecipientRelationships(10);
+    /**
+     * Tests relationship.
+     * What if you delete the relationship row? The data should be unaffected.
+     */
+    @Test
+    public void testMessageRecipientRelationshipDeleteRelationship() {
+        Calendar calendar = createAndInitializeCalendar(1);
+        Status status = createAndInitializeStatus(Status.SCHEDULED, "Description");
 
+        Message message = createAndInitializeMessage("Content", calendar, status);
+        Recipient recipient = createAndInitializeRecipient("Name", "Phone");
+
+
+        // insert message, recipient, and relationship
+        Long messageID = mMessageDao.createOrUpdateMessage(message);
+        Long recipientID = mRecipientDao.createOrUpdateRecipient(recipient);
+
+        // create relationship
+        MessageRecipientJoin messageRecipientJoin =
+                createAndInitializeMessageRecipientJoin(messageID,recipientID);
+
+        mMessageRecipientJoinDao.insert(messageRecipientJoin);
+
+        int deletedRelationshipsCount = mMessageRecipientJoinDao.deleteRelationship(messageRecipientJoin);
+        assertEquals(1, deletedRelationshipsCount);
+        assertEquals(0, mMessageRecipientJoinDao.findAllRelationships().size());
+        assertEquals(0, mMessageRecipientJoinDao.findMessagesForRecipient(recipientID).size());
+        assertEquals(0, mMessageRecipientJoinDao.findRecipientsForMessage(messageID).size());
+        assertEquals(1, mMessageDao.findAllMessages().size()); // ensure message wasn't affected
+        assertEquals(message, mMessageDao.findAllMessages().get(0));
+        assertEquals(1, mRecipientDao.findAllRecipients().size()); // ensure recipient wasn't affected
+        assertEquals(recipient, mRecipientDao.findAllRecipients().get(0));
+
+    }
 }

@@ -1,5 +1,6 @@
 package cs371m.hermes.futuremessenger.persistence.repositories.joined;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -46,8 +47,21 @@ public interface MessageRecipientJoinDao {
     @Query("SELECT recipients.* " +
             "FROM recipients " +
             "INNER JOIN messages_recipients_join as m_r_join ON recipients.id = m_r_join.recipient_id " +
-            "WHERE m_r_join.message_id = :messageID")
+            "WHERE m_r_join.message_id = :messageID " +
+            "ORDER BY recipients.name ASC")
     public List<Recipient> findRecipientsForMessage(Long messageID);
+
+    /**
+     * Observable version of the find recipients for message query.
+     * Get all of the recipients for a particular message.
+     * @param messageID
+     */
+    @Query("SELECT recipients.* " +
+            "FROM recipients " +
+            "INNER JOIN messages_recipients_join as m_r_join ON recipients.id = m_r_join.recipient_id " +
+            "WHERE m_r_join.message_id = :messageID " +
+            "ORDER BY recipients.name ASC")
+    public LiveData<List<Recipient>> observableFindRecipientsForMessage(Long messageID);
 
     /**
      * Get all of the rows in the table.

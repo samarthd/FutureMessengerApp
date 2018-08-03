@@ -1,5 +1,6 @@
 package cs371m.hermes.futuremessenger.persistence.repositories.isolated;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -41,8 +42,8 @@ public interface MessageDao {
      * Finds all messages in the database with a particular status code (ex: "SCHEDULED")
      * @return The message objects found in the database with that status code.
      */
-    @Query("SELECT * FROM messages WHERE status_code = :statusCode")
-    public List<Message> findAllMessagesWithStatusCode(String statusCode);
+    @Query("SELECT * FROM messages WHERE status_code = :statusCode ORDER BY scheduled_datetime ASC")
+    public LiveData<List<Message>> findAllMessagesWithStatusCode(String statusCode);
 
     /**
      * Deletes the row in the database which has a matching primary key.

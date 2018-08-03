@@ -30,6 +30,10 @@ import lombok.ToString;
                         childColumns = "recipient_id",
                         onUpdate = ForeignKey.CASCADE,
                         onDelete = ForeignKey.CASCADE)
+        },
+        indices = {
+            @Index(value = "message_id"),
+            @Index(value = "recipient_id")
         })
 public class MessageRecipientJoin {
 

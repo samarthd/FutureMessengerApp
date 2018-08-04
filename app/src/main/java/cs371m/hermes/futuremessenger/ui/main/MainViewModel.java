@@ -1,9 +1,9 @@
 package cs371m.hermes.futuremessenger.ui.main;
 
 import android.app.Application;
+import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
-import android.arch.lifecycle.ViewModel;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ import cs371m.hermes.futuremessenger.persistence.repositories.isolated.MessageDa
 import cs371m.hermes.futuremessenger.persistence.repositories.joined.MessageRecipientJoinDao;
 
 
-public class MainViewModel extends ViewModel {
+public class MainViewModel extends AndroidViewModel {
 
 
     // Message lists that Room will automatically update on message table updates
@@ -44,6 +44,7 @@ public class MainViewModel extends ViewModel {
 
 
     public MainViewModel (@NonNull Application application) {
+        super(application);
         // Get database and repositories
         mDb = AppDatabase.getInstance(application);
         mMessageDao = mDb.messageDao();

@@ -33,7 +33,8 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public static AppDatabase getInstance(Context context) {
         if (INSTANCE == null) {
-            INSTANCE = buildInstance(context);
+            // We will guarantee that we are always passing in the Application context
+            INSTANCE = buildInstance(context.getApplicationContext());
         }
         return INSTANCE;
     }

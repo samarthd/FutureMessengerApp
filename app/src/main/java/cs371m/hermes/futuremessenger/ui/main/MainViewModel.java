@@ -21,7 +21,7 @@ import cs371m.hermes.futuremessenger.persistence.repositories.joined.MessageReci
 public class MainViewModel extends ViewModel {
 
 
-    // Message lists that Room will automatically update on table updates
+    // Message lists that Room will automatically update on message table updates
     private LiveData<List<Message>> mScheduledMessages;
     private LiveData<List<Message>> mSentMessages;
     private LiveData<List<Message>> mFailedMessages;
@@ -44,28 +44,10 @@ public class MainViewModel extends ViewModel {
 
 
     public MainViewModel (@NonNull Application application) {
+        // Get database and repositories
         mDb = AppDatabase.getInstance(application);
         mMessageDao = mDb.messageDao();
         mMessageRecipientJoinDao = mDb.messageRecipientJoinDao();
-
-        initializeObservableQueryResultLists();
-        initializeMappedLists();
-
-    }
-
-    private void initializeObservableQueryResultLists() {
-        mScheduledMessages = mMessageDao.findAllMessagesWithStatusCode(Status.SCHEDULED);
-        mSentMessages = mMessageDao.findAllMessagesWithStatusCode(Status.SENT);
-        mFailedMessages = mMessageDao.findAllMessagesWithStatusCode(Status.FAILED);
-    }
-
-    private void initializeMappedLists() {
-        mScheduledMessagesWithRecipients
-                .addSource(mScheduledMessages, this::mapFromMessagesToMessagesWithRecipients);
-        mSentMessagesWithRecipients
-                .addSource(mSentMessages, this::mapFromMessagesToMessagesWithRecipients);
-        mFailedMessagesWithRecipients
-                .addSource(mFailedMessages, this::mapFromMessagesToMessagesWithRecipients);
     }
 
     /**
@@ -85,16 +67,33 @@ public class MainViewModel extends ViewModel {
     }
 
     public LiveData<List<MessageWithRecipients>> getScheduledMessagesWithRecipients() {
+        if (mScheduledMessagesWithRecipients == null) {
+            mScheduledMessages = mMessageDao.findAllMessagesWithStatusCode(Status.SCHEDULED);
+            mScheduledMessagesWithRecipients = new MediatorLiveData<>();
+            mScheduledMessagesWithRecipients
+                    .addSource(mScheduledMessages, this::mapFromMessagesToMessagesWithRecipients);
+        }
         return mScheduledMessagesWithRecipients;
     }
 
     public LiveData<List<MessageWithRecipients>> getSentMessagesWithRecipients() {
+        if (mSentMessagesWithRecipients == null) {
+            mSentMessages = mMessageDao.findAllMessagesWithStatusCode(Status.SENT);
+            mSentMessagesWithRecipients = new MediatorLiveData<>();
+            mSentMessagesWithRecipients
+                    .addSource(mSentMessages, this::mapFromMessagesToMessagesWithRecipients);
+        }
         return mSentMessagesWithRecipients;
     }
 
     public LiveData<List<MessageWithRecipients>> getFailedMessagesWithRecipients() {
+        if (mFailedMessagesWithRecipients == null) {
+            mFailedMessages = mMessageDao.findAllMessagesWithStatusCode(Status.FAILED);
+            mFailedMessagesWithRecipients = new MediatorLiveData<>();
+            mFailedMessagesWithRecipients
+                    .addSource(mFailedMessages, this::mapFromMessagesToMessagesWithRecipients);
+        }
         return mFailedMessagesWithRecipients;
     }
-
-
+    
 }

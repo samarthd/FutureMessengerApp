@@ -17,7 +17,8 @@ import cs371m.hermes.futuremessenger.persistence.typeconverters.CalendarConverte
 /**
  * @author samarthd
  */
-@Database(version = 1, entities = {Message.class, Recipient.class, MessageRecipientJoin.class})
+@Database(version = 1, entities = {Message.class, Recipient.class, MessageRecipientJoin.class},
+          exportSchema = false)
 @TypeConverters({CalendarConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 

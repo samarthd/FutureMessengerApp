@@ -1,6 +1,15 @@
 <resources>
     <string name="app_name">Future Messenger</string>
+    <!--Floating action menu labels-->
+    <string name="new_text_message_label">New Text Message</string>
+    <!--Tab labels-->
+    <string name="scheduled_tab_title">Scheduled</string>
+    <string name="sent_tab_title">Sent</string>
+    <string name="failed_tab_title">Failed</string>
+    <!--Message list item labels-->
+    <string name="message_content_label">Message</string>
+    <string name="recipients_label_singular">Recipient</string>
+    <string name="recipients_label_plural">Recipient</string>
+    <string name="scheduled_time_label">Date &amp; Time to Send</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

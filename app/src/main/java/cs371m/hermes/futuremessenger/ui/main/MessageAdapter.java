@@ -1,7 +1,6 @@
 package cs371m.hermes.futuremessenger.ui.main;
 
 import android.support.annotation.NonNull;
-import android.support.v7.recyclerview.extensions.ListAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +18,7 @@ import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
 
 /**
- * Adapter for lists of messages.
+ * RecyclerView adapter for lists of messages.
  */
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 
@@ -75,7 +74,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     private String getFormattedDateAndTime(Message message) {
         Calendar scheduledDateTime = message.getScheduledDateTime();
-        return mDateTimeFormatter.format(scheduledDateTime);
+        return mDateTimeFormatter.format(scheduledDateTime.getTime());
     }
 
     private String getConcatenatedRecipientNames(List<Recipient> recipients) {

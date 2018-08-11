@@ -4,10 +4,15 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.persistence.room.InvalidationTracker;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import cs371m.hermes.futuremessenger.persistence.AppDatabase;
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
@@ -20,79 +25,99 @@ import cs371m.hermes.futuremessenger.persistence.repositories.joined.MessageReci
 
 public class MainViewModel extends AndroidViewModel {
 
+    // Tracks changes in the database
+    private InvalidationTracker tableChangeTracker;
+
     /**
-     * These are MediatorLiveData objects that will observe for changes in the
-     * LiveData message lists, and upon seeing a change, will update themselves.
+     * These are MutableLiveData objects that will be notified on changes in the
+     * database, and upon seeing a change, will update themselves.
      *
-     * These lists hold MessageWithRecipients objects, so when an update is triggered,
-     * they will query the database for the recipients of each message.
+     * They have lists that hold MessageWithRecipients objects, so when an update is triggered,
+     * they will have the recipients for each message.
      */
-    private MediatorLiveData<List<MessageWithRecipients>> mScheduledMessagesWithRecipients;
-    private MediatorLiveData<List<MessageWithRecipients>> mSentMessagesWithRecipients;
-    private MediatorLiveData<List<MessageWithRecipients>> mFailedMessagesWithRecipients;
+    private MessagesWithRecipientsLiveData mScheduledMessagesWithRecipients;
+    private MessagesWithRecipientsLiveData mSentMessagesWithRecipients;
+    private MessagesWithRecipientsLiveData mFailedMessagesWithRecipients;
 
 
     private AppDatabase mDb;
-    private MessageDao mMessageDao;
-    private MessageRecipientJoinDao mMessageRecipientJoinDao;
-
 
     public MainViewModel (@NonNull Application application) {
         super(application);
-        // Get database and repositories
+        // Get database
         mDb = AppDatabase.getInstance(application);
-        mMessageDao = mDb.messageDao();
-        mMessageRecipientJoinDao = mDb.messageRecipientJoinDao();
+        setUpInvalidationTracker();
+
     }
 
-    /**
-     * Takes a list of messages, and finds the recipients for each and returns the new list of
-     * MessageWithRecipients objects.
-     */
-    private List<MessageWithRecipients> mapFromMessagesToMessagesWithRecipients(List<Message> messages) {
-        List<MessageWithRecipients> result = new ArrayList<>();
-        for(Message message : messages) {
-            List<Recipient> recipients =
-                    mMessageRecipientJoinDao.findRecipientsForMessage(message.getId());
-            MessageWithRecipients messageWithRecipients
-                    = new MessageWithRecipients(message, recipients);
-            result.add(messageWithRecipients);
-        }
-        return result;
+    private void setUpInvalidationTracker() {
+        // Track changes in the database
+        String[] tablesToTrack = {"messages", "recipients", "messages_recipients_join"};
+        tableChangeTracker = mDb.getInvalidationTracker();
+        tableChangeTracker.addObserver(new InvalidationTracker.Observer(tablesToTrack) {
+
+            /* When any of the tables are invalidated, we want to re-run the queries
+               for all LiveData that have active observers
+             */
+            @Override
+            public void onInvalidated(@NonNull Set<String> tables) {
+                Log.d("In onInvalidated()", "Tables invalidated: " + tables.toString());
+                if (mScheduledMessagesWithRecipients != null &&
+                        mScheduledMessagesWithRecipients.hasActiveObservers()) {
+                    asyncUpdateScheduledMessagesWithRecipients();
+                }
+                if (mSentMessagesWithRecipients != null &&
+                        mSentMessagesWithRecipients.hasActiveObservers()) {
+                    asyncUpdateSentMessagesWithRecipients();
+                }
+                if (mFailedMessagesWithRecipients != null &&
+                        mFailedMessagesWithRecipients.hasActiveObservers()) {
+                    asyncUpdateFailedMessagesWithRecipients();
+                }
+            }
+        });
+    }
+
+
+    private void asyncUpdateScheduledMessagesWithRecipients() {
+        QueryForMessagesWithRecipients queryTask =
+                new QueryForMessagesWithRecipients();
+        queryTask.setArguments(mDb, Status.SCHEDULED, mScheduledMessagesWithRecipients);
+        queryTask.execute();
+    }
+
+    private void asyncUpdateSentMessagesWithRecipients() {
+        QueryForMessagesWithRecipients queryTask =
+                new QueryForMessagesWithRecipients();
+        queryTask.setArguments(mDb, Status.SENT, mSentMessagesWithRecipients);
+        queryTask.execute();
+    }
+
+    private void asyncUpdateFailedMessagesWithRecipients() {
+        QueryForMessagesWithRecipients queryTask =
+                new QueryForMessagesWithRecipients();
+        queryTask.setArguments(mDb, Status.FAILED, mFailedMessagesWithRecipients);
+        queryTask.execute();
     }
 
     public LiveData<List<MessageWithRecipients>> getScheduledMessagesWithRecipients() {
         if (mScheduledMessagesWithRecipients == null) {
-            // LiveData that Room will automatically update on table changes to messages.
-            LiveData<List<Message>> mScheduledMessages =
-                    mMessageDao.findAllMessagesWithStatusCode(Status.SCHEDULED);
-            mScheduledMessagesWithRecipients = new MediatorLiveData<>();
-            mScheduledMessagesWithRecipients
-                    .addSource(mScheduledMessages, this::mapFromMessagesToMessagesWithRecipients);
+            mScheduledMessagesWithRecipients =
+                    new MessagesWithRecipientsLiveData(Status.SCHEDULED, mDb);
         }
         return mScheduledMessagesWithRecipients;
     }
 
     public LiveData<List<MessageWithRecipients>> getSentMessagesWithRecipients() {
         if (mSentMessagesWithRecipients == null) {
-            // LiveData that Room will automatically update on table changes to messages.
-            LiveData<List<Message>> mSentMessages =
-                    mMessageDao.findAllMessagesWithStatusCode(Status.SENT);
-            mSentMessagesWithRecipients = new MediatorLiveData<>();
-            mSentMessagesWithRecipients
-                    .addSource(mSentMessages, this::mapFromMessagesToMessagesWithRecipients);
+            mSentMessagesWithRecipients = new MessagesWithRecipientsLiveData(Status.SENT, mDb);
         }
         return mSentMessagesWithRecipients;
     }
 
     public LiveData<List<MessageWithRecipients>> getFailedMessagesWithRecipients() {
         if (mFailedMessagesWithRecipients == null) {
-            // LiveData that Room will automatically update on table changes to messages.
-            LiveData<List<Message>> mFailedMessages =
-                    mMessageDao.findAllMessagesWithStatusCode(Status.FAILED);
-            mFailedMessagesWithRecipients = new MediatorLiveData<>();
-            mFailedMessagesWithRecipients
-                    .addSource(mFailedMessages, this::mapFromMessagesToMessagesWithRecipients);
+            mFailedMessagesWithRecipients = new MessagesWithRecipientsLiveData(Status.FAILED, mDb);
         }
         return mFailedMessagesWithRecipients;
     }

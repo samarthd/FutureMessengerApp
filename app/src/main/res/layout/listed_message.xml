@@ -1,47 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:orientation="horizontal"
+    android:background="@drawable/listed_message_background">
 
-    <TextView
-        android:id="@+id/message_content_label_tv"
-        android:text="@string/message_content_label"
-        android:textStyle="bold"
-        android:layout_width="match_parent"
+    <ImageView
+        android:layout_width="60dp"
         android:layout_height="match_parent"
-        app:layout_constraintBottom_toTopOf="@id/message_content_tv"/>
-    <TextView
-        android:id="@+id/message_content_tv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toBottomOf="@id/message_content_label_tv"/>
-    <TextView
-        android:id="@+id/recipients_label_tv"
-        android:text="@string/recipients_label_plural"
-        android:textStyle="bold"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toBottomOf="@id/message_content_tv"/>
-    <TextView
-        android:id="@+id/recipients_tv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toBottomOf="@id/recipients_label_tv"/>
+        android:padding="8dp"
+        android:layout_gravity="center"
+        android:background="@drawable/listed_message_icon_background"
+        android:src="@drawable/text_icon" />
 
-    <TextView
-        android:id="@+id/scheduled_time_label_tv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/scheduled_time_label"
-        android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/recipients_tv"/>
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:paddingStart="15dp">
 
-    <TextView
-        android:id="@+id/scheduled_time_tv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toBottomOf="@id/scheduled_time_label_tv"/>
+        <TextView
+            android:id="@+id/message_content_label_tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/message_content_label"
+            android:textStyle="bold" />
 
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:id="@+id/message_content_tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/recipients_label_tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/recipients_label_plural"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/recipients_tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/scheduled_time_label_tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/scheduled_time_label"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/scheduled_time_tv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+</LinearLayout>

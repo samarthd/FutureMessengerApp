@@ -43,7 +43,7 @@ public interface MessageDao {
      * @return The message objects found in the database with that status code.
      */
     @Query("SELECT * FROM messages WHERE status_code = :statusCode ORDER BY scheduled_datetime ASC")
-    public LiveData<List<Message>> findAllMessagesWithStatusCode(String statusCode);
+    public List<Message> findAllMessagesWithStatusCode(String statusCode);
 
     /**
      * Deletes the row in the database which has a matching primary key.

@@ -1,7 +1,9 @@
 package cs371m.hermes.futuremessenger.ui.main;
 
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
+import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,10 +19,20 @@ import android.widget.Toast;
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import cs371m.hermes.futuremessenger.R;
+import cs371m.hermes.futuremessenger.persistence.AppDatabase;
+import cs371m.hermes.futuremessenger.persistence.entities.Message;
+import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
+import cs371m.hermes.futuremessenger.persistence.entities.embedded.Status;
+import cs371m.hermes.futuremessenger.persistence.entities.join.MessageRecipientJoin;
+import cs371m.hermes.futuremessenger.persistence.repositories.isolated.MessageDao;
+import cs371m.hermes.futuremessenger.persistence.repositories.isolated.RecipientDao;
+import cs371m.hermes.futuremessenger.persistence.repositories.joined.MessageRecipientJoinDao;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -60,11 +72,66 @@ public class MainActivity extends AppCompatActivity {
             switch(actionItem.getId()) {
                 case R.id.floating_action_menu_message_button:
                     Toast.makeText(MainActivity.this, "Begetabo", Toast.LENGTH_SHORT).show();
+                    //TODO Delete
+                    new TempInsertTask(this).execute();
+
                     return false;
                 default:
                     return false;
             }
         });
+    }
+
+    //TODO delete
+    private static class TempInsertTask extends AsyncTask<Void, Void, Integer> {
+
+        private WeakReference<Activity> weakActivity;
+        public TempInsertTask(Activity activity) {
+            this.weakActivity = new WeakReference<>(activity);
+        }
+
+        @Override
+        protected Integer doInBackground(Void... voids) {
+            insertManyMessages(10L);
+            return null;
+        }
+
+        //TODO delete this
+        private void insertManyMessages(Long j) {
+            AppDatabase db = AppDatabase.getInstance(weakActivity.get());
+            MessageDao mDao = db.messageDao();
+            RecipientDao rDao = db.recipientDao();
+            MessageRecipientJoinDao mrjDao = db.messageRecipientJoinDao();
+            for(long i = 0; i < j; i++) {
+                Message message = createMessageWithVal(i);
+                Long messageId = mDao.createOrUpdateMessage(message);
+                Recipient recipient = createRecipientWithVal(i);
+                Long recipientId = rDao.createOrUpdateRecipient(recipient);
+                MessageRecipientJoin join = new MessageRecipientJoin();
+                join.setRecipientID(recipientId);
+                join.setMessageID(messageId);
+                mrjDao.insert(join);
+            }
+        }
+        private Message createMessageWithVal(Long val) {
+            Message message = new Message();
+            message.setTextContent("Text content " + val);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(val);
+            message.setScheduledDateTime(calendar);
+            cs371m.hermes.futuremessenger.persistence.entities.embedded.Status status = new cs371m.hermes.futuremessenger.persistence.entities.embedded.Status();
+            status.setCode(cs371m.hermes.futuremessenger.persistence.entities.embedded.Status.SCHEDULED);
+            status.setDescription("Status description " + val);
+            message.setStatus(status);
+            return message;
+        }
+
+        private Recipient createRecipientWithVal(Long val) {
+            Recipient recipient = new Recipient();
+            recipient.setName("Recipient name " + val);
+            recipient.setPhoneNumber("Phone number " + val);
+            return recipient;
+        }
     }
 
     private void setUpViewPager(ViewPager viewPager) {

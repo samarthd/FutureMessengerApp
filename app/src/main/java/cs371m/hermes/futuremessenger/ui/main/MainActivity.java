@@ -66,17 +66,35 @@ public class MainActivity extends AppCompatActivity {
         mSpeedDialView.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.floating_action_menu_message_button, R.drawable.text_icon)
                         .setFabBackgroundColor(getResources().getColor(R.color.colorPrimary))
-                        .setLabel(getResources().getString(R.string.new_text_message_label))
+                        .setLabel("SCHEDULED")
                         .setLabelColor(getResources().getColor(R.color.colorPrimary))
                         .setLabelBackgroundColor(getResources().getColor(R.color.plain_white))
                 .create());
+        mSpeedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.floating_action_menu_message_button2, R.drawable.text_icon)
+                        .setFabBackgroundColor(getResources().getColor(R.color.colorPrimary))
+                        .setLabel("FAILED")
+                        .setLabelColor(getResources().getColor(R.color.colorPrimary))
+                        .setLabelBackgroundColor(getResources().getColor(R.color.plain_white))
+                .create());
+        mSpeedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.floating_action_menu_message_button3, R.drawable.text_icon)
+                        .setFabBackgroundColor(getResources().getColor(R.color.colorPrimary))
+                        .setLabel("SENT")
+                        .setLabelColor(getResources().getColor(R.color.colorPrimary))
+                        .setLabelBackgroundColor(getResources().getColor(R.color.plain_white))
+                        .create());
         mSpeedDialView.setOnActionSelectedListener(actionItem -> {
             switch(actionItem.getId()) {
                 case R.id.floating_action_menu_message_button:
-                    Toast.makeText(MainActivity.this, "Begetabo", Toast.LENGTH_SHORT).show();
                     //TODO Delete
-                    new TempInsertTask(this).execute();
-
+                    new TempInsertTask(this).execute(Status.SCHEDULED);
+                    return false;
+                case R.id.floating_action_menu_message_button2:
+                    new TempInsertTask(this).execute(Status.FAILED);
+                    return false;
+                case R.id.floating_action_menu_message_button3:
+                    new TempInsertTask(this).execute(Status.SENT);
                     return false;
                 default:
                     return false;
@@ -85,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //TODO delete
-    private static class TempInsertTask extends AsyncTask<Void, Void, Integer> {
+    private static class TempInsertTask extends AsyncTask<String, Void, Integer> {
 
         private WeakReference<Activity> weakActivity;
         public TempInsertTask(Activity activity) {
@@ -93,19 +111,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        protected Integer doInBackground(Void... voids) {
-            insertManyMessages(10L);
+        protected Integer doInBackground(String... voids) {
+            insertManyMessages(10L, voids[0]);
             return null;
         }
 
         //TODO delete this
-        private void insertManyMessages(Long j) {
+        private void insertManyMessages(Long j, String messageStatus) {
             AppDatabase db = AppDatabase.getInstance(weakActivity.get());
             MessageDao mDao = db.messageDao();
             RecipientDao rDao = db.recipientDao();
             MessageRecipientJoinDao mrjDao = db.messageRecipientJoinDao();
             for(long i = 0; i < j; i++) {
-                Message message = createMessageWithVal(i);
+                Message message = createMessageWithVal(i, messageStatus);
                 Long messageId = mDao.createOrUpdateMessage(message);
                 Recipient recipient = createRecipientWithVal(i);
                 Long recipientId = rDao.createOrUpdateRecipient(recipient);
@@ -124,14 +142,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-        private Message createMessageWithVal(Long val) {
+        private Message createMessageWithVal(Long val, String messageStatus) {
             Message message = new Message();
             message.setTextContent("Text content " + val);
             Calendar calendar = Calendar.getInstance();
             calendar.set(2009, Calendar.SEPTEMBER, 30, 12, 59); // longest possible date time
             message.setScheduledDateTime(calendar);
             cs371m.hermes.futuremessenger.persistence.entities.embedded.Status status = new cs371m.hermes.futuremessenger.persistence.entities.embedded.Status();
-            status.setCode(cs371m.hermes.futuremessenger.persistence.entities.embedded.Status.SCHEDULED);
+            status.setCode(messageStatus);
             status.setDescription("Status description " + val);
             message.setStatus(status);
             return message;
@@ -154,7 +172,6 @@ public class MainActivity extends AppCompatActivity {
                                          getString(R.string.scheduled_tab_title));
         fragmentPagerAdapter.addFragment(new FailedMessagesFragment(),
                 getString(R.string.failed_tab_title));
-//        fragmentPagerAdapter.addFragment();
         mViewPager.setAdapter(fragmentPagerAdapter);
     }
 

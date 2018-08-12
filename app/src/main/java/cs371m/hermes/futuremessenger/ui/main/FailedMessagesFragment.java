@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,19 @@ public class FailedMessagesFragment extends Fragment {
 
         // Add the current fragment as an observer to any changes in stored messages
         mModel.getFailedMessagesWithRecipients().observe(this,
-                failedMessages -> mMessageAdapter.updateMessageList(failedMessages));
+                failedMessages -> {
+                        mMessageAdapter.updateMessageList(failedMessages);
+                        if(failedMessages.size() == 0) {
+                            Log.d("Failed Message Fragment", "Failed message update - empty list so setting visibility");
+                            getActivity().findViewById(R.id.failed_messages_recycler_view).setVisibility(View.GONE);
+                            getActivity().findViewById(R.id.failed_messages_empty_layout).setVisibility(View.VISIBLE);
+                        }
+                        else {
+                            Log.d("Failed Message Fragment", "Failed message update - full list so setting visibility");
+                            getActivity().findViewById(R.id.failed_messages_recycler_view).setVisibility(View.VISIBLE);
+                            getActivity().findViewById(R.id.failed_messages_empty_layout).setVisibility(View.GONE);
+                        }
+                });
     }
 
 

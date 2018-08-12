@@ -12,7 +12,7 @@
     <string name="recipients_label_plural">RECIPIENTS</string>
     <string name="scheduled_time_label">Date &amp; Time to Send</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!--Failed fragment-->
+    <string name="no_failures_message">Smooth sailing - no failed messages, boss!</string>
 
 </resources>

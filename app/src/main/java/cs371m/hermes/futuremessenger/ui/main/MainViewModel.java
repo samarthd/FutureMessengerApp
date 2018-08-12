@@ -102,6 +102,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public LiveData<List<MessageWithRecipients>> getScheduledMessagesWithRecipients() {
         if (mScheduledMessagesWithRecipients == null) {
+            Log.d("In ViewModel", "Scheduled messages LiveData was null, initializing");
             mScheduledMessagesWithRecipients =
                     new MessagesWithRecipientsLiveData(Status.SCHEDULED, mDb);
         }
@@ -110,6 +111,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public LiveData<List<MessageWithRecipients>> getSentMessagesWithRecipients() {
         if (mSentMessagesWithRecipients == null) {
+            Log.d("In ViewModel", "Sent messages LiveData was null, initializing");
             mSentMessagesWithRecipients = new MessagesWithRecipientsLiveData(Status.SENT, mDb);
         }
         return mSentMessagesWithRecipients;
@@ -117,6 +119,7 @@ public class MainViewModel extends AndroidViewModel {
 
     public LiveData<List<MessageWithRecipients>> getFailedMessagesWithRecipients() {
         if (mFailedMessagesWithRecipients == null) {
+            Log.d("In ViewModel", "Failed messages LiveData was null, initializing");
             mFailedMessagesWithRecipients = new MessagesWithRecipientsLiveData(Status.FAILED, mDb);
         }
         return mFailedMessagesWithRecipients;

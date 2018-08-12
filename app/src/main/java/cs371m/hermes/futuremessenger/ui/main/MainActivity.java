@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity {
 
         mTabLayout = findViewById(R.id.main_tab_layout);
         mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.getTabAt(1).select(); // index of scheduled
+
 
         setUpFloatingActionMenu();
     }
@@ -146,10 +148,12 @@ public class MainActivity extends AppCompatActivity {
     private void setUpViewPager(ViewPager viewPager) {
         MainFragmentPagerAdapter fragmentPagerAdapter
                 = new MainFragmentPagerAdapter(getSupportFragmentManager());
+        fragmentPagerAdapter.addFragment(new SentMessagesFragment(),
+                getString(R.string.sent_tab_title));
         fragmentPagerAdapter.addFragment(new ScheduledMessagesFragment(),
                                          getString(R.string.scheduled_tab_title));
-//        // TODO add Sent and Failed fragments
-//        fragmentPagerAdapter.addFragment();
+        fragmentPagerAdapter.addFragment(new FailedMessagesFragment(),
+                getString(R.string.failed_tab_title));
 //        fragmentPagerAdapter.addFragment();
         mViewPager.setAdapter(fragmentPagerAdapter);
     }

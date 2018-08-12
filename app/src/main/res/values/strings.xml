@@ -7,9 +7,9 @@
     <string name="sent_tab_title">Sent</string>
     <string name="failed_tab_title">Failed</string>
     <!--Message list item labels-->
-    <string name="message_content_label">Message</string>
-    <string name="recipients_label_singular">Recipient</string>
-    <string name="recipients_label_plural">Recipients</string>
+    <string name="message_content_label">MESSAGE</string>
+    <string name="recipients_label_singular">RECIPIENT</string>
+    <string name="recipients_label_plural">RECIPIENTS</string>
     <string name="scheduled_time_label">Date &amp; Time to Send</string>
 
 </resources>

@@ -14,20 +14,27 @@
             android:id="@+id/main_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:layout_scrollFlags="scroll|enterAlways" />
+            app:layout_scrollFlags="scroll|enterAlways"
+            android:theme="@style/FutureMessengerToolbar"/>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/main_tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:tabMode="fixed"
-            app:tabGravity="fill"/>
+            app:tabGravity="center"
+            app:tabTextAppearance="@style/FutureMessengerTabTextAppearance"
+            app:tabSelectedTextColor="@color/plain_white"
+            app:tabIndicatorColor="@color/plain_white"
+            android:background="@color/colorPrimary"
+            app:tabBackground="@drawable/tab_background_color_selector" />
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/main_view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
     <com.leinardi.android.speeddial.SpeedDialView
         android:id="@+id/floating_action_menu"

@@ -10,4 +10,15 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!--Style for Toolbar -->
+    <style name="FutureMessengerToolbar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+    </style>
+
+    <style name="FutureMessengerTabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textColor">@color/plain_white</item>
+        <item name="android:textStyle">bold|italic</item>
+    </style>
+
 </resources>

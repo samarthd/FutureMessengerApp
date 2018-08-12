@@ -3,8 +3,8 @@
     <color name="colorPrimary">#00BCD4</color>
     <color name="colorPrimaryDark">#00ACC1</color>
     <color name="colorPrimaryLight">#26c6da</color>
-    <color name="colorAccent">#f4c245</color>
-    <color name="pressedAccent">#f4d589</color>
+    <color name="colorAccent">#ffa000</color>
+    <color name="pressedAccent">#ff8f00</color>
     <color name="menuOption">#00BCD4</color>
     <color name="pressedMenuOption">#80DEEA</color>
     <color name="plain_white">#FFFFFF</color>

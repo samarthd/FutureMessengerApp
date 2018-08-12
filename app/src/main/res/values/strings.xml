@@ -9,7 +9,7 @@
     <!--Message list item labels-->
     <string name="message_content_label">Message</string>
     <string name="recipients_label_singular">Recipient</string>
-    <string name="recipients_label_plural">Recipient</string>
+    <string name="recipients_label_plural">Recipients</string>
     <string name="scheduled_time_label">Date &amp; Time to Send</string>
 
 </resources>

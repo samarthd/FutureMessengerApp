@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -23,8 +24,9 @@ import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 
     private final List<MessageWithRecipients> mMessagesWithRecipients;
-    private final DateFormat mDateTimeFormatter =
-            DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.SHORT);
+    private final DateFormat mDayFormatter = new SimpleDateFormat("EEEE");
+    private final DateFormat mDateFormatter = DateFormat.getDateInstance(DateFormat.LONG);
+    private final DateFormat mTimeFormatter = DateFormat.getTimeInstance(DateFormat.SHORT);
 
     public MessageAdapter() {
         mMessagesWithRecipients = new ArrayList<>();
@@ -62,19 +64,44 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
                 holder.listedMessageView.findViewById(R.id.message_content_tv);
         messageContentTv.setText(message.getTextContent());
 
+        if (recipients.size() > 1) {
+            TextView recipientLabelTv =
+                    holder.listedMessageView.findViewById(R.id.recipients_label_tv);
+            recipientLabelTv.setText(R.string.recipients_label_plural);
+        }
         TextView recipientsTv =
                 holder.listedMessageView.findViewById(R.id.recipients_tv);
         recipientsTv.setText(getConcatenatedRecipientNames(recipients));
 
+        TextView scheduledDayTv =
+                holder.listedMessageView.findViewById(R.id.scheduled_day_tv);
+        scheduledDayTv.setText(getFormattedDayOnly(message));
+
+        TextView scheduledDateTv =
+                holder.listedMessageView.findViewById(R.id.scheduled_date_tv);
+        scheduledDateTv.setText(getFormattedDateOnly(message));
+
         TextView scheduledTimeTv =
                 holder.listedMessageView.findViewById(R.id.scheduled_time_tv);
-        scheduledTimeTv.setText(getFormattedDateAndTime(message));
+        scheduledTimeTv.setText(getFormattedTimeOnly(message));
+
 
     }
 
-    private String getFormattedDateAndTime(Message message) {
+    private String getFormattedTimeOnly(Message message) {
         Calendar scheduledDateTime = message.getScheduledDateTime();
-        return mDateTimeFormatter.format(scheduledDateTime.getTime());
+        return mTimeFormatter.format(scheduledDateTime.getTime()).toUpperCase();
+    }
+
+    private String getFormattedDateOnly(Message message) {
+        Calendar scheduledDate = message.getScheduledDateTime();
+        return mDateFormatter.format(scheduledDate.getTime()).toUpperCase();
+
+    }
+
+    private String getFormattedDayOnly(Message message) {
+        Calendar scheduledDate = message.getScheduledDateTime();
+        return mDayFormatter.format(scheduledDate.getTime()).toUpperCase();
     }
 
     private String getConcatenatedRecipientNames(List<Recipient> recipients) {

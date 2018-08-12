@@ -111,13 +111,22 @@ public class MainActivity extends AppCompatActivity {
                 join.setRecipientID(recipientId);
                 join.setMessageID(messageId);
                 mrjDao.insert(join);
+
+                if(i % 2 == 0) {
+                    Recipient recipient2 = createRecipientWithVal(i * 10000);
+                    Long recipientId2 = rDao.createOrUpdateRecipient(recipient2);
+                    MessageRecipientJoin join2 = new MessageRecipientJoin();
+                    join2.setRecipientID(recipientId2);
+                    join2.setMessageID(messageId);
+                    mrjDao.insert(join2);
+                }
             }
         }
         private Message createMessageWithVal(Long val) {
             Message message = new Message();
             message.setTextContent("Text content " + val);
             Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(val);
+            calendar.set(2009, Calendar.SEPTEMBER, 30, 12, 59); // longest possible date time
             message.setScheduledDateTime(calendar);
             cs371m.hermes.futuremessenger.persistence.entities.embedded.Status status = new cs371m.hermes.futuremessenger.persistence.entities.embedded.Status();
             status.setCode(cs371m.hermes.futuremessenger.persistence.entities.embedded.Status.SCHEDULED);

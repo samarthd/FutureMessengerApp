@@ -17,6 +17,38 @@
         android:src="@drawable/text_icon" />
 
     <LinearLayout
+        android:layout_width="150dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="5dp"
+        android:background="@drawable/listed_message_datetime_background">
+        <TextView
+            android:id="@+id/scheduled_day_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textStyle="bold|italic"
+            android:textColor="@color/plain_white"/>
+        <TextView
+            android:id="@+id/scheduled_date_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textStyle="bold|italic"
+            android:textColor="@color/plain_white"/>
+        <TextView
+            android:id="@+id/scheduled_time_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textStyle="bold|italic"
+            android:textColor="@color/plain_white"/>
+    </LinearLayout>
+
+
+    <LinearLayout
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -29,7 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/message_content_label"
-            android:textStyle="bold" />
+            android:textStyle="bold|italic" />
 
         <TextView
             android:id="@+id/message_content_tv"
@@ -40,25 +72,14 @@
             android:id="@+id/recipients_label_tv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/recipients_label_plural"
-            android:textStyle="bold" />
+            android:text="@string/recipients_label_singular"
+            android:textStyle="bold|italic" />
 
         <TextView
             android:id="@+id/recipients_tv"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <TextView
-            android:id="@+id/scheduled_time_label_tv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/scheduled_time_label"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/scheduled_time_tv"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
     </LinearLayout>
 
 </LinearLayout>

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#00BCD4</color>
-    <color name="colorPrimaryDark">#00ACC1</color>
+    <color name="colorPrimary">#00acc1</color>
+    <color name="colorPrimaryDark">#0097a7</color>
     <color name="colorPrimaryLight">#26c6da</color>
+    <color name="colorTertiary">#c2185b</color>
     <color name="colorAccent">#ffa000</color>
     <color name="pressedAccent">#ff8f00</color>
     <color name="menuOption">#00BCD4</color>
@@ -10,6 +11,5 @@
     <color name="plain_white">#FFFFFF</color>
     <color name="tab_background_selected">@color/colorAccent</color>
     <color name="tab_background_unselected">@color/colorPrimary</color>
-    <color name="colorTertiary">#c2185b</color>
     <color name="offWhite">#f5f5f5</color>
 </resources>

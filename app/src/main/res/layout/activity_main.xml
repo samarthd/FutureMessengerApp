@@ -36,11 +36,18 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 
+    <com.leinardi.android.speeddial.SpeedDialOverlayLayout
+        android:id="@+id/floating_action_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <com.leinardi.android.speeddial.SpeedDialView
         android:id="@+id/floating_action_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        app:sdMainFabClosedSrc="@drawable/ic_plus_icon" />
+        app:sdMainFabClosedSrc="@drawable/ic_plus_icon"
+        app:sdOverlayLayout="@id/floating_action_overlay"
+        app:layout_behavior="@string/speeddial_scrolling_view_snackbar_behavior"/>
 
 </android.support.design.widget.CoordinatorLayout>

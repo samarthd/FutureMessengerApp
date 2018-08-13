@@ -47,7 +47,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         app:sdMainFabClosedSrc="@drawable/ic_plus_icon"
-        app:sdOverlayLayout="@id/floating_action_overlay"
-        app:layout_behavior="@string/speeddial_scrolling_view_snackbar_behavior"/>
+        app:sdOverlayLayout="@id/floating_action_overlay" />
 
 </android.support.design.widget.CoordinatorLayout>

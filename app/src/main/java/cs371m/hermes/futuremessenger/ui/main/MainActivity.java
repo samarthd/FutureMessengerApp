@@ -23,6 +23,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 import cs371m.hermes.futuremessenger.R;
 import cs371m.hermes.futuremessenger.persistence.AppDatabase;
@@ -84,6 +85,27 @@ public class MainActivity extends AppCompatActivity {
                         .setLabelColor(getResources().getColor(R.color.colorPrimary))
                         .setLabelBackgroundColor(getResources().getColor(R.color.plain_white))
                         .create());
+        mSpeedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.floating_action_menu_message_button4, R.drawable.text_icon)
+                        .setFabBackgroundColor(getResources().getColor(R.color.colorPrimary))
+                        .setLabel("DELETE SCHEDULED")
+                        .setLabelColor(getResources().getColor(R.color.colorPrimary))
+                        .setLabelBackgroundColor(getResources().getColor(R.color.plain_white))
+                        .create());
+        mSpeedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.floating_action_menu_message_button5, R.drawable.text_icon)
+                        .setFabBackgroundColor(getResources().getColor(R.color.colorPrimary))
+                        .setLabel("DELETE FAILED")
+                        .setLabelColor(getResources().getColor(R.color.colorPrimary))
+                        .setLabelBackgroundColor(getResources().getColor(R.color.plain_white))
+                        .create());
+        mSpeedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.floating_action_menu_message_button6, R.drawable.text_icon)
+                        .setFabBackgroundColor(getResources().getColor(R.color.colorPrimary))
+                        .setLabel("DELETE SENT")
+                        .setLabelColor(getResources().getColor(R.color.colorPrimary))
+                        .setLabelBackgroundColor(getResources().getColor(R.color.plain_white))
+                        .create());
         mSpeedDialView.setOnActionSelectedListener(actionItem -> {
             switch(actionItem.getId()) {
                 case R.id.floating_action_menu_message_button:
@@ -95,6 +117,16 @@ public class MainActivity extends AppCompatActivity {
                     return false;
                 case R.id.floating_action_menu_message_button3:
                     new TempInsertTask(this).execute(Status.SENT);
+                    return false;
+                case R.id.floating_action_menu_message_button4:
+                    //TODO Delete
+                    new TempDeleteTask(this).execute(Status.SCHEDULED);
+                    return false;
+                case R.id.floating_action_menu_message_button5:
+                    new TempDeleteTask(this).execute(Status.FAILED);
+                    return false;
+                case R.id.floating_action_menu_message_button6:
+                    new TempDeleteTask(this).execute(Status.SENT);
                     return false;
                 default:
                     return false;
@@ -147,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
             message.setTextContent("Text content " + val);
             Calendar calendar = Calendar.getInstance();
             calendar.set(2009, Calendar.SEPTEMBER, 30, 12, 59); // longest possible date time
+            calendar.setTimeInMillis(calendar.getTimeInMillis() + val * 1000000);
             message.setScheduledDateTime(calendar);
             cs371m.hermes.futuremessenger.persistence.entities.embedded.Status status = new cs371m.hermes.futuremessenger.persistence.entities.embedded.Status();
             status.setCode(messageStatus);
@@ -160,6 +193,37 @@ public class MainActivity extends AppCompatActivity {
             recipient.setName("Recipient name " + val);
             recipient.setPhoneNumber("Phone number " + val);
             return recipient;
+        }
+    }
+
+    private static class TempDeleteTask extends AsyncTask<String, Void, Integer> {
+
+        private WeakReference<Activity> weakActivity;
+        public TempDeleteTask(Activity activity) {
+            this.weakActivity = new WeakReference<>(activity);
+        }
+
+        @Override
+        protected Integer doInBackground(String... voids) {
+            deleteManyMessages(10L, voids[0]);
+            return null;
+        }
+
+        //TODO delete this
+        private void deleteManyMessages(Long j, String messageStatus) {
+            AppDatabase db = AppDatabase.getInstance(weakActivity.get());
+            MessageDao mDao = db.messageDao();
+            RecipientDao rDao = db.recipientDao();
+            MessageRecipientJoinDao mrjDao = db.messageRecipientJoinDao();
+            Random r = new Random();
+            Long valToDelete = (long) r.nextInt(10);
+            List<Message> messages = mDao.findAllMessagesWithStatusCode(messageStatus);
+            for (Message message: messages) {
+                String content = message.getTextContent();
+                if (content.contains(valToDelete.toString())) {
+                    mDao.deleteMessage(message);
+                }
+            }
         }
     }
 

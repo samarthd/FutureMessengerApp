@@ -4,5 +4,8 @@
     <item type="id" name="floating_action_menu_message_button" />
     <item type="id" name="floating_action_menu_message_button2" />
     <item type="id" name="floating_action_menu_message_button3" />
+    <item type="id" name="floating_action_menu_message_button4" />
+    <item type="id" name="floating_action_menu_message_button5" />
+    <item type="id" name="floating_action_menu_message_button6" />
 
 </resources>

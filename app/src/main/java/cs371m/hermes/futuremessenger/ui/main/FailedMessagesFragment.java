@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import cs371m.hermes.futuremessenger.R;
+import jp.wasabeef.recyclerview.animators.ScaleInAnimator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,6 +63,7 @@ public class FailedMessagesFragment extends Fragment {
                 inflater.inflate(R.layout.fragment_failed_messages, container, false);
         // Get a MessageAdapter to populate the RecyclerView
         RecyclerView recyclerView = fragmentView.findViewById(R.id.failed_messages_recycler_view);
+        recyclerView.setItemAnimator(new ScaleInAnimator());
         recyclerView.setAdapter(mMessageAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return fragmentView;

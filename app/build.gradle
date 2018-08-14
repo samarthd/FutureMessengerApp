@@ -61,6 +61,11 @@ dependencies {
      */
     implementation "com.leinardi.android:speed-dial:1.0.2"
 
+    /**
+     * RecyclerView animators
+     */
+    implementation 'jp.wasabeef:recyclerview-animators:2.3.0'
+
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.1'
 

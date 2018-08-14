@@ -13,6 +13,14 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import cs371m.hermes.futuremessenger.R;
+import jp.wasabeef.recyclerview.animators.LandingAnimator;
+import jp.wasabeef.recyclerview.animators.ScaleInAnimator;
+import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator;
+import jp.wasabeef.recyclerview.animators.ScaleInLeftAnimator;
+import jp.wasabeef.recyclerview.animators.ScaleInTopAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInDownAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,6 +58,7 @@ public class ScheduledMessagesFragment extends Fragment {
                 inflater.inflate(R.layout.fragment_scheduled_messages, container, false);
         // Get a MessageAdapter to populate the RecyclerView
         RecyclerView recyclerView = fragmentView.findViewById(R.id.scheduled_messages_recycler_view);
+        recyclerView.setItemAnimator(new ScaleInAnimator());
         recyclerView.setAdapter(mMessageAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return fragmentView;

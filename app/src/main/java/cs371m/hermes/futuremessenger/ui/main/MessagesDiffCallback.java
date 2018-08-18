@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.util.DiffUtil;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cs371m.hermes.futuremessenger.persistence.entities.Message;

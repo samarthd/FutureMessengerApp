@@ -1,5 +1,6 @@
 package cs371m.hermes.futuremessenger.ui.main;
 
+import android.arch.persistence.room.util.StringUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
@@ -8,8 +9,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -193,14 +199,17 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         result.append(getRecipientNameOrPhone(recipients.get(0)));
 
         for(int i = 1; i < recipients.size(); i++) {
-            result.append(", ");
+            result.append("\n");
             result.append(getRecipientNameOrPhone(recipients.get(i)));
         }
 
         return result.toString();
     }
 
-    // Returns the recipient's name, or the phone number if there is no name.
+    /**
+     * Returns the recipient's name, or just the phone number
+     * if there is no name.
+     */
     private static String getRecipientNameOrPhone(Recipient recipient) {
         if (recipient.getName() == null || recipient.getName().equals(""))
             return recipient.getPhoneNumber();

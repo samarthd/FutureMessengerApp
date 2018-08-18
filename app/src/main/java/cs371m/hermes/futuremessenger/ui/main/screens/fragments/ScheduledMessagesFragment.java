@@ -1,4 +1,4 @@
-package cs371m.hermes.futuremessenger.ui.main;
+package cs371m.hermes.futuremessenger.ui.main.screens.fragments;
 
 
 import android.arch.lifecycle.ViewModelProviders;
@@ -9,18 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import cs371m.hermes.futuremessenger.R;
-import jp.wasabeef.recyclerview.animators.LandingAnimator;
-import jp.wasabeef.recyclerview.animators.ScaleInAnimator;
-import jp.wasabeef.recyclerview.animators.ScaleInBottomAnimator;
-import jp.wasabeef.recyclerview.animators.ScaleInLeftAnimator;
-import jp.wasabeef.recyclerview.animators.ScaleInTopAnimator;
-import jp.wasabeef.recyclerview.animators.SlideInDownAnimator;
-import jp.wasabeef.recyclerview.animators.SlideInLeftAnimator;
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
+import cs371m.hermes.futuremessenger.ui.main.MainViewModel;
+import cs371m.hermes.futuremessenger.ui.main.adapters.message.ScheduledMessageAdapter;
+import cs371m.hermes.futuremessenger.ui.main.animators.MessageAnimator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,7 +21,7 @@ import jp.wasabeef.recyclerview.animators.SlideInUpAnimator;
 public class ScheduledMessagesFragment extends Fragment {
 
     private MainViewModel mModel;
-    private MessageAdapter mMessageAdapter;
+    private ScheduledMessageAdapter mMessageAdapter;
 
     public ScheduledMessagesFragment() {
         // Required empty public constructor
@@ -41,7 +34,7 @@ public class ScheduledMessagesFragment extends Fragment {
         // Get the ViewModel from the activity, which means each fragment will have the same
         mModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
 
-        mMessageAdapter = new MessageAdapter();
+        mMessageAdapter = new ScheduledMessageAdapter();
 
         // Add the current fragment as an observer to any changes in stored messages
         mModel.getScheduledMessagesWithRecipients().observe(this,
@@ -58,7 +51,7 @@ public class ScheduledMessagesFragment extends Fragment {
                 inflater.inflate(R.layout.fragment_scheduled_messages, container, false);
         // Get a MessageAdapter to populate the RecyclerView
         RecyclerView recyclerView = fragmentView.findViewById(R.id.scheduled_messages_recycler_view);
-        recyclerView.setItemAnimator(new ScaleInAnimator());
+        recyclerView.setItemAnimator(new MessageAnimator());
         recyclerView.setAdapter(mMessageAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return fragmentView;

@@ -4,12 +4,12 @@ import android.os.Bundle;
 import android.support.v7.util.DiffUtil;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
+import cs371m.hermes.futuremessenger.ui.main.adapters.message.MessageAdapter;
 
 /**
  * DiffUtil callback implementation that compares two lists of messages with recipients

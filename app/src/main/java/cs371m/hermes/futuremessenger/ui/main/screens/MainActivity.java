@@ -1,26 +1,18 @@
-package cs371m.hermes.futuremessenger.ui.main;
+package cs371m.hermes.futuremessenger.ui.main.screens;
 
 
 import android.app.Activity;
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.AsyncTask;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.Toast;
 
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
@@ -34,6 +26,10 @@ import cs371m.hermes.futuremessenger.persistence.entities.join.MessageRecipientJ
 import cs371m.hermes.futuremessenger.persistence.repositories.isolated.MessageDao;
 import cs371m.hermes.futuremessenger.persistence.repositories.isolated.RecipientDao;
 import cs371m.hermes.futuremessenger.persistence.repositories.joined.MessageRecipientJoinDao;
+import cs371m.hermes.futuremessenger.ui.main.adapters.MainFragmentPagerAdapter;
+import cs371m.hermes.futuremessenger.ui.main.screens.fragments.FailedMessagesFragment;
+import cs371m.hermes.futuremessenger.ui.main.screens.fragments.ScheduledMessagesFragment;
+import cs371m.hermes.futuremessenger.ui.main.screens.fragments.SentMessagesFragment;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:animateLayoutChanges="true">
+
+    <include layout="@layout/listed_message" />
+
+    <!--Options layout that is made visible when a user clicks on a message.-->
+    <LinearLayout
+        android:id="@+id/options_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        android:background="@color/messageOptionsBackground"
+        android:padding="10dp">
+        <ImageView
+            android:id="@+id/edit_option"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_edit_white_24dp"
+            android:background="?attr/selectableItemBackground"/>
+        <ImageView
+            android:id="@+id/delete_option"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_delete_white_24dp"
+            android:background="?attr/selectableItemBackground" />
+    </LinearLayout>
+</LinearLayout>

@@ -21,12 +21,12 @@ import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
 import cs371m.hermes.futuremessenger.ui.main.MessagesDiffCallback;
-import cs371m.hermes.futuremessenger.ui.main.adapters.message.viewholders.MessageDetailsViewHolder;
+import cs371m.hermes.futuremessenger.ui.main.adapters.message.viewholders.MessageViewHolder;
 
 /**
  * RecyclerView adapter for lists of messages.
  */
-public class MessageAdapter extends RecyclerView.Adapter<MessageDetailsViewHolder> {
+public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
 
     protected final List<MessageWithRecipients> mMessagesWithRecipients = new ArrayList<>();
 
@@ -53,6 +53,11 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageDetailsViewHolde
     }
 
     @Override
+    public long getItemId(int position) {
+        return mMessagesWithRecipients.get(position).message.getId();
+    }
+
+    @Override
     public int getItemCount() {
         Log.d("In messageadapter", "Get item count " + mMessagesWithRecipients.size());
         return mMessagesWithRecipients.size();
@@ -63,14 +68,18 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageDetailsViewHolde
      */
     @NonNull
     @Override
-    public MessageDetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View listedMessageView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.listed_message, parent, false);
-        return new MessageDetailsViewHolder(listedMessageView);
+                .inflate(R.layout.listed_message_details, parent, false);
+        return new MessageViewHolder(listedMessageView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MessageDetailsViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
+
+        // always use getAdapterPosition for guaranteed correctness
+        position = holder.getAdapterPosition();
+
         MessageWithRecipients currentMessageWithRecipients = mMessagesWithRecipients.get(position);
         Message message = currentMessageWithRecipients.message;
         List<Recipient> recipients = currentMessageWithRecipients.recipients;
@@ -93,9 +102,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageDetailsViewHolde
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MessageDetailsViewHolder holder, int position,
+    public void onBindViewHolder(@NonNull MessageViewHolder holder, int position,
                                  @NonNull List<Object> payloads) {
         Log.d("In MessageAdapter", "onBindViewHolder partial bind method, about to update TVs");
+
+        // always use getAdapterPosition for guaranteed correctness
+        position = holder.getAdapterPosition();
 
         if(!payloads.isEmpty()) {
             Log.d("In MessageAdapter", "Payloads were not empty");
@@ -123,21 +135,21 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageDetailsViewHolde
         }
     }
 
-    private void updateMessageContentTv(MessageDetailsViewHolder holder, String messageContent) {
+    private void updateMessageContentTv(MessageViewHolder holder, String messageContent) {
         TextView messageContentTv =
-                holder.listedMessageView.findViewById(R.id.message_content_tv);
+                holder.fullMessageLayout.findViewById(R.id.message_content_tv);
         messageContentTv.setText(messageContent);
     }
 
-    private void updateRecipientsTv(MessageDetailsViewHolder holder, String concatenatedRecipientNames) {
+    private void updateRecipientsTv(MessageViewHolder holder, String concatenatedRecipientNames) {
         TextView recipientsTv =
-                holder.listedMessageView.findViewById(R.id.recipients_tv);
+                holder.fullMessageLayout.findViewById(R.id.recipients_tv);
         recipientsTv.setText(concatenatedRecipientNames);
     }
 
-    private void updateRecipientsLabelTv(MessageDetailsViewHolder holder, boolean isPlural) {
+    private void updateRecipientsLabelTv(MessageViewHolder holder, boolean isPlural) {
         TextView recipientLabelTv =
-                holder.listedMessageView.findViewById(R.id.recipients_label_tv);
+                holder.fullMessageLayout.findViewById(R.id.recipients_label_tv);
         if (isPlural) {
             recipientLabelTv.setText(R.string.recipients_label_plural);
         }
@@ -146,21 +158,21 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageDetailsViewHolde
         }
     }
 
-    private void updateScheduledDayTv(MessageDetailsViewHolder holder, String dayString) {
+    private void updateScheduledDayTv(MessageViewHolder holder, String dayString) {
         TextView scheduledDayTv =
-                holder.listedMessageView.findViewById(R.id.scheduled_day_tv);
+                holder.fullMessageLayout.findViewById(R.id.scheduled_day_tv);
         scheduledDayTv.setText(dayString);
     }
 
-    private void updateScheduledDateTv(MessageDetailsViewHolder holder, String dateString) {
+    private void updateScheduledDateTv(MessageViewHolder holder, String dateString) {
         TextView scheduledDateTv =
-                holder.listedMessageView.findViewById(R.id.scheduled_date_tv);
+                holder.fullMessageLayout.findViewById(R.id.scheduled_date_tv);
         scheduledDateTv.setText(dateString);
     }
 
-    private void updateScheduledTimeTv(MessageDetailsViewHolder holder, String timeString) {
+    private void updateScheduledTimeTv(MessageViewHolder holder, String timeString) {
         TextView scheduledTimeTv =
-                holder.listedMessageView.findViewById(R.id.scheduled_time_tv);
+                holder.fullMessageLayout.findViewById(R.id.scheduled_time_tv);
         scheduledTimeTv.setText(timeString);
     }
 

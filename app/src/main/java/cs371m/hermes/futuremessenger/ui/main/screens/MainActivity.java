@@ -2,11 +2,12 @@ package cs371m.hermes.futuremessenger.ui.main.screens;
 
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
 import com.leinardi.android.speeddial.SpeedDialActionItem;
@@ -14,8 +15,6 @@ import com.leinardi.android.speeddial.SpeedDialView;
 
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Random;
 
 import cs371m.hermes.futuremessenger.R;
 import cs371m.hermes.futuremessenger.persistence.AppDatabase;
@@ -65,42 +64,42 @@ public class MainActivity extends AppCompatActivity {
                         .setFabBackgroundColor(getResources().getColor(R.color.colorPrimary))
                         .setLabel("SCHEDULED")
                         .setLabelColor(getResources().getColor(R.color.colorPrimary))
-                        .setLabelBackgroundColor(getResources().getColor(R.color.plain_white))
+                        .setLabelBackgroundColor(Color.WHITE)
                 .create());
         mSpeedDialView.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.floating_action_menu_message_button2, R.drawable.text_icon)
                         .setFabBackgroundColor(getResources().getColor(R.color.colorPrimary))
                         .setLabel("FAILED")
                         .setLabelColor(getResources().getColor(R.color.colorPrimary))
-                        .setLabelBackgroundColor(getResources().getColor(R.color.plain_white))
+                        .setLabelBackgroundColor(Color.WHITE)
                 .create());
         mSpeedDialView.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.floating_action_menu_message_button3, R.drawable.text_icon)
                         .setFabBackgroundColor(getResources().getColor(R.color.colorPrimary))
                         .setLabel("SENT")
                         .setLabelColor(getResources().getColor(R.color.colorPrimary))
-                        .setLabelBackgroundColor(getResources().getColor(R.color.plain_white))
+                        .setLabelBackgroundColor(Color.WHITE)
                         .create());
         mSpeedDialView.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.floating_action_menu_message_button4, R.drawable.text_icon)
                         .setFabBackgroundColor(getResources().getColor(R.color.colorPrimary))
                         .setLabel("DELETE SCHEDULED")
                         .setLabelColor(getResources().getColor(R.color.colorPrimary))
-                        .setLabelBackgroundColor(getResources().getColor(R.color.plain_white))
+                        .setLabelBackgroundColor(Color.WHITE)
                         .create());
         mSpeedDialView.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.floating_action_menu_message_button5, R.drawable.text_icon)
                         .setFabBackgroundColor(getResources().getColor(R.color.colorPrimary))
                         .setLabel("DELETE FAILED")
                         .setLabelColor(getResources().getColor(R.color.colorPrimary))
-                        .setLabelBackgroundColor(getResources().getColor(R.color.plain_white))
+                        .setLabelBackgroundColor(Color.WHITE)
                         .create());
         mSpeedDialView.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.floating_action_menu_message_button6, R.drawable.text_icon)
                         .setFabBackgroundColor(getResources().getColor(R.color.colorPrimary))
                         .setLabel("DELETE SENT")
                         .setLabelColor(getResources().getColor(R.color.colorPrimary))
-                        .setLabelBackgroundColor(getResources().getColor(R.color.plain_white))
+                        .setLabelBackgroundColor(Color.WHITE)
                         .create());
         mSpeedDialView.setOnActionSelectedListener(actionItem -> {
             switch(actionItem.getId()) {
@@ -211,15 +210,7 @@ public class MainActivity extends AppCompatActivity {
             MessageDao mDao = db.messageDao();
             RecipientDao rDao = db.recipientDao();
             MessageRecipientJoinDao mrjDao = db.messageRecipientJoinDao();
-            Random r = new Random();
-            Long valToDelete = (long) r.nextInt(10);
-            List<Message> messages = mDao.findAllMessagesWithStatusCode(messageStatus);
-            for (Message message: messages) {
-                String content = message.getTextContent();
-                if (content.contains(valToDelete.toString())) {
-                    mDao.deleteMessage(message);
-                }
-            }
+            mDao.deleteAllMessagesWithStatusCode(messageStatus);
         }
     }
 

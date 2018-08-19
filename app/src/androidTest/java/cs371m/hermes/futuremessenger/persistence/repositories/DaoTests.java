@@ -4,7 +4,6 @@ import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
-import android.util.Log;
 
 import org.junit.After;
 import org.junit.Before;
@@ -13,7 +12,6 @@ import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.Calendar;
-import java.util.List;
 import java.util.logging.Logger;
 
 import cs371m.hermes.futuremessenger.persistence.AppDatabase;
@@ -25,8 +23,6 @@ import cs371m.hermes.futuremessenger.persistence.repositories.isolated.MessageDa
 import cs371m.hermes.futuremessenger.persistence.repositories.isolated.RecipientDao;
 import cs371m.hermes.futuremessenger.persistence.repositories.joined.MessageRecipientJoinDao;
 
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertNull;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(AndroidJUnit4.class)

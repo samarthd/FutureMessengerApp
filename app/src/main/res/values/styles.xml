@@ -17,7 +17,7 @@
     </style>
 
     <style name="FutureMessengerTabTextAppearance" parent="TextAppearance.Design.Tab">
-        <item name="android:textColor">@color/plain_white</item>
+        <item name="android:textColor">@android:color/white</item>
         <item name="android:textStyle">bold|italic</item>
     </style>
 

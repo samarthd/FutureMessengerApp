@@ -12,7 +12,12 @@
     <string name="recipients_label_plural">RECIPIENTS</string>
     <string name="scheduled_time_label">Date &amp; Time to Send</string>
 
+    <!-- Options Dialog Labels -->
+    <string name="edit_message_option_label">EDIT</string>
+    <string name="delete_message_option_label">DELETE</string>
     <!--Failed fragment-->
     <string name="no_failures_message">Smooth sailing - no failed messages, boss!</string>
+
+
 
 </resources>

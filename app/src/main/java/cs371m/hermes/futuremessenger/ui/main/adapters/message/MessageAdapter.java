@@ -1,13 +1,8 @@
 package cs371m.hermes.futuremessenger.ui.main.adapters.message;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.text.DateFormat;
@@ -26,7 +21,7 @@ import cs371m.hermes.futuremessenger.ui.main.adapters.message.viewholders.Messag
 /**
  * RecyclerView adapter for lists of messages.
  */
-public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
+public abstract class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
 
     protected final List<MessageWithRecipients> mMessagesWithRecipients = new ArrayList<>();
 
@@ -46,7 +41,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         DiffUtil.DiffResult diffResult =
                 DiffUtil.calculateDiff(
                         new MessagesDiffCallback(mMessagesWithRecipients, updatedMessageList));
-
         this.mMessagesWithRecipients.clear();
         this.mMessagesWithRecipients.addAll(updatedMessageList);
         diffResult.dispatchUpdatesTo(this);
@@ -54,37 +48,43 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
 
     @Override
     public long getItemId(int position) {
-        return mMessagesWithRecipients.get(position).message.getId();
+        return mMessagesWithRecipients.get(position).getMessage().getId();
     }
 
     @Override
     public int getItemCount() {
-        Log.d("In messageadapter", "Get item count " + mMessagesWithRecipients.size());
         return mMessagesWithRecipients.size();
     }
 
-    /**
-     * Called by the LayoutManager to create new views
-     */
-    @NonNull
-    @Override
-    public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View listedMessageView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.listed_message_details, parent, false);
-        return new MessageViewHolder(listedMessageView);
+
+    protected void updateWithPayloads(MessageViewHolder holder, List<Object> payloads) {
+        Bundle bundle = (Bundle) payloads.get(0);
+        for (String key : bundle.keySet()) {
+            switch (key) {
+                case PAYLOAD_KEY_MESSAGE_CONTENT:
+                    updateMessageContentTv(holder, bundle.getString(key));
+                case PAYLOAD_KEY_RECIPIENTS:
+                    updateRecipientsTv(holder, bundle.getString(key));
+                case PAYLOAD_KEY_RECIPIENTS_PLURAL_FLAG:
+                    updateRecipientsLabelTv(holder, bundle.getBoolean(key));
+                case PAYLOAD_KEY_SCHEDULED_DATE:
+                    updateScheduledDateTv(holder, bundle.getString(key));
+                case PAYLOAD_KEY_SCHEDULED_DAY:
+                    updateScheduledDayTv(holder, bundle.getString(key));
+                case PAYLOAD_KEY_SCHEDULED_TIME:
+                    updateScheduledTimeTv(holder, bundle.getString(key));
+            }
+        }
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
-
+    protected void updateWithoutPayloads(MessageViewHolder holder) {
         // always use getAdapterPosition for guaranteed correctness
-        position = holder.getAdapterPosition();
+        int position = holder.getAdapterPosition();
 
         MessageWithRecipients currentMessageWithRecipients = mMessagesWithRecipients.get(position);
-        Message message = currentMessageWithRecipients.message;
-        List<Recipient> recipients = currentMessageWithRecipients.recipients;
+        Message message = currentMessageWithRecipients.getMessage();
+        List<Recipient> recipients = currentMessageWithRecipients.getRecipients();
 
-        Log.d("In MessageAdapter", "onBindViewHolder full bind method, about to update TVs");
         updateMessageContentTv(holder, message.getTextContent());
 
         if (recipients.size() > 1)
@@ -99,40 +99,6 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
         updateScheduledDateTv(holder, getFormattedDateOnly(message));
 
         updateScheduledTimeTv(holder, getFormattedTimeOnly(message));
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull MessageViewHolder holder, int position,
-                                 @NonNull List<Object> payloads) {
-        Log.d("In MessageAdapter", "onBindViewHolder partial bind method, about to update TVs");
-
-        // always use getAdapterPosition for guaranteed correctness
-        position = holder.getAdapterPosition();
-
-        if(!payloads.isEmpty()) {
-            Log.d("In MessageAdapter", "Payloads were not empty");
-            Bundle bundle = (Bundle) payloads.get(0);
-            for (String key : bundle.keySet()) {
-                switch (key) {
-                    case PAYLOAD_KEY_MESSAGE_CONTENT:
-                        updateMessageContentTv(holder, bundle.getString(key));
-                    case PAYLOAD_KEY_RECIPIENTS:
-                        updateRecipientsTv(holder, bundle.getString(key));
-                    case PAYLOAD_KEY_RECIPIENTS_PLURAL_FLAG:
-                        updateRecipientsLabelTv(holder, bundle.getBoolean(key));
-                    case PAYLOAD_KEY_SCHEDULED_DATE:
-                        updateScheduledDateTv(holder, bundle.getString(key));
-                    case PAYLOAD_KEY_SCHEDULED_DAY:
-                        updateScheduledDayTv(holder, bundle.getString(key));
-                    case PAYLOAD_KEY_SCHEDULED_TIME:
-                        updateScheduledTimeTv(holder, bundle.getString(key));
-                }
-            }
-        }
-        else {
-            Log.d("In MessageAdapter", "Payloads were empty");
-            super.onBindViewHolder(holder, position, payloads);
-        }
     }
 
     private void updateMessageContentTv(MessageViewHolder holder, String messageContent) {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
-    <stroke android:width="2px" android:color="@color/messageBorder"/>
-    <solid android:color="@color/offWhite" />
-</shape>
+<ripple xmlns:android="http://schemas.android.com/apk/res/android"
+    android:color="@color/listedMessageRipple">
+    <item android:drawable="@drawable/message_background_shape" />
+</ripple>

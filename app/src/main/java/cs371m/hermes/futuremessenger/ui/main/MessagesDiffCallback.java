@@ -2,7 +2,6 @@ package cs371m.hermes.futuremessenger.ui.main;
 
 import android.os.Bundle;
 import android.support.v7.util.DiffUtil;
-import android.util.Log;
 
 import java.util.List;
 
@@ -22,7 +21,6 @@ public class MessagesDiffCallback extends DiffUtil.Callback {
 
     public MessagesDiffCallback(List<MessageWithRecipients> existing,
                                 List<MessageWithRecipients> updated) {
-        Log.d("In MessagesDiffCallback",  "In constructor");
         this.existingList = existing;
         this.updatedList = updated;
     }
@@ -45,9 +43,7 @@ public class MessagesDiffCallback extends DiffUtil.Callback {
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
         MessageWithRecipients oldItem = existingList.get(oldItemPosition);
         MessageWithRecipients newItem = updatedList.get(newItemPosition);
-        Log.d("In MessagesDiffCallback", "Are items the same, determined: " +
-                oldItem.message.getId().equals(newItem.message.getId()));
-        return oldItem.message.getId().equals(newItem.message.getId());
+        return oldItem.getMessage().getId().equals(newItem.getMessage().getId());
     }
 
     /*
@@ -58,8 +54,6 @@ public class MessagesDiffCallback extends DiffUtil.Callback {
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
         MessageWithRecipients oldItem = existingList.get(oldItemPosition);
         MessageWithRecipients newItem = updatedList.get(newItemPosition);
-        Log.d("In MessagesDiffCallback", "Are contents the same, determined: " +
-                oldItem.equals(newItem));
         return oldItem.equals(newItem);
     }
 
@@ -77,8 +71,8 @@ public class MessagesDiffCallback extends DiffUtil.Callback {
         MessageWithRecipients oldMessageWithRecipients = existingList.get(oldItemPosition);
         Bundle diffBundle = new Bundle();
 
-        Message newMessage = newMessageWithRecipients.message;
-        Message oldMessage = oldMessageWithRecipients.message;
+        Message newMessage = newMessageWithRecipients.getMessage();
+        Message oldMessage = oldMessageWithRecipients.getMessage();
         // Compare the message fields themselves
         if (!newMessage.getTextContent().equals(oldMessage.getTextContent())) {
             diffBundle.putString(MessageAdapter.PAYLOAD_KEY_MESSAGE_CONTENT,
@@ -94,8 +88,8 @@ public class MessagesDiffCallback extends DiffUtil.Callback {
         }
 
         // Compare the recipient strings
-        List<Recipient> newRecipients = newMessageWithRecipients.recipients;
-        List<Recipient> oldRecipients = oldMessageWithRecipients.recipients;
+        List<Recipient> newRecipients = newMessageWithRecipients.getRecipients();
+        List<Recipient> oldRecipients = oldMessageWithRecipients.getRecipients();
 
         if (!newRecipients.equals(oldRecipients)) {
             diffBundle.putString(MessageAdapter.PAYLOAD_KEY_RECIPIENTS,

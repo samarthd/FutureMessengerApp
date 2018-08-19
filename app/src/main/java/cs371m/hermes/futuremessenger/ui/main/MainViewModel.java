@@ -3,24 +3,16 @@ package cs371m.hermes.futuremessenger.ui.main;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
-import android.arch.lifecycle.MutableLiveData;
 import android.arch.persistence.room.InvalidationTracker;
-import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import cs371m.hermes.futuremessenger.persistence.AppDatabase;
-import cs371m.hermes.futuremessenger.persistence.entities.Message;
-import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.entities.embedded.Status;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
-import cs371m.hermes.futuremessenger.persistence.repositories.isolated.MessageDao;
-import cs371m.hermes.futuremessenger.persistence.repositories.joined.MessageRecipientJoinDao;
 
 
 public class MainViewModel extends AndroidViewModel {

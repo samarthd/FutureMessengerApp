@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import cs371m.hermes.futuremessenger.R;
 import cs371m.hermes.futuremessenger.ui.main.MainViewModel;
 import cs371m.hermes.futuremessenger.ui.main.adapters.message.MessageAdapter;
+import cs371m.hermes.futuremessenger.ui.main.adapters.message.ScheduledMessageAdapter;
 import jp.wasabeef.recyclerview.animators.ScaleInAnimator;
 
 /**
@@ -35,7 +36,8 @@ public class SentMessagesFragment extends Fragment {
         // Get the ViewModel from the activity, which means each fragment will have the same
         mModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
 
-        mMessageAdapter = new MessageAdapter();
+        // TODO change this to SentMessagesAdapter
+        mMessageAdapter = new ScheduledMessageAdapter();
 
         // Add the current fragment as an observer to any changes in stored messages
         mModel.getSentMessagesWithRecipients().observe(this,

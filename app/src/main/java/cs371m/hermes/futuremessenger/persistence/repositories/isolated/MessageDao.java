@@ -1,6 +1,5 @@
 package cs371m.hermes.futuremessenger.persistence.repositories.isolated;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -52,5 +51,8 @@ public interface MessageDao {
      */
     @Delete
     public int deleteMessage(Message message);
+
+    @Query("DELETE FROM messages WHERE messages.status_code = :statusCode")
+    public int deleteAllMessagesWithStatusCode(String statusCode);
 
 }

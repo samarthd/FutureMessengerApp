@@ -52,8 +52,9 @@ public class QueryForMessagesWithRecipients
             this.mRecipientDao = mDb.recipientDao();
 
             List<Message> messages = mMessageDao.findAllMessagesWithStatusCode(messageStatus);
-            Log.d("In async query task",
-                  "Found " + messages.size() + " messages with status " + messageStatus);
+            if (messageStatus.equals(cs371m.hermes.futuremessenger.persistence.entities.embedded.Status.SCHEDULED))
+                Log.d("In async query task",
+                      "Found " + messages.size() + " messages with status " + messageStatus);
             if (messages.isEmpty())
                 return new ArrayList<>();
             return mapFromMessagesToMessagesWithRecipients(messages);

@@ -1,4 +1,4 @@
-package cs371m.hermes.futuremessenger.ui.main;
+package cs371m.hermes.futuremessenger.tasks;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -13,6 +13,7 @@ import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
 import cs371m.hermes.futuremessenger.persistence.repositories.isolated.MessageDao;
 import cs371m.hermes.futuremessenger.persistence.repositories.isolated.RecipientDao;
 import cs371m.hermes.futuremessenger.persistence.repositories.joined.MessageRecipientJoinDao;
+import cs371m.hermes.futuremessenger.ui.main.MessagesWithRecipientsLiveData;
 
 /**
  * An asynchronous task that can query for messages with a certain status, retrieve their recipients,

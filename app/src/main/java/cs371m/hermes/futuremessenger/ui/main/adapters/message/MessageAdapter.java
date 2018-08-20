@@ -183,6 +183,6 @@ public abstract class MessageAdapter extends RecyclerView.Adapter<MessageViewHol
     private static String getRecipientNameOrPhone(Recipient recipient) {
         if (recipient.getName() == null || recipient.getName().equals(""))
             return recipient.getPhoneNumber();
-        return recipient.getName();
+        return "\u2022 " + recipient.getName();
     }
 }

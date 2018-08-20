@@ -6,6 +6,7 @@ import java.util.List;
 
 import cs371m.hermes.futuremessenger.persistence.AppDatabase;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
+import cs371m.hermes.futuremessenger.tasks.QueryForMessagesWithRecipients;
 
 public class MessagesWithRecipientsLiveData extends MutableLiveData<List<MessageWithRecipients>> {
 

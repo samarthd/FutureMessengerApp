@@ -52,6 +52,15 @@ public interface MessageDao {
     @Delete
     public int deleteMessage(Message message);
 
+    /**
+     * Deletes the message in the database with the given ID
+     * @param messageID the ID of the message to delete
+     * @return A count of the number of rows which were deleted.
+     */
+    @Query("DELETE FROM messages WHERE id = :messageID")
+    public int deleteMessageByID(Long messageID);
+
+
     @Query("DELETE FROM messages WHERE messages.status_code = :statusCode")
     public int deleteAllMessagesWithStatusCode(String statusCode);
 

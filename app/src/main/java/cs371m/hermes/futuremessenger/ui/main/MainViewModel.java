@@ -13,6 +13,7 @@ import java.util.Set;
 import cs371m.hermes.futuremessenger.persistence.AppDatabase;
 import cs371m.hermes.futuremessenger.persistence.entities.embedded.Status;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
+import cs371m.hermes.futuremessenger.tasks.QueryForMessagesWithRecipients;
 
 
 public class MainViewModel extends AndroidViewModel {

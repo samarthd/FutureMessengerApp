@@ -3,12 +3,15 @@ package cs371m.hermes.futuremessenger.ui.main.screens.dialogs;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
 
 import cs371m.hermes.futuremessenger.R;
+import cs371m.hermes.futuremessenger.persistence.AppDatabase;
+import cs371m.hermes.futuremessenger.tasks.DeleteMessageAndRelatedData;
 import cs371m.hermes.futuremessenger.ui.main.adapters.message.viewholders.MessageViewHolder;
 
 public class ScheduledMessageOptionsDialog extends Dialog implements View.OnClickListener {
@@ -46,15 +49,35 @@ public class ScheduledMessageOptionsDialog extends Dialog implements View.OnClic
         switch(v.getId()) {
             case R.id.edit_option:
                 dismiss();
+                //getContext().startActivity();
                 break;
             case R.id.delete_option:
                 dismiss();
+                launchDeleteConfirmationDialog();
                 break;
             default:
                 break;
         }
         dismiss();
-        // start target activity here
+    }
+
+    private void launchDeleteConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle(getContext().getResources().getString(R.string.deleting_message));
+        builder.setMessage(getContext().getResources().getString(R.string.are_you_sure));
+        builder.setPositiveButton(R.string.yes, (dialog, which) -> {
+            dialog.dismiss();
+            DeleteMessageAndRelatedData deleteTask = new DeleteMessageAndRelatedData();
+            deleteTask.setArguments(
+                    AppDatabase.getInstance(getContext()),
+                    mMessageViewHolder.getItemId());
+            deleteTask.execute();
+        });
+        builder.setNegativeButton(R.string.no, (dialog, which) -> {
+            dialog.dismiss();
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
     private void setUpOptionsDialog() {

@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                 mrjDao.insert(join);
 
                 if(i % 2 == 0) {
-                    Recipient recipient2 = createRecipientWithVal(i * 10000);
+                    Recipient recipient2 = createRecipientWithVal(i * 100000000);
                     Long recipientId2 = rDao.createOrUpdateRecipient(recipient2);
                     MessageRecipientJoin join2 = new MessageRecipientJoin();
                     join2.setRecipientID(recipientId2);
@@ -174,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
             message.setTextContent("Text content " + val);
             Calendar calendar = Calendar.getInstance();
             calendar.set(2009, Calendar.SEPTEMBER, 30, 12, 59); // longest possible date time
-            calendar.setTimeInMillis(calendar.getTimeInMillis() + val * 1000000);
+            calendar.setTimeInMillis(calendar.getTimeInMillis() + val * 1000000000);
             message.setScheduledDateTime(calendar);
             cs371m.hermes.futuremessenger.persistence.entities.embedded.Status status = new cs371m.hermes.futuremessenger.persistence.entities.embedded.Status();
             status.setCode(messageStatus);

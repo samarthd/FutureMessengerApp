@@ -15,7 +15,13 @@ import cs371m.hermes.futuremessenger.persistence.entities.embedded.Status;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
 import cs371m.hermes.futuremessenger.tasks.QueryForMessagesWithRecipients;
 
-
+/**
+ * This is a ViewModel that holds the data necessary to populate all of the tabs in
+ * the {@link cs371m.hermes.futuremessenger.ui.main.screens.MainActivity}.
+ *
+ * It observes the database's InvalidationTracker, and on changes to any tables,
+ * runs a background task to query for the new data and updates the data it has.
+ */
 public class MainViewModel extends AndroidViewModel {
 
     // Tracks changes in the database
@@ -49,8 +55,13 @@ public class MainViewModel extends AndroidViewModel {
         tableChangeTracker = mDb.getInvalidationTracker();
         tableChangeTracker.addObserver(new InvalidationTracker.Observer(tablesToTrack) {
 
-            /* When any of the tables are invalidated, we want to re-run the queries
-               for all LiveData that have active observers
+            /**
+             * When any of the tables are invalidated, we want to re-run the queries
+             * for all LiveData that have active observers.
+             *
+             * @param tables the tables that were invalidated
+             *
+             * @see MessagesWithRecipientsLiveData#onActive()
              */
             @Override
             public void onInvalidated(@NonNull Set<String> tables) {

@@ -15,6 +15,8 @@ import cs371m.hermes.futuremessenger.persistence.repositories.joined.MessageReci
 /**
  * Deletes a message from the database, along with all join entries. If the associated recipients
  * do not have any other messages, delete them as well.
+ *
+ * All operations are performed in one database transaction.
  */
 public class DeleteMessageAndRelatedData extends AsyncTask<Void, Integer, Void>{
 
@@ -41,48 +43,50 @@ public class DeleteMessageAndRelatedData extends AsyncTask<Void, Integer, Void>{
         if (mDb == null || messageID == Long.MIN_VALUE) {
             return null;
         }
-
         this.mMessageDao = mDb.messageDao();
         this.mJoinDao = mDb.messageRecipientJoinDao();
         this.mRecipientDao = mDb.recipientDao();
 
+        Runnable deleteMessageAndRelatedData =
+                () -> {
+                    Message message = mMessageDao.findMessage(messageID);
+                    if (message == null) {
+                        Log.w(TAG, "Can't find message to delete with ID: " + messageID);
+                        return;
+                    }
 
-        Message message = mMessageDao.findMessage(messageID);
-        if (message == null) {
-            Log.w(TAG, "Can't find message to delete with ID: " + messageID);
-            return null;
-        }
+                    // first get all of the recipients for the message
+                    List<Recipient> recipients = mJoinDao.findRecipientsForMessage(messageID);
 
-        // first get all of the recipients for the message
-        List<Recipient> recipients = mJoinDao.findRecipientsForMessage(messageID);
+                    // delete relationships for this message
+                    int deletedRelationships = mJoinDao.deleteRelationshipsForMessage(messageID);
+                    if (deletedRelationships == 0) {
+                        Log.w(TAG, "No relationships found for message " + messageID);
+                    }
 
-        // delete relationships for this message
-        int deletedRelationships = mJoinDao.deleteRelationshipsForMessage(messageID);
-        if (deletedRelationships == 0) {
-            Log.w(TAG, "No relationships found for message " + messageID);
-        }
+                    // for each of the recipients query if they have any messages now, delete if none
+                    for (Recipient recipient : recipients) {
+                        List<Message> messagesForRecipient =
+                                mJoinDao.findMessagesForRecipient(recipient.getId());
+                        if (messagesForRecipient.isEmpty()) {
+                            int deletedRecipientCount = mRecipientDao.deleteRecipient(recipient);
+                            if (deletedRecipientCount == 0) {
+                                Log.w(TAG, "Error deleting recipient: " + recipient);
+                            }
+                            else {
+                                Log.d(TAG, "Recipient successfully deleted: " + recipient);
+                            }
+                        }
+                    }
 
-        // for each of the recipients query if they have any messages now, delete if none
-        for (Recipient recipient : recipients) {
-            List<Message> messagesForRecipient =
-                    mJoinDao.findMessagesForRecipient(recipient.getId());
-            if (messagesForRecipient.isEmpty()) {
-                int deletedRecipientCount = mRecipientDao.deleteRecipient(recipient);
-                if (deletedRecipientCount == 0) {
-                    Log.w(TAG, "Error deleting recipient: " + recipient);
-                }
-                else {
-                    Log.d(TAG, "Recipient successfully deleted: " + recipient);
-                }
-            }
-        }
-
-        // delete message
-        int deletedMessageCount = mMessageDao.deleteMessageByID(messageID);
-        if (deletedMessageCount == 0) {
-            Log.w(TAG, "Error deleting message: " + message);
-        }
-
+                    // delete message
+                    int deletedMessageCount = mMessageDao.deleteMessageByID(messageID);
+                    if (deletedMessageCount == 0) {
+                        Log.w(TAG, "Error deleting message: " + message);
+                    }
+                };
+        // This is the key to avoid
+        mDb.runInTransaction(deleteMessageAndRelatedData);
         return null;
     }
 }

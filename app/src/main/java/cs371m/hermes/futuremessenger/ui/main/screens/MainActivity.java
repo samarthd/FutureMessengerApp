@@ -149,25 +149,29 @@ public class MainActivity extends AppCompatActivity {
             MessageDao mDao = db.messageDao();
             RecipientDao rDao = db.recipientDao();
             MessageRecipientJoinDao mrjDao = db.messageRecipientJoinDao();
-            for(long i = 0; i < j; i++) {
-                Message message = createMessageWithVal(i, messageStatus);
-                Long messageId = mDao.createOrUpdateMessage(message);
-                Recipient recipient = createRecipientWithVal(i);
-                Long recipientId = rDao.createOrUpdateRecipient(recipient);
-                MessageRecipientJoin join = new MessageRecipientJoin();
-                join.setRecipientID(recipientId);
-                join.setMessageID(messageId);
-                mrjDao.insert(join);
+            Runnable create =
+                    () -> {
+                        for(long i = 0; i < j; i++) {
+                            Message message = createMessageWithVal(i, messageStatus);
+                            Long messageId = mDao.createOrUpdateMessage(message);
+                            Recipient recipient = createRecipientWithVal(i);
+                            Long recipientId = rDao.createOrUpdateRecipient(recipient);
+                            MessageRecipientJoin join = new MessageRecipientJoin();
+                            join.setRecipientID(recipientId);
+                            join.setMessageID(messageId);
+                            mrjDao.insert(join);
 
-                if(i % 2 == 0) {
-                    Recipient recipient2 = createRecipientWithVal(i * 100000000);
-                    Long recipientId2 = rDao.createOrUpdateRecipient(recipient2);
-                    MessageRecipientJoin join2 = new MessageRecipientJoin();
-                    join2.setRecipientID(recipientId2);
-                    join2.setMessageID(messageId);
-                    mrjDao.insert(join2);
-                }
-            }
+                            if(i % 2 == 0) {
+                                Recipient recipient2 = createRecipientWithVal(i * 100000000);
+                                Long recipientId2 = rDao.createOrUpdateRecipient(recipient2);
+                                MessageRecipientJoin join2 = new MessageRecipientJoin();
+                                join2.setRecipientID(recipientId2);
+                                join2.setMessageID(messageId);
+                                mrjDao.insert(join2);
+                            }
+                        }
+                    };
+            db.runInTransaction(create);
         }
         private Message createMessageWithVal(Long val, String messageStatus) {
             Message message = new Message();

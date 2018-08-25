@@ -26,7 +26,7 @@ public abstract class MessageAdapter extends RecyclerView.Adapter<MessageViewHol
     protected final List<MessageWithRecipients> mMessagesWithRecipients = new ArrayList<>();
 
     private static final DateFormat DAY_FORMATTER = new SimpleDateFormat("EEEE");
-    private static final DateFormat DATE_FORMATTER = DateFormat.getDateInstance(DateFormat.LONG);
+    private static final DateFormat DATE_FORMATTER = DateFormat.getDateInstance(DateFormat.MEDIUM);
     private static final DateFormat TIME_FORMATTER = DateFormat.getTimeInstance(DateFormat.SHORT);
 
     public static final String PAYLOAD_KEY_MESSAGE_CONTENT = "message_content";

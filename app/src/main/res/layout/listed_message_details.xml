@@ -14,7 +14,8 @@
         android:src="@drawable/text_icon" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_weight="6"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_gravity="center"
@@ -46,7 +47,7 @@
 
 
     <LinearLayout
-        android:layout_weight="1"
+        android:layout_weight="10"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"

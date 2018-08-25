@@ -85,7 +85,7 @@ public class DeleteMessageAndRelatedData extends AsyncTask<Void, Integer, Void>{
                         Log.w(TAG, "Error deleting message: " + message);
                     }
                 };
-        // This is the key to avoid
+        // This is the most important part - everything needs to be done in 1 transaction
         mDb.runInTransaction(deleteMessageAndRelatedData);
         return null;
     }

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/recipient_edit_layout_background"
+    android:padding="10dp"
+    android:gravity="center_horizontal"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/recipient_edit_label"
+        android:textStyle="bold|italic"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"/>
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/contact_button"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/add_from_contacts"
+            android:textStyle="bold|italic"
+            android:textSize="16sp"
+            android:textColor="@color/colorQuaternary"
+            android:background="@drawable/recipient_button_background"
+            android:layout_margin="3dp"
+            style="?android:attr/borderlessButtonStyle"
+            android:elevation="4dp"/>
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/phone_number_button"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="@string/add_phone_number"
+            android:textStyle="bold|italic"
+            android:textSize="16sp"
+            android:textColor="@color/colorQuaternary"
+            android:background="@drawable/recipient_button_background"
+            android:layout_margin="3dp"
+            style="?android:attr/borderlessButtonStyle"
+            android:elevation="4dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

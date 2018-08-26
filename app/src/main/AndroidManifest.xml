@@ -16,7 +16,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.draft.EditTextMessageActivity"></activity>
+        <activity
+            android:name=".ui.draft.screens.EditTextMessageActivity"
+            android:parentActivityName=".ui.main.screens.MainActivity"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
     </application>
 
 </manifest>

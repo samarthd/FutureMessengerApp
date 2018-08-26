@@ -10,7 +10,6 @@
     <string name="message_content_label">MESSAGE</string>
     <string name="recipients_label_singular">RECIPIENT</string>
     <string name="recipients_label_plural">RECIPIENTS</string>
-    <string name="scheduled_time_label">Date &amp; Time to Send</string>
 
     <!-- Options Dialog Labels -->
     <string name="edit_message_option_label">EDIT</string>
@@ -24,6 +23,22 @@
 
     <!--Failed fragment-->
     <string name="no_failures_message">Smooth sailing - no failed messages, boss!</string>
+
+    <!--Edit Activity -->
+    <string name="edit_activity_label">Edit Text Message</string>
+    <string name="date_time_edit_label">WHEN</string>
+    <string name="recipient_edit_label">WHO</string>
+    <string name="message_edit_label">WHAT</string>
+
+    <string name="add_from_contacts">ADD FROM CONTACTS</string>
+    <string name="add_phone_number">ADD PHONE NUMBER</string>
+
+    <string name="message_edittext_hint">Enter a message to send</string>
+    <string name="phone_number_edittext_hint">Enter a phone number</string>
+
+    <string name="phone_number_dialog_title">New Recipient</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
 
 
 </resources>

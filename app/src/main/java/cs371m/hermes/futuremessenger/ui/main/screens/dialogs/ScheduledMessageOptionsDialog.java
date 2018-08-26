@@ -1,6 +1,7 @@
 package cs371m.hermes.futuremessenger.ui.main.screens.dialogs;
 
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import cs371m.hermes.futuremessenger.R;
 import cs371m.hermes.futuremessenger.persistence.AppDatabase;
 import cs371m.hermes.futuremessenger.tasks.DeleteMessageAndRelatedData;
+import cs371m.hermes.futuremessenger.ui.draft.screens.EditTextMessageActivity;
 import cs371m.hermes.futuremessenger.ui.main.adapters.message.viewholders.MessageViewHolder;
 
 public class ScheduledMessageOptionsDialog extends Dialog implements View.OnClickListener {
@@ -49,7 +51,8 @@ public class ScheduledMessageOptionsDialog extends Dialog implements View.OnClic
         switch(v.getId()) {
             case R.id.edit_option:
                 dismiss();
-                //getContext().startActivity();
+                Intent intent = new Intent(getContext(), EditTextMessageActivity.class);
+                getContext().startActivity(intent); // TODO start with given data
                 break;
             case R.id.delete_option:
                 dismiss();

@@ -14,11 +14,20 @@
     <style name="FutureMessengerToolbar" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">@android:color/white</item>
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
     </style>
 
     <style name="FutureMessengerTabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textStyle">bold|italic</item>
     </style>
+
+    <!--Picker Dialogs-->
+    <style name="PickerDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/colorTertiary</item>
+        <item name="colorAccent">@color/colorTertiary</item>
+    </style>
+
 
 </resources>

@@ -10,6 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.InputType;
+import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -174,6 +176,29 @@ public class EditTextMessageActivity extends AppCompatActivity implements
                 case RESULT_PICK_CONTACT:
 
             }
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Log.d("Edit Text Message", "Up click");
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle(R.string.exit_dialog_title)
+                       .setMessage(R.string.exit_dialog_message)
+                       .setPositiveButton(R.string.yes, (dialog, which) -> {
+                           dialog.dismiss();
+                           finish();
+                       })
+                       .setNegativeButton(R.string.no, (dialog, which) -> {
+                           dialog.dismiss();
+                       })
+                       .create()
+                       .show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

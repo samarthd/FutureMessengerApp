@@ -40,5 +40,7 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
 
-
+    <!--Exit Dialog-->
+    <string name="exit_dialog_title">Exit</string>
+    <string name="exit_dialog_message">Are you sure you want to discard all changes and exit?</string>
 </resources>

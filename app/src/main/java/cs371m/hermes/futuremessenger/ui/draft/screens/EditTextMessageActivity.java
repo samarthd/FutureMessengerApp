@@ -81,7 +81,9 @@ public class EditTextMessageActivity extends AppCompatActivity implements
             phoneNumberInput.setHint(R.string.phone_number_edittext_hint);
             layout.addView(phoneNumberInput, params);
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            AlertDialog.Builder builder =
+                    new AlertDialog.Builder(this,
+                                             R.style.PhoneNumberDialogTheme);
             builder.setTitle(R.string.phone_number_dialog_title)
                    .setView(layout)
                    .setPositiveButton(R.string.save, (dialog, which) -> {
@@ -179,26 +181,37 @@ public class EditTextMessageActivity extends AppCompatActivity implements
         }
     }
 
+    private void showExitDialog() {
+        Log.d("Edit Text Message", "Up click");
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(this,
+                        R.style.GeneralDialogTheme);
+        builder.setTitle(R.string.exit_dialog_title)
+                .setMessage(R.string.exit_dialog_message)
+                .setPositiveButton(R.string.yes, (dialog, which) -> {
+                    dialog.dismiss();
+                    finish();
+                })
+                .setNegativeButton(R.string.no, (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .create()
+                .show();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                Log.d("Edit Text Message", "Up click");
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle(R.string.exit_dialog_title)
-                       .setMessage(R.string.exit_dialog_message)
-                       .setPositiveButton(R.string.yes, (dialog, which) -> {
-                           dialog.dismiss();
-                           finish();
-                       })
-                       .setNegativeButton(R.string.no, (dialog, which) -> {
-                           dialog.dismiss();
-                       })
-                       .create()
-                       .show();
+                showExitDialog();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        showExitDialog();
     }
 }

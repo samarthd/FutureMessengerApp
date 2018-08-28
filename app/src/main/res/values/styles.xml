@@ -18,16 +18,23 @@
         <item name="windowActionBar">false</item>
     </style>
 
+    <style name="GeneralDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
+    <!--Picker Dialogs-->
     <style name="FutureMessengerTabTextAppearance" parent="TextAppearance.Design.Tab">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textStyle">bold|italic</item>
     </style>
 
-    <!--Picker Dialogs-->
+    <!--Phone number dialog-->
     <style name="PickerDialogTheme" parent="Theme.AppCompat.Light.Dialog">
         <item name="colorPrimary">@color/colorTertiary</item>
         <item name="colorAccent">@color/colorTertiary</item>
     </style>
 
-
+    <style name="PhoneNumberDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/colorQuaternary</item>
+    </style>
 </resources>

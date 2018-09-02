@@ -65,7 +65,7 @@ public class MainViewModel extends AndroidViewModel {
              */
             @Override
             public void onInvalidated(@NonNull Set<String> tables) {
-                Log.d("In onInvalidated()", "Tables invalidated: " + tables.toString());
+                Log.d(this.getClass().getName(), "Tables invalidated: " + tables.toString());
                 if (mScheduledMessagesWithRecipients != null &&
                         mScheduledMessagesWithRecipients.hasActiveObservers()) {
                     asyncUpdateScheduledMessagesWithRecipients();

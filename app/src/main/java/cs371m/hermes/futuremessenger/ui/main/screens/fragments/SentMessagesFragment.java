@@ -37,7 +37,7 @@ public class SentMessagesFragment extends Fragment {
         mModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
 
         // TODO change this to SentMessagesAdapter
-        mMessageAdapter = new ScheduledMessageAdapter();
+        mMessageAdapter = new ScheduledMessageAdapter(getActivity().getSupportFragmentManager());
 
         // Add the current fragment as an observer to any changes in stored messages
         mModel.getSentMessagesWithRecipients().observe(this,

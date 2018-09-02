@@ -8,7 +8,7 @@ import java.util.List;
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
-import cs371m.hermes.futuremessenger.ui.main.adapters.message.MessageAdapter;
+import static cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport.*;
 
 /**
  * DiffUtil callback implementation that compares two lists of messages with recipients
@@ -75,16 +75,16 @@ public class MessagesDiffCallback extends DiffUtil.Callback {
         Message oldMessage = oldMessageWithRecipients.getMessage();
         // Compare the message fields themselves
         if (!newMessage.getTextContent().equals(oldMessage.getTextContent())) {
-            diffBundle.putString(MessageAdapter.PAYLOAD_KEY_MESSAGE_CONTENT,
+            diffBundle.putString(PAYLOAD_KEY_MESSAGE_CONTENT,
                                  newMessage.getTextContent());
         }
         if (!newMessage.getScheduledDateTime().equals(oldMessage.getScheduledDateTime())) {
-            diffBundle.putString(MessageAdapter.PAYLOAD_KEY_SCHEDULED_DATE,
-                                 MessageAdapter.getFormattedDateOnly(newMessage));
-            diffBundle.putString(MessageAdapter.PAYLOAD_KEY_SCHEDULED_DAY,
-                                 MessageAdapter.getFormattedDayOnly(newMessage));
-            diffBundle.putString(MessageAdapter.PAYLOAD_KEY_SCHEDULED_TIME,
-                                 MessageAdapter.getFormattedTimeOnly(newMessage));
+            diffBundle.putString(PAYLOAD_KEY_SCHEDULED_DATE,
+                                 getFormattedDateOnly(newMessage));
+            diffBundle.putString(PAYLOAD_KEY_SCHEDULED_DAY,
+                                 getFormattedDayOnly(newMessage));
+            diffBundle.putString(PAYLOAD_KEY_SCHEDULED_TIME,
+                                 getFormattedTimeOnly(newMessage));
         }
 
         // Compare the recipient strings
@@ -92,9 +92,9 @@ public class MessagesDiffCallback extends DiffUtil.Callback {
         List<Recipient> oldRecipients = oldMessageWithRecipients.getRecipients();
 
         if (!newRecipients.equals(oldRecipients)) {
-            diffBundle.putString(MessageAdapter.PAYLOAD_KEY_RECIPIENTS,
-                                 MessageAdapter.getConcatenatedRecipientNames(newRecipients));
-            diffBundle.putBoolean(MessageAdapter.PAYLOAD_KEY_RECIPIENTS_PLURAL_FLAG,
+            diffBundle.putString(PAYLOAD_KEY_RECIPIENTS,
+                                 getConcatenatedRecipientNames(newRecipients));
+            diffBundle.putBoolean(PAYLOAD_KEY_RECIPIENTS_PLURAL_FLAG,
                                   newRecipients.size() > 1);
         }
 

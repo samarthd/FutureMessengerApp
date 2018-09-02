@@ -4,6 +4,8 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Ignore;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +19,9 @@ import lombok.ToString;
 @Setter
 @ToString
 @EqualsAndHashCode
-public class Status {
+public class Status implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Ignore
     public static final String SCHEDULED = "SCHEDULED";

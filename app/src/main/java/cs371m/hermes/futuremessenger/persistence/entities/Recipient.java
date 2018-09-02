@@ -5,6 +5,8 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +17,9 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(exclude = "id")
 @Entity(tableName = "recipients")
-public class Recipient {
+public class Recipient implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @PrimaryKey(autoGenerate = true)
     private Long id;

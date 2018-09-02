@@ -1,6 +1,8 @@
 package cs371m.hermes.futuremessenger.ui.main.adapters.message;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,10 +10,18 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import cs371m.hermes.futuremessenger.R;
+import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
 import cs371m.hermes.futuremessenger.ui.main.adapters.message.viewholders.MessageViewHolder;
-import cs371m.hermes.futuremessenger.ui.main.listeners.ScheduledMessageOnClickListener;
+import cs371m.hermes.futuremessenger.ui.main.screens.dialogs.ScheduledMessageOptionsDialogFragment;
 
 public class ScheduledMessageAdapter extends MessageAdapter {
+
+    // Need this in order to create dialog fragments
+    private FragmentManager mSupportFragmentManager;
+
+    public ScheduledMessageAdapter(FragmentManager supportFragmentManager) {
+        this.mSupportFragmentManager = supportFragmentManager;
+    }
 
     /**
      * Called by the LayoutManager to create new views.
@@ -46,7 +56,17 @@ public class ScheduledMessageAdapter extends MessageAdapter {
     }
 
     private void setUpOnClick(MessageViewHolder holder) {
+        int position = holder.getAdapterPosition();
         holder.fullMessageLayout
-                .setOnClickListener(new ScheduledMessageOnClickListener(holder));
+                .setOnClickListener(scheduledMessageView -> {
+                    ScheduledMessageOptionsDialogFragment optionsDialog =
+                            new ScheduledMessageOptionsDialogFragment();
+                    Bundle args = new Bundle();
+                    args.putSerializable(MessageWithRecipients.BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS,
+                                         mMessagesWithRecipients.get(position));
+                    optionsDialog.setArguments(args);
+                    optionsDialog.show(mSupportFragmentManager,
+                                       ScheduledMessageOptionsDialogFragment.class.getName());
+                });
     }
 }

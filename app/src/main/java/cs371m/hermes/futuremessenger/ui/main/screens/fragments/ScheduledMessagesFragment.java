@@ -34,7 +34,7 @@ public class ScheduledMessagesFragment extends Fragment {
         // Get the ViewModel from the activity, which means each fragment will have the same
         mModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
 
-        mMessageAdapter = new ScheduledMessageAdapter();
+        mMessageAdapter = new ScheduledMessageAdapter(getActivity().getSupportFragmentManager());
         mMessageAdapter.setHasStableIds(true); // do this as we've overriden getItemId()
 
         // Add the current fragment as an observer to any changes in stored messages

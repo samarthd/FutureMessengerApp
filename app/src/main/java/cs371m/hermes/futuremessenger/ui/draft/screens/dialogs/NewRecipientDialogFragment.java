@@ -2,6 +2,7 @@ package cs371m.hermes.futuremessenger.ui.draft.screens.dialogs;
 
 import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatButton;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.InputType;
@@ -18,7 +19,7 @@ import cs371m.hermes.futuremessenger.R;
 public class NewRecipientDialogFragment extends android.support.v4.app.DialogFragment {
 
     public interface NewRecipientInfoSaveListener {
-        void onSaveNewRecipient(String name, String phoneNumber);
+        void onSaveNewManualRecipient(String name, String phoneNumber);
     }
 
     private EditText mRecipientNameInput;
@@ -29,6 +30,7 @@ public class NewRecipientDialogFragment extends android.support.v4.app.DialogFra
         // empty constructor
     }
 
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
@@ -38,15 +40,20 @@ public class NewRecipientDialogFragment extends android.support.v4.app.DialogFra
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View recipientInputDialogLayout = inflateAndReturnDialogLayout(inflater);
+
+        setUpInputFields(recipientInputDialogLayout);
+        setUpButtons(recipientInputDialogLayout);
+
+        return recipientInputDialogLayout;
+    }
+
+    private View inflateAndReturnDialogLayout(LayoutInflater inflater) {
         View recipientInputDialogLayout = inflater.inflate(R.layout.new_recipient_input_dialog, null);
 
         // set the dialog's width to be 90% of the width of the screen
         Double dialogWidth = getContext().getResources().getDisplayMetrics().widthPixels * 0.90;
         recipientInputDialogLayout.setMinimumWidth(dialogWidth.intValue());
-
-        setUpInputFields(recipientInputDialogLayout);
-        setUpButtons(recipientInputDialogLayout);
-
         return recipientInputDialogLayout;
     }
 
@@ -76,7 +83,7 @@ public class NewRecipientDialogFragment extends android.support.v4.app.DialogFra
             }
             else {
                 dismiss();
-                listeningActivity.onSaveNewRecipient(newRecipientName, newRecipientPhoneNumber);
+                listeningActivity.onSaveNewManualRecipient(newRecipientName, newRecipientPhoneNumber);
             }
         });
 

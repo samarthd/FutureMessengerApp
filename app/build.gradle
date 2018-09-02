@@ -66,6 +66,11 @@ dependencies {
      */
     implementation 'jp.wasabeef:recyclerview-animators:2.3.0'
 
+    /**
+     * Apache Utils
+     */
+    implementation 'org.apache.commons:commons-lang3:3.8'
+
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:27.1.1'
 

@@ -5,6 +5,7 @@
     <color name="colorPrimaryLight">#26c6da</color>
     <color name="colorTertiary">#c2185b</color>
     <color name="colorQuaternary">#007c89</color>
+    <color name="colorQuaternaryDark">#005b64</color>
     <color name="colorQuinary">#f7c59f</color>
     <color name="colorAccent">#ffb12e</color>
     <color name="pressedAccent">#ff8f00</color>

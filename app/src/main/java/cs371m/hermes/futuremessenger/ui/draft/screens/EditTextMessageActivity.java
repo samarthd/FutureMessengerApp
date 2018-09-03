@@ -65,6 +65,9 @@ public class EditTextMessageActivity extends AppCompatActivity implements
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        EditText messageContentInput = findViewById(R.id.message_content_edittext);
+        mMessageWithRecipients.getMessage()
+                              .setTextContent(messageContentInput.getText().toString());
         outState.putSerializable(MessageWithRecipients.BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS,
                                  mMessageWithRecipients);
     }
@@ -121,7 +124,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements
                         new CloseEditActivityIfScheduledMessageInvalidated();
                 checkIfMessageInvalidatedTask.setArguments(mDb,
                         mMessageWithRecipients.getMessage().getId(),
-                        currentActivity);
+                        currentActivity); // TODO change this to be a weakreference
                 checkIfMessageInvalidatedTask.execute();
             }
         });

@@ -56,14 +56,13 @@ public class ScheduledMessageAdapter extends MessageAdapter {
     }
 
     private void setUpOnClick(MessageViewHolder holder) {
-        int position = holder.getAdapterPosition();
         holder.fullMessageLayout
                 .setOnClickListener(scheduledMessageView -> {
                     ScheduledMessageOptionsDialogFragment optionsDialog =
                             new ScheduledMessageOptionsDialogFragment();
                     Bundle args = new Bundle();
                     args.putSerializable(MessageWithRecipients.BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS,
-                                         mMessagesWithRecipients.get(position));
+                                         mMessagesWithRecipients.get(holder.getAdapterPosition()));
                     optionsDialog.setArguments(args);
                     optionsDialog.show(mSupportFragmentManager,
                                        ScheduledMessageOptionsDialogFragment.class.getName());

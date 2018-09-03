@@ -124,7 +124,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements
                         new CloseEditActivityIfScheduledMessageInvalidated();
                 checkIfMessageInvalidatedTask.setArguments(mDb,
                         mMessageWithRecipients.getMessage().getId(),
-                        currentActivity); // TODO change this to be a weakreference
+                        currentActivity);
                 checkIfMessageInvalidatedTask.execute();
             }
         });
@@ -156,6 +156,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements
 
         EditText messageContentInput = findViewById(R.id.message_content_edittext);
         messageContentInput.setText(mMessageWithRecipients.getMessage().getTextContent());
+        messageContentInput.requestFocus();
 
         updateDateButtonText();
         updateTimeButtonText();

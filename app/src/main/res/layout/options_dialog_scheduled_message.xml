@@ -2,8 +2,10 @@
 <android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="10dp"
-    android:background="@drawable/dialog_background"  >
+    android:padding="20dp"
+    android:background="@drawable/dialog_background"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <include layout="@layout/listed_message_details" />
 
@@ -21,10 +23,10 @@
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/edit_option"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableTop="@drawable/ic_edit_white_24dp"
+            android:layout_height="match_parent"
+            android:drawableTop="@drawable/ic_edit_primary"
             android:text="@string/edit_message_option_label"
-            android:textColor="@android:color/white"
+            android:textColor="@color/colorPrimary"
             android:textStyle="bold|italic"
             android:background="@drawable/option_button_neutral_background"
             android:padding="10dp"
@@ -34,12 +36,12 @@
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/delete_option"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableTop="@drawable/ic_delete_white_24dp"
+            android:layout_height="match_parent"
+            android:drawableTop="@drawable/ic_delete_primary"
             android:text="@string/delete_message_option_label"
-            android:textColor="@android:color/white"
+            android:textColor="@color/colorPrimary"
             android:textStyle="bold|italic"
-            android:background="@drawable/option_button_warn_background"
+            android:background="@drawable/option_button_neutral_background"
             android:padding="10dp"
             android:layout_marginStart="5dp"
             style="?android:attr/borderlessButtonStyle"

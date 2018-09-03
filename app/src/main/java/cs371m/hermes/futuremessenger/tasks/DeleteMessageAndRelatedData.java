@@ -27,7 +27,7 @@ public class DeleteMessageAndRelatedData extends AsyncTask<Void, Integer, Void>{
     private MessageRecipientJoinDao mJoinDao;
     private RecipientDao mRecipientDao;
 
-    private Long messageID = Long.MIN_VALUE;
+    private Long mMessageID = Long.MIN_VALUE;
 
     /**
      * @param db An instance of the database to query.
@@ -35,12 +35,12 @@ public class DeleteMessageAndRelatedData extends AsyncTask<Void, Integer, Void>{
      */
     public void setArguments(AppDatabase db, Long messageID) {
         this.mDb = db;
-        this.messageID = messageID;
+        this.mMessageID = messageID;
     }
 
     @Override
     protected Void doInBackground(Void... params) {
-        if (mDb == null || messageID == Long.MIN_VALUE) {
+        if (mDb == null || mMessageID == Long.MIN_VALUE) {
             return null;
         }
         this.mMessageDao = mDb.messageDao();
@@ -49,19 +49,19 @@ public class DeleteMessageAndRelatedData extends AsyncTask<Void, Integer, Void>{
 
         Runnable deleteMessageAndRelatedData =
                 () -> {
-                    Message message = mMessageDao.findMessage(messageID);
+                    Message message = mMessageDao.findMessage(mMessageID);
                     if (message == null) {
-                        Log.w(TAG, "Can't find message to delete with ID: " + messageID);
+                        Log.w(TAG, "Can't find message to delete with ID: " + mMessageID);
                         return;
                     }
 
                     // first get all of the recipients for the message
-                    List<Recipient> recipients = mJoinDao.findRecipientsForMessage(messageID);
+                    List<Recipient> recipients = mJoinDao.findRecipientsForMessage(mMessageID);
 
                     // delete relationships for this message
-                    int deletedRelationships = mJoinDao.deleteRelationshipsForMessage(messageID);
+                    int deletedRelationships = mJoinDao.deleteRelationshipsForMessage(mMessageID);
                     if (deletedRelationships == 0) {
-                        Log.w(TAG, "No relationships found for message " + messageID);
+                        Log.w(TAG, "No relationships found for message " + mMessageID);
                     }
 
                     // for each of the recipients query if they have any messages now, delete if none
@@ -80,7 +80,7 @@ public class DeleteMessageAndRelatedData extends AsyncTask<Void, Integer, Void>{
                     }
 
                     // delete message
-                    int deletedMessageCount = mMessageDao.deleteMessageByID(messageID);
+                    int deletedMessageCount = mMessageDao.deleteMessageByID(mMessageID);
                     if (deletedMessageCount == 0) {
                         Log.w(TAG, "Error deleting message: " + message);
                     }

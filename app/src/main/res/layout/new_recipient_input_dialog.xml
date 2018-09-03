@@ -4,8 +4,9 @@
     android:layout_height="wrap_content"
     android:background="@color/colorQuaternary"
     android:padding="10dp"
-    android:layout_marginTop="10dp"
-    android:gravity="center_horizontal">
+    android:gravity="center_horizontal"
+    android:clipToPadding="false"
+    android:clipChildren="false">
 
     <TextView
         android:layout_width="wrap_content"
@@ -55,29 +56,30 @@
         android:paddingTop="10dp"
         android:gravity="center_horizontal"
         android:clipToPadding="false"
-        android:clipChildren="false">
+        android:clipChildren="false"
+        android:layout_margin="10dp">
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/cancel_new_recipient_button"
+            android:id="@+id/save_new_recipient_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableTop="@drawable/ic_edit_white_24dp"
-            android:text="@string/cancel"
-            android:textColor="@android:color/white"
+            android:layout_height="match_parent"
+            android:drawableTop="@drawable/ic_check_circle"
+            android:text="@string/save"
+            android:textColor="@color/colorQuaternary"
             android:textStyle="bold|italic"
-            android:background="@drawable/option_button_neutral_background"
+            android:background="@drawable/manual_recipient_button_background"
             android:padding="10dp"
             android:layout_marginEnd="5dp"
             style="?android:attr/borderlessButtonStyle"
             android:elevation="4dp"/>
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/save_new_recipient_button"
+            android:id="@+id/cancel_new_recipient_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableTop="@drawable/ic_delete_white_24dp"
-            android:text="@string/save"
-            android:textColor="@android:color/white"
+            android:layout_height="match_parent"
+            android:drawableTop="@drawable/ic_cancel"
+            android:text="@string/cancel"
+            android:textColor="@color/colorQuaternary"
             android:textStyle="bold|italic"
-            android:background="@drawable/option_button_warn_background"
+            android:background="@drawable/manual_recipient_button_background"
             android:padding="10dp"
             android:layout_marginStart="5dp"
             style="?android:attr/borderlessButtonStyle"

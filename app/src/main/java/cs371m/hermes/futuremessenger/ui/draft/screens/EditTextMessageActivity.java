@@ -10,6 +10,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -48,6 +50,8 @@ public class EditTextMessageActivity extends AppCompatActivity implements
         RecipientAdapter.RecipientRemoveListener {
 
     private Toolbar mToolbar;
+
+    private FloatingActionButton mFloatingActionButton;
 
     private static final String TAG = EditTextMessageActivity.class.getName();
 
@@ -166,6 +170,24 @@ public class EditTextMessageActivity extends AppCompatActivity implements
     private void setUpAllButtons() {
         setUpRecipientButtons();
         setUpDateAndTimeButtons();
+        setUpScheduleButton();
+    }
+
+    private void setUpScheduleButton() {
+        mFloatingActionButton = findViewById(R.id.schedule_button);
+        mFloatingActionButton.setOnClickListener(view -> {
+            validateForm();
+            // show confirmation dialog
+            // schedule if good
+            Snackbar.make(view, "Some snackbar", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+        });
+    }
+
+    private void validateForm() {
+        // validate recipients
+        // validate message content
+        // validate date/time are future
+
     }
 
     private void setUpRecipientsRecyclerView() {

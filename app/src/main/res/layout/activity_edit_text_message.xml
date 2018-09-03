@@ -29,11 +29,13 @@
 
     </android.support.v4.widget.NestedScrollView>
 
-    <com.leinardi.android.speeddial.SpeedDialView
-        android:id="@+id/floating_action_menu"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/schedule_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        app:sdMainFabClosedSrc="@drawable/ic_plus_icon" />
+        android:src="@drawable/ic_check"
+        app:rippleColor="@android:color/white"
+        android:layout_margin="16dp"/>
 
 </android.support.design.widget.CoordinatorLayout>

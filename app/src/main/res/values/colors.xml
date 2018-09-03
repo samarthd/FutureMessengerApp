@@ -6,9 +6,8 @@
     <color name="colorTertiary">#c2185b</color>
     <color name="colorQuaternary">#007c89</color>
     <color name="colorQuaternaryDark">#005b64</color>
-    <color name="colorQuinary">#f7c59f</color>
-    <color name="colorAccent">#ffb12e</color>
-    <color name="pressedAccent">#ff8f00</color>
+    <color name="colorQuinary">#ffb12e</color>
+    <color name="colorAccent">#ff686b</color>
     <color name="colorWarning">#f50057</color>
     <color name="menuOption">#00BCD4</color>
     <color name="pressedMenuOption">#80DEEA</color>

@@ -11,13 +11,13 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -157,7 +157,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements
 
     private void updateViewsFromData() {
         mRecipientAdapter.updateRecipientList(mMessageWithRecipients.getRecipients());
-
+        updateRecipientListViewVisibility();
         EditText messageContentInput = findViewById(R.id.message_content_edittext);
         messageContentInput.setText(mMessageWithRecipients.getMessage().getTextContent());
         messageContentInput.requestFocus();
@@ -166,6 +166,14 @@ public class EditTextMessageActivity extends AppCompatActivity implements
         updateTimeButtonText();
     }
 
+    private void updateRecipientListViewVisibility() {
+        if (mMessageWithRecipients.getRecipients().isEmpty()) {
+            findViewById(R.id.recipients_recyclerview).setVisibility(View.GONE);
+        }
+        else {
+            findViewById(R.id.recipients_recyclerview).setVisibility(View.VISIBLE);
+        }
+    }
 
     private void setUpAllButtons() {
         setUpRecipientButtons();
@@ -179,7 +187,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements
             validateForm();
             // show confirmation dialog
             // schedule if good
-            Snackbar.make(view, "Some snackbar", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+            this.finish();
         });
     }
 
@@ -358,13 +366,14 @@ public class EditTextMessageActivity extends AppCompatActivity implements
 
     private void addRecipientIfNotInCurrentListOrShowErrorToast(Recipient recipient) {
         if (isRecipientInCurrentRecipientList(recipient)) {
-            Toast.makeText(this, R.string.error_duplicate_recipient, Toast.LENGTH_SHORT)
+            Toast.makeText(this, R.string.error_duplicate_recipient, Toast.LENGTH_LONG)
                     .show();
         }
         else {
             mMessageWithRecipients.getRecipients().add(recipient);
             // notify the adapter
             mRecipientAdapter.updateRecipientList(mMessageWithRecipients.getRecipients());
+            updateRecipientListViewVisibility();
         }
     }
 
@@ -432,5 +441,6 @@ public class EditTextMessageActivity extends AppCompatActivity implements
     public void removeRecipient(Recipient recipientToRemove) {
         mMessageWithRecipients.getRecipients().remove(recipientToRemove);
         mRecipientAdapter.updateRecipientList(mMessageWithRecipients.getRecipients());
+        updateRecipientListViewVisibility();
     }
 }

@@ -22,7 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="3dp"
-        android:background="@drawable/recipient_button_shape"
+        android:background="@drawable/white_rounded_background"
         android:padding="4dp"/>
 
     <LinearLayout

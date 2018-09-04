@@ -6,6 +6,15 @@ import java.util.List;
 
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 
+/**
+ * UNUSED CLASS - animations weren't working well with wrap_content recyclerview
+ * so this became useless, but keep this around in case someday you figure out how to
+ * animate the layout bounds changes before/after additions and removals, respectively
+ *
+ * The problem is outlined here: https://stackoverflow.com/questions/40528487/recyclerview-with-wrap-content-is-not-animating-well
+ * and here: https://medium.com/@elye.project/recyclerview-supported-wrap-content-not-quite-f04a942ce624
+ *
+ */
 public class RecipientsDiffCallback extends DiffUtil.Callback {
 
     private List<Recipient> existingList;

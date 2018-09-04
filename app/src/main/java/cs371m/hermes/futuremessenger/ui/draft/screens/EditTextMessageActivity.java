@@ -42,7 +42,6 @@ import cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport;
 import cs371m.hermes.futuremessenger.tasks.CloseEditActivityIfScheduledMessageInvalidated;
 import cs371m.hermes.futuremessenger.ui.draft.adapters.RecipientAdapter;
 import cs371m.hermes.futuremessenger.ui.draft.screens.dialogs.NewRecipientDialogFragment;
-import jp.wasabeef.recyclerview.animators.ScaleInAnimator;
 
 import static cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients.BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS;
 
@@ -209,7 +208,6 @@ public class EditTextMessageActivity extends AppCompatActivity implements
     private void setUpRecipientsRecyclerView() {
         mRecipientAdapter = new RecipientAdapter(this);
         RecyclerView recyclerView = findViewById(R.id.recipients_recyclerview);
-        recyclerView.setItemAnimator(new ScaleInAnimator());
         recyclerView.setAdapter(mRecipientAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this) {
             // need this to prevent nested scrolling

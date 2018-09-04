@@ -1,7 +1,6 @@
 package cs371m.hermes.futuremessenger.ui.draft.adapters;
 
 import android.support.annotation.NonNull;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,11 +25,9 @@ public class RecipientAdapter extends RecyclerView.Adapter<RecipientViewHolder>{
     }
 
     public void updateRecipientList(List<Recipient> updatedRecipientList) {
-        DiffUtil.DiffResult diffResult =
-                DiffUtil.calculateDiff(new RecipientsDiffCallback(mRecipientList, updatedRecipientList));
         this.mRecipientList.clear();
         this.mRecipientList.addAll(updatedRecipientList);
-        diffResult.dispatchUpdatesTo(this);
+        notifyDataSetChanged();
     }
 
     @NonNull

@@ -47,7 +47,11 @@
     <string name="error_blank">You can\'t leave this blank!</string>
     <string name="error_duplicate_recipient">That phone number is already in the recipients list!</string>
     <string name="error_no_number_for_contact">That contact didn\'t have a phone number!</string>
+    <string name="error_no_contact">Something went wrong when adding that contact.</string>
 
+    <string name="error_no_recipients">You have to specify at least one recipient for this message!</string>
+    <string name="error_no_message">Your message is empty!</string>
+    <string name="error_datetime_not_future">Your message must be scheduled at least 1 minute into the future!</string>
     <!--Exit Dialog-->
     <string name="exit_dialog_title">Exit</string>
     <string name="exit_dialog_message">Are you sure you want to discard all changes and exit?</string>

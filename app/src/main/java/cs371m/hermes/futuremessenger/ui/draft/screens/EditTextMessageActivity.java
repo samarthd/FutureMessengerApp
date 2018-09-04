@@ -11,12 +11,14 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.transition.ChangeBounds;
 import android.support.transition.TransitionManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,13 +26,13 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Set;
 
 import cs371m.hermes.futuremessenger.R;
@@ -71,11 +73,15 @@ public class EditTextMessageActivity extends AppCompatActivity implements
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        EditText messageContentInput = findViewById(R.id.message_content_edittext);
-        mMessageWithRecipients.getMessage()
-                              .setTextContent(messageContentInput.getText().toString());
+        getMessageContentFromInputAndSetValue();
         outState.putSerializable(MessageWithRecipients.BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS,
                                  mMessageWithRecipients);
+    }
+
+    private void getMessageContentFromInputAndSetValue() {
+        EditText messageContentInput = findViewById(R.id.message_content_edittext);
+        mMessageWithRecipients.getMessage()
+                .setTextContent(messageContentInput.getText().toString());
     }
 
     @Override
@@ -191,19 +197,48 @@ public class EditTextMessageActivity extends AppCompatActivity implements
     private void setUpScheduleButton() {
         mFloatingActionButton = findViewById(R.id.schedule_button);
         mFloatingActionButton.setOnClickListener(view -> {
-            validateForm();
-            // show confirmation dialog
-            // schedule if good
-            this.finish();
+            getMessageContentFromInputAndSetValue(); // this is the only data that might not be latest, so update it
+            validateFormAndPerformAppropriateAction();
         });
     }
 
-    private void validateForm() {
-        // validate recipients
-        // validate message content
-        // validate date/time are future
-
+    private void validateFormAndPerformAppropriateAction() {
+        if (areRecipientsValid() && isMessageContentValid() && areDateAndTimeValid()) {
+            // show confirmation dialog
+            // schedule
+            this.finish();
+        }
     }
+
+    private boolean areRecipientsValid() {
+        if (mMessageWithRecipients.getRecipients().isEmpty()) {
+            Snackbar.make(findViewById(R.id.schedule_button), R.string.error_no_recipients, Snackbar.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isMessageContentValid() {
+        String textContent = mMessageWithRecipients.getMessage().getTextContent();
+        if (StringUtils.isEmpty(textContent.trim())) {
+            Snackbar.make(findViewById(R.id.schedule_button), R.string.error_no_message, Snackbar.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
+    }
+
+    private boolean areDateAndTimeValid()  {
+        Calendar scheduledDateTime = mMessageWithRecipients.getMessage().getScheduledDateTime();
+        Calendar minimumDateTime = Calendar.getInstance();
+        minimumDateTime.add(Calendar.MINUTE, 1); // messages must be scheduled for at least 1 minute into the future
+
+        if (scheduledDateTime.before(minimumDateTime)) {
+            Snackbar.make(findViewById(R.id.schedule_button), R.string.error_datetime_not_future, Snackbar.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
+    }
+
 
     private void setUpRecipientsRecyclerView() {
         mRecipientAdapter = new RecipientAdapter(this);
@@ -336,7 +371,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements
             boolean hasPhoneNumber =
                     cursor.getInt(cursor.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) == 1;
             if (!hasPhoneNumber) {
-                Toast.makeText(this, R.string.error_no_number_for_contact, Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.schedule_button), R.string.error_no_number_for_contact, Snackbar.LENGTH_LONG).show();
                 cursor.close();
                 return;
             }
@@ -346,11 +381,15 @@ public class EditTextMessageActivity extends AppCompatActivity implements
             String contactPhoneNumber =
                     cursor.getString(
                             cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
-
+            String formattedPhoneNumber =
+                    PhoneNumberUtils.formatNumber(contactPhoneNumber, Locale.getDefault().getCountry());
             Recipient recipient = new Recipient();
             recipient.setName(contactName);
-            recipient.setPhoneNumber(contactPhoneNumber);
+            recipient.setPhoneNumber(formattedPhoneNumber);
             addRecipientIfNotInCurrentListOrShowErrorToast(recipient);
+        }
+        else {
+            Snackbar.make(findViewById(R.id.schedule_button), R.string.error_no_contact, Snackbar.LENGTH_LONG).show();
         }
         cursor.close();
     }
@@ -372,8 +411,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements
 
     private void addRecipientIfNotInCurrentListOrShowErrorToast(Recipient recipient) {
         if (isRecipientInCurrentRecipientList(recipient)) {
-            Toast.makeText(this, R.string.error_duplicate_recipient, Toast.LENGTH_LONG)
-                    .show();
+            Snackbar.make(findViewById(R.id.schedule_button), R.string.error_duplicate_recipient, Snackbar.LENGTH_LONG).show();
         }
         else {
             mMessageWithRecipients.getRecipients().add(recipient);

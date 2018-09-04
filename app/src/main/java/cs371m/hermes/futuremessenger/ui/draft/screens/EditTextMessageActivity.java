@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.transition.ChangeBounds;
+import android.support.transition.TransitionManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -40,6 +42,7 @@ import cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport;
 import cs371m.hermes.futuremessenger.tasks.CloseEditActivityIfScheduledMessageInvalidated;
 import cs371m.hermes.futuremessenger.ui.draft.adapters.RecipientAdapter;
 import cs371m.hermes.futuremessenger.ui.draft.screens.dialogs.NewRecipientDialogFragment;
+import jp.wasabeef.recyclerview.animators.ScaleInAnimator;
 
 import static cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients.BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS;
 
@@ -155,8 +158,13 @@ public class EditTextMessageActivity extends AppCompatActivity implements
         }
     }
 
-    private void updateViewsFromData() {
+    private void updateRecipientAdapterAndAnimateChange() {
+        TransitionManager.beginDelayedTransition(findViewById(R.id.edit_scrollview), new ChangeBounds());
         mRecipientAdapter.updateRecipientList(mMessageWithRecipients.getRecipients());
+    }
+
+    private void updateViewsFromData() {
+        updateRecipientAdapterAndAnimateChange();
         updateRecipientListViewVisibility();
         EditText messageContentInput = findViewById(R.id.message_content_edittext);
         messageContentInput.setText(mMessageWithRecipients.getMessage().getTextContent());
@@ -201,7 +209,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements
     private void setUpRecipientsRecyclerView() {
         mRecipientAdapter = new RecipientAdapter(this);
         RecyclerView recyclerView = findViewById(R.id.recipients_recyclerview);
-        // TODO recyclerView.setItemAnimator();
+        recyclerView.setItemAnimator(new ScaleInAnimator());
         recyclerView.setAdapter(mRecipientAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this) {
             // need this to prevent nested scrolling
@@ -372,7 +380,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements
         else {
             mMessageWithRecipients.getRecipients().add(recipient);
             // notify the adapter
-            mRecipientAdapter.updateRecipientList(mMessageWithRecipients.getRecipients());
+            updateRecipientAdapterAndAnimateChange();
             updateRecipientListViewVisibility();
         }
     }
@@ -440,7 +448,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements
     @Override
     public void removeRecipient(Recipient recipientToRemove) {
         mMessageWithRecipients.getRecipients().remove(recipientToRemove);
-        mRecipientAdapter.updateRecipientList(mMessageWithRecipients.getRecipients());
+        updateRecipientAdapterAndAnimateChange();
         updateRecipientListViewVisibility();
     }
 }

@@ -222,9 +222,13 @@ public class EditTextMessageActivity extends AppCompatActivity implements
     }
 
     private boolean isMessageContentValid() {
-        String textContent = mMessageWithRecipients.getMessage().getTextContent();
-        if (StringUtils.isEmpty(textContent.trim())) {
-            Snackbar.make(findViewById(R.id.schedule_button), R.string.error_no_message, Snackbar.LENGTH_LONG).show();
+        // trim the content first
+        String textContent = mMessageWithRecipients.getMessage().getTextContent().trim();
+        mMessageWithRecipients.getMessage().setTextContent(textContent);
+        if (StringUtils.isEmpty(textContent)) {
+            EditText messageContentInput = findViewById(R.id.message_content_edittext);
+            messageContentInput.setError(getString(R.string.error_no_message));
+            messageContentInput.requestFocus();
             return false;
         }
         return true;

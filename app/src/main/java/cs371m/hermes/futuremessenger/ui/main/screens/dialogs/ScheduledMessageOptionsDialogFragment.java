@@ -20,7 +20,7 @@ import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
 import cs371m.hermes.futuremessenger.tasks.DeleteMessageAndRelatedData;
-import cs371m.hermes.futuremessenger.ui.draft.screens.EditTextMessageActivity;
+import cs371m.hermes.futuremessenger.ui.edit.screens.activities.EditTextMessageActivity;
 
 import static cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport.getConcatenatedRecipientNames;
 import static cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport.getFormattedDateOnly;

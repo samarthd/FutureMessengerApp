@@ -1,4 +1,4 @@
-package cs371m.hermes.futuremessenger.ui.main.adapters.message;
+package cs371m.hermes.futuremessenger.ui.main.support.adapters;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,8 +9,8 @@ import android.view.ViewGroup;
 
 import cs371m.hermes.futuremessenger.R;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
-import cs371m.hermes.futuremessenger.ui.main.adapters.message.viewholders.MessageViewHolder;
 import cs371m.hermes.futuremessenger.ui.main.screens.dialogs.ScheduledMessageOptionsDialogFragment;
+import cs371m.hermes.futuremessenger.ui.main.support.viewholders.MessageViewHolder;
 
 public class ScheduledMessageAdapter extends MessageAdapter {
 

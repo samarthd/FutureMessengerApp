@@ -1,4 +1,4 @@
-package cs371m.hermes.futuremessenger.persistence.entities.join;
+package cs371m.hermes.futuremessenger.persistence.entities;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -6,8 +6,6 @@ import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Index;
 import android.support.annotation.NonNull;
 
-import cs371m.hermes.futuremessenger.persistence.entities.Message;
-import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

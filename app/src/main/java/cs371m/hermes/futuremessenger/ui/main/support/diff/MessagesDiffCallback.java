@@ -1,4 +1,4 @@
-package cs371m.hermes.futuremessenger.ui.main;
+package cs371m.hermes.futuremessenger.ui.main.support.diff;
 
 import android.os.Bundle;
 import android.support.v7.util.DiffUtil;

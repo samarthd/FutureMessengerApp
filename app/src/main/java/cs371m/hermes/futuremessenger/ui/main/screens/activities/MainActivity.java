@@ -1,4 +1,4 @@
-package cs371m.hermes.futuremessenger.ui.main.screens;
+package cs371m.hermes.futuremessenger.ui.main.screens.activities;
 
 
 import android.app.Activity;
@@ -22,11 +22,11 @@ import cs371m.hermes.futuremessenger.persistence.AppDatabase;
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.entities.embedded.Status;
-import cs371m.hermes.futuremessenger.persistence.entities.join.MessageRecipientJoin;
-import cs371m.hermes.futuremessenger.persistence.repositories.isolated.MessageDao;
-import cs371m.hermes.futuremessenger.persistence.repositories.isolated.RecipientDao;
-import cs371m.hermes.futuremessenger.persistence.repositories.joined.MessageRecipientJoinDao;
-import cs371m.hermes.futuremessenger.ui.main.adapters.MainFragmentPagerAdapter;
+import cs371m.hermes.futuremessenger.persistence.entities.MessageRecipientJoin;
+import cs371m.hermes.futuremessenger.persistence.repositories.MessageDao;
+import cs371m.hermes.futuremessenger.persistence.repositories.RecipientDao;
+import cs371m.hermes.futuremessenger.persistence.repositories.MessageRecipientJoinDao;
+import cs371m.hermes.futuremessenger.ui.main.support.adapters.MainFragmentPagerAdapter;
 import cs371m.hermes.futuremessenger.ui.main.screens.fragments.FailedMessagesFragment;
 import cs371m.hermes.futuremessenger.ui.main.screens.fragments.ScheduledMessagesFragment;
 import cs371m.hermes.futuremessenger.ui.main.screens.fragments.SentMessagesFragment;

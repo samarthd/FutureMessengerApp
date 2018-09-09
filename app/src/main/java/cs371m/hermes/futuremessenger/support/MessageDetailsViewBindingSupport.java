@@ -11,11 +11,12 @@ import java.util.List;
 import cs371m.hermes.futuremessenger.R;
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
+import cs371m.hermes.futuremessenger.ui.main.support.adapters.MessageAdapter;
 
 /**
  * A support class that holds basic functionality necessary to populate a message details view.
  *
- * @see cs371m.hermes.futuremessenger.ui.main.adapters.message.MessageAdapter
+ * @see MessageAdapter
  * @see cs371m.hermes.futuremessenger.ui.main.screens.dialogs.ScheduledMessageOptionsDialogFragment
  *
  */

@@ -1,4 +1,4 @@
-package cs371m.hermes.futuremessenger.ui.draft.screens.dialogs;
+package cs371m.hermes.futuremessenger.ui.edit.screens.dialogs;
 
 import android.app.Dialog;
 import android.os.Bundle;

@@ -8,9 +8,9 @@ import java.util.List;
 import cs371m.hermes.futuremessenger.persistence.AppDatabase;
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
-import cs371m.hermes.futuremessenger.persistence.repositories.isolated.MessageDao;
-import cs371m.hermes.futuremessenger.persistence.repositories.isolated.RecipientDao;
-import cs371m.hermes.futuremessenger.persistence.repositories.joined.MessageRecipientJoinDao;
+import cs371m.hermes.futuremessenger.persistence.repositories.MessageDao;
+import cs371m.hermes.futuremessenger.persistence.repositories.RecipientDao;
+import cs371m.hermes.futuremessenger.persistence.repositories.MessageRecipientJoinDao;
 
 /**
  * Deletes a message from the database, along with all join entries. If the associated recipients

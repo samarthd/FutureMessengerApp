@@ -1,4 +1,4 @@
-package cs371m.hermes.futuremessenger.ui.main.adapters;
+package cs371m.hermes.futuremessenger.ui.main.support.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

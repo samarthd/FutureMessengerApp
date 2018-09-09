@@ -1,4 +1,4 @@
-package cs371m.hermes.futuremessenger.ui.draft.screens;
+package cs371m.hermes.futuremessenger.ui.edit.screens.activities;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -43,8 +43,8 @@ import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
 import cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport;
 import cs371m.hermes.futuremessenger.tasks.CloseEditActivityIfScheduledMessageInvalidated;
 import cs371m.hermes.futuremessenger.tasks.SaveAndScheduleMessage;
-import cs371m.hermes.futuremessenger.ui.draft.adapters.RecipientAdapter;
-import cs371m.hermes.futuremessenger.ui.draft.screens.dialogs.NewRecipientDialogFragment;
+import cs371m.hermes.futuremessenger.ui.edit.screens.dialogs.NewRecipientDialogFragment;
+import cs371m.hermes.futuremessenger.ui.edit.support.adapters.RecipientAdapter;
 
 import static cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients.BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS;
 
@@ -205,8 +205,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements
 
     private void validateFormAndPerformAppropriateAction() {
         if (areRecipientsValid() && isMessageContentValid() && areDateAndTimeValid()) {
-            // show confirmation dialog
-            // schedule
+            // TODO show confirmation dialog
             SaveAndScheduleMessage scheduleMessageTask = new SaveAndScheduleMessage();
             scheduleMessageTask.setArguments(AppDatabase.getInstance(this), mMessageWithRecipients);
             scheduleMessageTask.execute();

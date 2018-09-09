@@ -11,8 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import cs371m.hermes.futuremessenger.R;
-import cs371m.hermes.futuremessenger.ui.main.MainViewModel;
-import cs371m.hermes.futuremessenger.ui.main.adapters.message.ScheduledMessageAdapter;
+import cs371m.hermes.futuremessenger.ui.main.support.viewmodels.MainViewModel;
+import cs371m.hermes.futuremessenger.ui.main.support.adapters.ScheduledMessageAdapter;
 import jp.wasabeef.recyclerview.animators.ScaleInAnimator;
 
 /**

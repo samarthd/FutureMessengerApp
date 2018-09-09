@@ -1,17 +1,17 @@
-package cs371m.hermes.futuremessenger.ui.main;
+package cs371m.hermes.futuremessenger.ui.main.support.livedata;
 
 import android.arch.lifecycle.MutableLiveData;
-import android.os.AsyncTask;
 
 import java.util.List;
 
 import cs371m.hermes.futuremessenger.persistence.AppDatabase;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
 import cs371m.hermes.futuremessenger.tasks.QueryForMessagesWithRecipients;
+import cs371m.hermes.futuremessenger.ui.main.screens.activities.MainActivity;
 
 /**
  * MutableLiveData that the fragment tabs in
- * {@link cs371m.hermes.futuremessenger.ui.main.screens.MainActivity} look to for data.
+ * {@link MainActivity} look to for data.
  */
 public class MessagesWithRecipientsLiveData extends MutableLiveData<List<MessageWithRecipients>> {
 

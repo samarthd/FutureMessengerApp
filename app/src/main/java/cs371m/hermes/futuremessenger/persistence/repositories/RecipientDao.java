@@ -1,4 +1,4 @@
-package cs371m.hermes.futuremessenger.persistence.repositories.isolated;
+package cs371m.hermes.futuremessenger.persistence.repositories;
 
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;

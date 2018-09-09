@@ -12,11 +12,11 @@ import java.util.Set;
 import cs371m.hermes.futuremessenger.persistence.AppDatabase;
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
-import cs371m.hermes.futuremessenger.persistence.entities.join.MessageRecipientJoin;
+import cs371m.hermes.futuremessenger.persistence.entities.MessageRecipientJoin;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
-import cs371m.hermes.futuremessenger.persistence.repositories.isolated.MessageDao;
-import cs371m.hermes.futuremessenger.persistence.repositories.isolated.RecipientDao;
-import cs371m.hermes.futuremessenger.persistence.repositories.joined.MessageRecipientJoinDao;
+import cs371m.hermes.futuremessenger.persistence.repositories.MessageDao;
+import cs371m.hermes.futuremessenger.persistence.repositories.RecipientDao;
+import cs371m.hermes.futuremessenger.persistence.repositories.MessageRecipientJoinDao;
 
 public class SaveAndScheduleMessage extends AsyncTask<Void, Integer, Void> {
 

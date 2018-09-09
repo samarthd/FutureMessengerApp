@@ -9,7 +9,8 @@ import java.lang.ref.WeakReference;
 
 import cs371m.hermes.futuremessenger.persistence.AppDatabase;
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
-import cs371m.hermes.futuremessenger.persistence.repositories.isolated.MessageDao;
+import cs371m.hermes.futuremessenger.persistence.repositories.MessageDao;
+import cs371m.hermes.futuremessenger.ui.edit.screens.activities.EditTextMessageActivity;
 
 import static cs371m.hermes.futuremessenger.persistence.entities.embedded.Status.SCHEDULED;
 
@@ -18,7 +19,7 @@ import static cs371m.hermes.futuremessenger.persistence.entities.embedded.Status
  * and thus should no longer be editable. Sets a signal to kill the activity where the
  * message is being edited.
  *
- * @see cs371m.hermes.futuremessenger.ui.draft.screens.EditTextMessageActivity
+ * @see EditTextMessageActivity
  */
 public class CloseEditActivityIfScheduledMessageInvalidated extends AsyncTask<Void, Integer, Message> {
 

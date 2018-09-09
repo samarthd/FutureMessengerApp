@@ -1,4 +1,4 @@
-package cs371m.hermes.futuremessenger.persistence.repositories.joined;
+package cs371m.hermes.futuremessenger.persistence.repositories;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
@@ -10,7 +10,7 @@ import java.util.List;
 
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
-import cs371m.hermes.futuremessenger.persistence.entities.join.MessageRecipientJoin;
+import cs371m.hermes.futuremessenger.persistence.entities.MessageRecipientJoin;
 
 @Dao
 public interface MessageRecipientJoinDao {

@@ -1,4 +1,4 @@
-package cs371m.hermes.futuremessenger.ui.draft.adapters;
+package cs371m.hermes.futuremessenger.ui.edit.support.viewholders;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;

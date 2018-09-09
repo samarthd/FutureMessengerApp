@@ -1,4 +1,4 @@
-package cs371m.hermes.futuremessenger.ui.main.adapters.message;
+package cs371m.hermes.futuremessenger.ui.main.support.adapters;
 
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
@@ -10,8 +10,8 @@ import java.util.List;
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
-import cs371m.hermes.futuremessenger.ui.main.MessagesDiffCallback;
-import cs371m.hermes.futuremessenger.ui.main.adapters.message.viewholders.MessageViewHolder;
+import cs371m.hermes.futuremessenger.ui.main.support.diff.MessagesDiffCallback;
+import cs371m.hermes.futuremessenger.ui.main.support.viewholders.MessageViewHolder;
 
 import static cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport.getConcatenatedRecipientNames;
 import static cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport.getFormattedDateOnly;

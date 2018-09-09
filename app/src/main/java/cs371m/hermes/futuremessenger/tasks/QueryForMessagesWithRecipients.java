@@ -11,9 +11,9 @@ import cs371m.hermes.futuremessenger.persistence.AppDatabase;
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
-import cs371m.hermes.futuremessenger.persistence.repositories.isolated.MessageDao;
-import cs371m.hermes.futuremessenger.persistence.repositories.joined.MessageRecipientJoinDao;
-import cs371m.hermes.futuremessenger.ui.main.MessagesWithRecipientsLiveData;
+import cs371m.hermes.futuremessenger.persistence.repositories.MessageDao;
+import cs371m.hermes.futuremessenger.persistence.repositories.MessageRecipientJoinDao;
+import cs371m.hermes.futuremessenger.ui.main.support.livedata.MessagesWithRecipientsLiveData;
 
 /**
  * An asynchronous task that can query for messages with a certain status, retrieve their recipients,

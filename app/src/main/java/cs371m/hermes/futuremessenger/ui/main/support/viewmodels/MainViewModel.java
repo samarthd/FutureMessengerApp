@@ -1,4 +1,4 @@
-package cs371m.hermes.futuremessenger.ui.main;
+package cs371m.hermes.futuremessenger.ui.main.support.viewmodels;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
@@ -14,10 +14,12 @@ import cs371m.hermes.futuremessenger.persistence.AppDatabase;
 import cs371m.hermes.futuremessenger.persistence.entities.embedded.Status;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
 import cs371m.hermes.futuremessenger.tasks.QueryForMessagesWithRecipients;
+import cs371m.hermes.futuremessenger.ui.main.support.livedata.MessagesWithRecipientsLiveData;
+import cs371m.hermes.futuremessenger.ui.main.screens.activities.MainActivity;
 
 /**
  * This is a ViewModel that holds the data necessary to populate all of the tabs in
- * the {@link cs371m.hermes.futuremessenger.ui.main.screens.MainActivity}.
+ * the {@link MainActivity}.
  *
  * It observes the database's InvalidationTracker, and on changes to any tables,
  * runs a background task to query for the new data and updates the data it has.

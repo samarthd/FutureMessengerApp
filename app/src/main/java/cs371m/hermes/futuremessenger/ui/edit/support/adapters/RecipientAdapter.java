@@ -1,4 +1,4 @@
-package cs371m.hermes.futuremessenger.ui.draft.adapters;
+package cs371m.hermes.futuremessenger.ui.edit.support.adapters;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -13,6 +13,7 @@ import java.util.List;
 
 import cs371m.hermes.futuremessenger.R;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
+import cs371m.hermes.futuremessenger.ui.edit.support.viewholders.RecipientViewHolder;
 
 public class RecipientAdapter extends RecyclerView.Adapter<RecipientViewHolder>{
 

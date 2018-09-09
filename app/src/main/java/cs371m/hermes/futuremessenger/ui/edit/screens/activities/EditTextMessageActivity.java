@@ -1,6 +1,5 @@
 package cs371m.hermes.futuremessenger.ui.edit.screens.activities;
 
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.arch.persistence.room.InvalidationTracker;
@@ -43,6 +42,7 @@ import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
 import cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport;
 import cs371m.hermes.futuremessenger.tasks.CloseEditActivityIfScheduledMessageInvalidated;
 import cs371m.hermes.futuremessenger.tasks.SaveAndScheduleMessage;
+import cs371m.hermes.futuremessenger.ui.edit.screens.dialogs.ExitConfirmationDialog;
 import cs371m.hermes.futuremessenger.ui.edit.screens.dialogs.NewRecipientDialogFragment;
 import cs371m.hermes.futuremessenger.ui.edit.support.adapters.RecipientAdapter;
 
@@ -445,20 +445,9 @@ public class EditTextMessageActivity extends AppCompatActivity implements
     }
 
     private void showExitDialog() {
-        AlertDialog.Builder builder =
-                new AlertDialog.Builder(this,
-                        R.style.GeneralDialogTheme);
-        builder.setTitle(R.string.exit_dialog_title)
-                .setMessage(R.string.exit_dialog_message)
-                .setPositiveButton(R.string.yes, (dialog, which) -> {
-                    dialog.dismiss();
-                    finish();
-                })
-                .setNegativeButton(R.string.no, (dialog, which) -> {
-                    dialog.dismiss();
-                })
-                .create()
-                .show();
+        ExitConfirmationDialog exitConfirmationDialog =  new ExitConfirmationDialog();
+        exitConfirmationDialog.show(getSupportFragmentManager(),
+                ExitConfirmationDialog.class.getName());
     }
 
 

@@ -18,9 +18,6 @@
         <item name="windowActionBar">false</item>
     </style>
 
-    <style name="GeneralDialogTheme" parent="Theme.AppCompat.Light.Dialog">
-        <item name="colorAccent">@color/colorPrimary</item>
-    </style>
 
     <!--Picker Dialogs-->
     <style name="FutureMessengerTabTextAppearance" parent="TextAppearance.Design.Tab">

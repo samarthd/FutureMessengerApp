@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -61,44 +62,44 @@ public class MainActivity extends AppCompatActivity {
         // The "New Text Message" option
         mSpeedDialView.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.floating_action_menu_message_button, R.drawable.text_icon)
-                        .setFabBackgroundColor(getResources().getColor(R.color.colorPrimary))
+                        .setFabBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         .setLabel("SCHEDULED")
-                        .setLabelColor(getResources().getColor(R.color.colorPrimary))
+                        .setLabelColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         .setLabelBackgroundColor(Color.WHITE)
                 .create());
         mSpeedDialView.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.floating_action_menu_message_button2, R.drawable.text_icon)
-                        .setFabBackgroundColor(getResources().getColor(R.color.colorPrimary))
+                        .setFabBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         .setLabel("FAILED")
-                        .setLabelColor(getResources().getColor(R.color.colorPrimary))
+                        .setLabelColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         .setLabelBackgroundColor(Color.WHITE)
                 .create());
         mSpeedDialView.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.floating_action_menu_message_button3, R.drawable.text_icon)
-                        .setFabBackgroundColor(getResources().getColor(R.color.colorPrimary))
+                        .setFabBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         .setLabel("SENT")
-                        .setLabelColor(getResources().getColor(R.color.colorPrimary))
+                        .setLabelColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         .setLabelBackgroundColor(Color.WHITE)
                         .create());
         mSpeedDialView.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.floating_action_menu_message_button4, R.drawable.text_icon)
-                        .setFabBackgroundColor(getResources().getColor(R.color.colorPrimary))
+                        .setFabBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         .setLabel("DELETE SCHEDULED")
-                        .setLabelColor(getResources().getColor(R.color.colorPrimary))
+                        .setLabelColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         .setLabelBackgroundColor(Color.WHITE)
                         .create());
         mSpeedDialView.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.floating_action_menu_message_button5, R.drawable.text_icon)
-                        .setFabBackgroundColor(getResources().getColor(R.color.colorPrimary))
+                        .setFabBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         .setLabel("DELETE FAILED")
-                        .setLabelColor(getResources().getColor(R.color.colorPrimary))
+                        .setLabelColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         .setLabelBackgroundColor(Color.WHITE)
                         .create());
         mSpeedDialView.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.floating_action_menu_message_button6, R.drawable.text_icon)
-                        .setFabBackgroundColor(getResources().getColor(R.color.colorPrimary))
+                        .setFabBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         .setLabel("DELETE SENT")
-                        .setLabelColor(getResources().getColor(R.color.colorPrimary))
+                        .setLabelColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         .setLabelBackgroundColor(Color.WHITE)
                         .create());
         mSpeedDialView.setOnActionSelectedListener(actionItem -> {

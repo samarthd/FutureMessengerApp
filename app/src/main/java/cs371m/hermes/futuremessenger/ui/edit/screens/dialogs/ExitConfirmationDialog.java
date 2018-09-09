@@ -33,12 +33,12 @@ public class ExitConfirmationDialog extends DialogFragment {
     }
 
     private View inflateAndReturnDialogLayout(LayoutInflater inflater) {
-        View recipientInputDialogLayout = inflater.inflate(R.layout.exit_confirmation_dialog, null);
+        View exitConfirmationDialogLayout = inflater.inflate(R.layout.exit_confirmation_dialog, null);
 
         // set the dialog's width to be 90% of the width of the screen
         Double dialogWidth = getContext().getResources().getDisplayMetrics().widthPixels * 0.90;
-        recipientInputDialogLayout.setMinimumWidth(dialogWidth.intValue());
-        return recipientInputDialogLayout;
+        exitConfirmationDialogLayout.setMinimumWidth(dialogWidth.intValue());
+        return exitConfirmationDialogLayout;
     }
 
     private void setUpButtons(View exitConfirmationDialogLayout) {

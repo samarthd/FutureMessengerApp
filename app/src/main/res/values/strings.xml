@@ -16,8 +16,8 @@
     <string name="delete_message_option_label">DELETE</string>
 
     <!-- Confirmation Dialog Labels -->
-    <string name="deleting_message">Cancel and Delete Message</string>
-    <string name="are_you_sure">Are you sure you want to cancel sending this message and delete it?</string>
+    <string name="delete_dialog_title">CANCEL &amp; DELETE</string>
+    <string name="delete_dialog_message">Are you sure you want to cancel sending this message and delete it?</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
 

@@ -12,17 +12,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:text="@string/exit_dialog_title"
+        android:text="@string/delete_dialog_title"
         android:textStyle="bold|italic"
         android:textSize="20sp"
         android:textColor="@android:color/white"/>
 
     <TextView
-        android:id="@+id/exit_dialog_message"
+        android:id="@+id/delete_dialog_message"
+        android:padding="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="@string/exit_dialog_message"
+        android:text="@string/delete_dialog_message"
         android:textSize="15sp"
         android:textColor="@android:color/white"/>
 
@@ -35,7 +35,7 @@
         android:clipChildren="false"
         android:layout_margin="10dp">
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/cancel_exit_button"
+            android:id="@+id/cancel_delete_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/no"
@@ -47,7 +47,7 @@
             style="?android:attr/borderlessButtonStyle"
             android:elevation="4dp"/>
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/confirm_exit_button"
+            android:id="@+id/confirm_delete_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/yes"

@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +14,11 @@ import android.view.Window;
 import java.util.List;
 
 import cs371m.hermes.futuremessenger.R;
-import cs371m.hermes.futuremessenger.persistence.AppDatabase;
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
-import cs371m.hermes.futuremessenger.tasks.DeleteMessageAndRelatedData;
 import cs371m.hermes.futuremessenger.ui.edit.screens.activities.EditTextMessageActivity;
+import cs371m.hermes.futuremessenger.ui.edit.screens.dialogs.DeleteConfirmationDialog;
 
 import static cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport.getConcatenatedRecipientNames;
 import static cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport.getFormattedDateOnly;
@@ -94,23 +92,10 @@ public class ScheduledMessageOptionsDialogFragment extends DialogFragment implem
     }
 
     private void launchDeleteConfirmationDialog() {
-        // TODO convert to dialog fragment
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle(getContext().getResources().getString(R.string.deleting_message));
-        builder.setMessage(getContext().getResources().getString(R.string.are_you_sure));
-        builder.setPositiveButton(R.string.yes, (dialog, which) -> {
-            dialog.dismiss();
-            DeleteMessageAndRelatedData deleteTask = new DeleteMessageAndRelatedData();
-            deleteTask.setArguments(
-                    AppDatabase.getInstance(getContext()),
-                    mMessageWithRecipients.getMessage().getId());
-            deleteTask.execute();
-        });
-        builder.setNegativeButton(R.string.no, (dialog, which) -> {
-            dialog.dismiss();
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
+        DeleteConfirmationDialog deleteConfirmationDialog =  new DeleteConfirmationDialog();
+        deleteConfirmationDialog.setMessageIDToDelete(mMessageWithRecipients.getMessage().getId());
+        deleteConfirmationDialog.show(getActivity().getSupportFragmentManager(),
+                DeleteConfirmationDialog.class.getName());
     }
 
     private void setUpOptionsDialog(View dialogLayout) {

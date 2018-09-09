@@ -31,11 +31,11 @@ import static cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSup
 import static cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport.updateScheduledDayTv;
 import static cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport.updateScheduledTimeTv;
 
-public class ScheduledMessageOptionsDialogFragment extends DialogFragment implements View.OnClickListener {
+public class ScheduledMessageOptionsDialog extends DialogFragment implements View.OnClickListener {
 
     private MessageWithRecipients mMessageWithRecipients;
 
-    public ScheduledMessageOptionsDialogFragment() {
+    public ScheduledMessageOptionsDialog() {
         // empty constructor
     }
 

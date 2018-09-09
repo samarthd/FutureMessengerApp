@@ -19,7 +19,7 @@ import java.util.Locale;
 
 import cs371m.hermes.futuremessenger.R;
 
-public class NewRecipientDialogFragment extends android.support.v4.app.DialogFragment {
+public class NewRecipientDialog extends android.support.v4.app.DialogFragment {
 
     public interface NewRecipientInfoSaveListener {
         void onSaveNewManualRecipient(String name, String phoneNumber);
@@ -29,7 +29,7 @@ public class NewRecipientDialogFragment extends android.support.v4.app.DialogFra
 
     private EditText mRecipientPhoneNumberInput;
 
-    public NewRecipientDialogFragment() {
+    public NewRecipientDialog() {
         // empty constructor
     }
 

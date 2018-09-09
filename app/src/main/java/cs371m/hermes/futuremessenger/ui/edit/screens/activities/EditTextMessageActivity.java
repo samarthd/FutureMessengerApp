@@ -43,7 +43,7 @@ import cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport;
 import cs371m.hermes.futuremessenger.tasks.CloseEditActivityIfScheduledMessageInvalidated;
 import cs371m.hermes.futuremessenger.tasks.SaveAndScheduleMessage;
 import cs371m.hermes.futuremessenger.ui.edit.screens.dialogs.ExitConfirmationDialog;
-import cs371m.hermes.futuremessenger.ui.edit.screens.dialogs.NewRecipientDialogFragment;
+import cs371m.hermes.futuremessenger.ui.edit.screens.dialogs.NewRecipientDialog;
 import cs371m.hermes.futuremessenger.ui.edit.support.adapters.RecipientAdapter;
 
 import static cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients.BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS;
@@ -51,7 +51,7 @@ import static cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipien
 public class EditTextMessageActivity extends AppCompatActivity implements
         DatePickerDialog.OnDateSetListener,
         TimePickerDialog.OnTimeSetListener,
-        NewRecipientDialogFragment.NewRecipientInfoSaveListener,
+        NewRecipientDialog.NewRecipientInfoSaveListener,
         RecipientAdapter.RecipientRemoveListener {
 
     private Toolbar mToolbar;
@@ -302,9 +302,9 @@ public class EditTextMessageActivity extends AppCompatActivity implements
     private void setUpPhoneNumberButton() {
         Button phoneNumberButton = findViewById(R.id.phone_number_button);
         phoneNumberButton.setOnClickListener(v -> {
-            NewRecipientDialogFragment newRecipientDialogFragment =  new NewRecipientDialogFragment();
-            newRecipientDialogFragment.show(getSupportFragmentManager(),
-                    NewRecipientDialogFragment.class.getName());
+            NewRecipientDialog newRecipientDialog =  new NewRecipientDialog();
+            newRecipientDialog.show(getSupportFragmentManager(),
+                    NewRecipientDialog.class.getName());
         });
     }
 

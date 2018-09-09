@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 
 import cs371m.hermes.futuremessenger.R;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
-import cs371m.hermes.futuremessenger.ui.main.screens.dialogs.ScheduledMessageOptionsDialogFragment;
+import cs371m.hermes.futuremessenger.ui.main.screens.dialogs.ScheduledMessageOptionsDialog;
 import cs371m.hermes.futuremessenger.ui.main.support.viewholders.MessageViewHolder;
 
 public class ScheduledMessageAdapter extends MessageAdapter {
@@ -42,14 +42,14 @@ public class ScheduledMessageAdapter extends MessageAdapter {
     private void setUpOnClick(MessageViewHolder holder) {
         holder.fullMessageLayout
                 .setOnClickListener(scheduledMessageView -> {
-                    ScheduledMessageOptionsDialogFragment optionsDialog =
-                            new ScheduledMessageOptionsDialogFragment();
+                    ScheduledMessageOptionsDialog optionsDialog =
+                            new ScheduledMessageOptionsDialog();
                     Bundle args = new Bundle();
                     args.putSerializable(MessageWithRecipients.BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS,
                                          mMessagesWithRecipients.get(holder.getAdapterPosition()));
                     optionsDialog.setArguments(args);
                     optionsDialog.show(mSupportFragmentManager,
-                                       ScheduledMessageOptionsDialogFragment.class.getName());
+                                       ScheduledMessageOptionsDialog.class.getName());
                 });
     }
 }

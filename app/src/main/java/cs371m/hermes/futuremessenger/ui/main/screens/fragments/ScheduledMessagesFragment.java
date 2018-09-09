@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import cs371m.hermes.futuremessenger.R;
 import cs371m.hermes.futuremessenger.ui.main.MainViewModel;
 import cs371m.hermes.futuremessenger.ui.main.adapters.message.ScheduledMessageAdapter;
-import cs371m.hermes.futuremessenger.ui.main.animators.MessageAnimator;
+import jp.wasabeef.recyclerview.animators.ScaleInAnimator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -52,7 +52,7 @@ public class ScheduledMessagesFragment extends Fragment {
                 inflater.inflate(R.layout.fragment_scheduled_messages, container, false);
         // Get a MessageAdapter to populate the RecyclerView
         RecyclerView recyclerView = fragmentView.findViewById(R.id.scheduled_messages_recycler_view);
-        recyclerView.setItemAnimator(new MessageAnimator());
+        recyclerView.setItemAnimator(new ScaleInAnimator());
         recyclerView.setAdapter(mMessageAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         return fragmentView;

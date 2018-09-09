@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatButton;
 import android.telephony.PhoneNumberFormattingTextWatcher;
+import android.telephony.PhoneNumberUtils;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,8 @@ import android.view.Window;
 import android.widget.EditText;
 
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.Locale;
 
 import cs371m.hermes.futuremessenger.R;
 
@@ -72,7 +75,9 @@ public class NewRecipientDialogFragment extends android.support.v4.app.DialogFra
         saveButton.setOnClickListener(view -> {
             NewRecipientInfoSaveListener listeningActivity = (NewRecipientInfoSaveListener) getActivity();
             String newRecipientName = mRecipientNameInput.getText().toString().trim();
-            String newRecipientPhoneNumber = mRecipientPhoneNumberInput.getText().toString().trim();
+            String newRecipientPhoneNumber =
+                    PhoneNumberUtils.formatNumber(mRecipientPhoneNumberInput.getText().toString().trim(),
+                                                  Locale.getDefault().getCountry());
             if (StringUtils.isEmpty(newRecipientName)) {
                 mRecipientNameInput.setError(getString(R.string.error_blank));
                 mRecipientNameInput.requestFocus();

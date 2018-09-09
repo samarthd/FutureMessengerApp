@@ -2,6 +2,7 @@ package cs371m.hermes.futuremessenger.persistence.entities;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
@@ -16,7 +17,11 @@ import lombok.ToString;
 @Setter
 @ToString
 @EqualsAndHashCode(exclude = "id")
-@Entity(tableName = "recipients")
+@Entity(tableName = "recipients", indices = {
+        @Index(value = "id", unique = true),
+        @Index(value = {"name", "phone_number"}, unique = true)
+})
+
 public class Recipient implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -33,10 +38,11 @@ public class Recipient implements Serializable {
 
     /**
      * The name of the recipient.
+     *
+     * Collation is set to NOCASE to ignore case when comparing strings. The index will have the
+     * same collation setting as is defined on the column.
      */
-    @ColumnInfo(name = "name")
+    @ColumnInfo(name = "name", collate = ColumnInfo.NOCASE)
     private String name;
-
-    // Maybe a contact photo URI?
 
 }

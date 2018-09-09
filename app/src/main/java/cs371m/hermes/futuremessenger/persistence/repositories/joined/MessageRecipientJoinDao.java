@@ -81,5 +81,11 @@ public interface MessageRecipientJoinDao {
     @Query("DELETE FROM messages_recipients_join WHERE message_id = :messageId")
     public int deleteRelationshipsForMessage(Long messageId);
 
+    /**
+     * Delete specific relationships for a message.
+     * @return the number of rows deleted
+     */
+    @Query("DELETE FROM messages_recipients_join WHERE message_id = :messageId AND recipient_id IN (:recipientIds)")
+    public int deleteRelationshipByJoinedIds(Long messageId, List<Long> recipientIds);
 
 }

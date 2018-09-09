@@ -31,6 +31,16 @@ public interface RecipientDao {
     public Recipient findRecipient(Long recipientID);
 
     /**
+     * Finds recipients matching the given name and phone number.
+     *
+     * Collation is set to NOCASE for the name column, so case sensitivity shouldn't matter
+     * unless the contact name has non-ASCII characters...and in that case I think it's okay
+     * to just have a mismatch and create a new entry.
+     */
+    @Query("SELECT * FROM recipients WHERE recipients.name = :name AND recipients.phone_number = :phoneNumber")
+    public Recipient findRecipientMatchingValues(String name, String phoneNumber);
+
+    /**
      * Finds all the recipients in the database.
      * @return The recipient objects found in the database.
      */

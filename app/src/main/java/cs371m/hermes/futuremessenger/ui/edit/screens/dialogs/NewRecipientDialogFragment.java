@@ -75,15 +75,20 @@ public class NewRecipientDialogFragment extends android.support.v4.app.DialogFra
         saveButton.setOnClickListener(view -> {
             NewRecipientInfoSaveListener listeningActivity = (NewRecipientInfoSaveListener) getActivity();
             String newRecipientName = mRecipientNameInput.getText().toString().trim();
+            String unformattedPhoneNumber = mRecipientPhoneNumberInput.getText().toString().trim();
             String newRecipientPhoneNumber =
-                    PhoneNumberUtils.formatNumber(mRecipientPhoneNumberInput.getText().toString().trim(),
+                    PhoneNumberUtils.formatNumber(unformattedPhoneNumber,
                                                   Locale.getDefault().getCountry());
             if (StringUtils.isEmpty(newRecipientName)) {
                 mRecipientNameInput.setError(getString(R.string.error_blank));
                 mRecipientNameInput.requestFocus();
             }
-            else if (StringUtils.isEmpty(newRecipientPhoneNumber)){
+            else if (StringUtils.isEmpty(unformattedPhoneNumber)){
                 mRecipientPhoneNumberInput.setError(getString(R.string.error_blank));
+                mRecipientPhoneNumberInput.requestFocus();
+            }
+            else if (StringUtils.isEmpty(newRecipientPhoneNumber)) {
+                mRecipientPhoneNumberInput.setError(getString(R.string.error_invalid_phone));
                 mRecipientPhoneNumberInput.requestFocus();
             }
             else {

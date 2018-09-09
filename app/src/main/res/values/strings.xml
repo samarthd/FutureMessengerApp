@@ -45,6 +45,7 @@
     <string name="cancel">Cancel</string>
 
     <string name="error_blank">You can\'t leave this blank!</string>
+    <string name="error_invalid_phone">This phone number is not valid.</string>
     <string name="error_duplicate_recipient">That phone number is already in the recipients list!</string>
     <string name="error_no_number_for_contact">That contact didn\'t have a phone number!</string>
     <string name="error_no_contact">Something went wrong when adding that contact.</string>

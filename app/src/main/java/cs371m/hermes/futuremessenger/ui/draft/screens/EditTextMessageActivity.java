@@ -42,6 +42,7 @@ import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
 import cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport;
 import cs371m.hermes.futuremessenger.tasks.CloseEditActivityIfScheduledMessageInvalidated;
+import cs371m.hermes.futuremessenger.tasks.SaveAndScheduleMessage;
 import cs371m.hermes.futuremessenger.ui.draft.adapters.RecipientAdapter;
 import cs371m.hermes.futuremessenger.ui.draft.screens.dialogs.NewRecipientDialogFragment;
 
@@ -206,6 +207,9 @@ public class EditTextMessageActivity extends AppCompatActivity implements
         if (areRecipientsValid() && isMessageContentValid() && areDateAndTimeValid()) {
             // show confirmation dialog
             // schedule
+            SaveAndScheduleMessage scheduleMessageTask = new SaveAndScheduleMessage();
+            scheduleMessageTask.setArguments(AppDatabase.getInstance(this), mMessageWithRecipients);
+            scheduleMessageTask.execute();
             this.finish();
         }
     }

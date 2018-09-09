@@ -1,6 +1,5 @@
 package cs371m.hermes.futuremessenger.ui.main.adapters.message;
 
-import android.os.Bundle;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -11,7 +10,6 @@ import java.util.List;
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
-import cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport;
 import cs371m.hermes.futuremessenger.ui.main.MessagesDiffCallback;
 import cs371m.hermes.futuremessenger.ui.main.adapters.message.viewholders.MessageViewHolder;
 
@@ -52,27 +50,6 @@ public abstract class MessageAdapter extends RecyclerView.Adapter<MessageViewHol
         return mMessagesWithRecipients.size();
     }
 
-
-    protected void updateWithPayloads(MessageViewHolder holder, List<Object> payloads) {
-        Bundle bundle = (Bundle) payloads.get(0);
-        View listedMessageDetailsLayout = holder.fullMessageLayout;
-        for (String key : bundle.keySet()) {
-            switch (key) {
-                case MessageDetailsViewBindingSupport.PAYLOAD_KEY_MESSAGE_CONTENT:
-                    updateMessageContentTv(listedMessageDetailsLayout, bundle.getString(key));
-                case MessageDetailsViewBindingSupport.PAYLOAD_KEY_RECIPIENTS:
-                    updateRecipientsTv(listedMessageDetailsLayout, bundle.getString(key));
-                case MessageDetailsViewBindingSupport.PAYLOAD_KEY_RECIPIENTS_PLURAL_FLAG:
-                    updateRecipientsLabelTv(listedMessageDetailsLayout, bundle.getBoolean(key));
-                case MessageDetailsViewBindingSupport.PAYLOAD_KEY_SCHEDULED_DATE:
-                    updateScheduledDateTv(listedMessageDetailsLayout, bundle.getString(key));
-                case MessageDetailsViewBindingSupport.PAYLOAD_KEY_SCHEDULED_DAY:
-                    updateScheduledDayTv(listedMessageDetailsLayout, bundle.getString(key));
-                case MessageDetailsViewBindingSupport.PAYLOAD_KEY_SCHEDULED_TIME:
-                    updateScheduledTimeTv(listedMessageDetailsLayout, bundle.getString(key));
-            }
-        }
-    }
 
     protected void updateWithoutPayloads(MessageViewHolder holder) {
         // always use getAdapterPosition for guaranteed correctness

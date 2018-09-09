@@ -7,8 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
-
 import cs371m.hermes.futuremessenger.R;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
 import cs371m.hermes.futuremessenger.ui.main.adapters.message.viewholders.MessageViewHolder;
@@ -33,20 +31,6 @@ public class ScheduledMessageAdapter extends MessageAdapter {
         View fullMessageLayout = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.listed_message, parent, false);
         return new MessageViewHolder(fullMessageLayout);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull MessageViewHolder holder, int position,
-                                 @NonNull List<Object> payloads) {
-
-        if (!payloads.isEmpty()) {
-            updateWithPayloads(holder, payloads);
-            setUpOnClick(holder);
-        }
-        else {
-            onBindViewHolder(holder, position);
-        }
-
     }
 
     @Override

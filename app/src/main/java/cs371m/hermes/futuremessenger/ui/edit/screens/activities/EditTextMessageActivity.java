@@ -148,7 +148,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements
         // so don't bother restoring state in here
         if (savedInstanceState == null) {
             // case where user launched this activity to edit an existing message
-            if (getIntent().getExtras().containsKey(BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS)) {
+            if (getIntent().getExtras() != null) {
                 Log.d(TAG, "Using intent extras to load data");
                 mMessageWithRecipients = (MessageWithRecipients) getIntent().getExtras()
                         .getSerializable(BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS);

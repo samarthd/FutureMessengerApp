@@ -2,6 +2,7 @@ package cs371m.hermes.futuremessenger.ui.main.screens.activities;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -20,16 +21,17 @@ import java.util.Calendar;
 import cs371m.hermes.futuremessenger.R;
 import cs371m.hermes.futuremessenger.persistence.AppDatabase;
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
+import cs371m.hermes.futuremessenger.persistence.entities.MessageRecipientJoin;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.entities.embedded.Status;
-import cs371m.hermes.futuremessenger.persistence.entities.MessageRecipientJoin;
 import cs371m.hermes.futuremessenger.persistence.repositories.MessageDao;
-import cs371m.hermes.futuremessenger.persistence.repositories.RecipientDao;
 import cs371m.hermes.futuremessenger.persistence.repositories.MessageRecipientJoinDao;
-import cs371m.hermes.futuremessenger.ui.main.support.adapters.MainFragmentPagerAdapter;
+import cs371m.hermes.futuremessenger.persistence.repositories.RecipientDao;
+import cs371m.hermes.futuremessenger.ui.edit.screens.activities.EditTextMessageActivity;
 import cs371m.hermes.futuremessenger.ui.main.screens.fragments.FailedMessagesFragment;
 import cs371m.hermes.futuremessenger.ui.main.screens.fragments.ScheduledMessagesFragment;
 import cs371m.hermes.futuremessenger.ui.main.screens.fragments.SentMessagesFragment;
+import cs371m.hermes.futuremessenger.ui.main.support.adapters.MainFragmentPagerAdapter;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,19 +63,26 @@ public class MainActivity extends AppCompatActivity {
         mSpeedDialView = findViewById(R.id.floating_action_menu);
         // The "New Text Message" option
         mSpeedDialView.addActionItem(
+                new SpeedDialActionItem.Builder(R.id.schedule_new_message_floating_button, R.drawable.text_icon)
+                        .setFabBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                        .setLabel(getString(R.string.new_text_message_label))
+                        .setLabelColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                        .setLabelBackgroundColor(Color.WHITE)
+                        .create());
+        mSpeedDialView.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.floating_action_menu_message_button, R.drawable.text_icon)
                         .setFabBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         .setLabel("SCHEDULED")
                         .setLabelColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         .setLabelBackgroundColor(Color.WHITE)
-                .create());
+                        .create());
         mSpeedDialView.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.floating_action_menu_message_button2, R.drawable.text_icon)
                         .setFabBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         .setLabel("FAILED")
                         .setLabelColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         .setLabelBackgroundColor(Color.WHITE)
-                .create());
+                        .create());
         mSpeedDialView.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.floating_action_menu_message_button3, R.drawable.text_icon)
                         .setFabBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
@@ -103,7 +112,11 @@ public class MainActivity extends AppCompatActivity {
                         .setLabelBackgroundColor(Color.WHITE)
                         .create());
         mSpeedDialView.setOnActionSelectedListener(actionItem -> {
-            switch(actionItem.getId()) {
+            switch (actionItem.getId()) {
+                case R.id.schedule_new_message_floating_button:
+                    Intent intent = new Intent(this, EditTextMessageActivity.class);
+                    startActivity(intent);
+                    return false;
                 case R.id.floating_action_menu_message_button:
                     //TODO Delete
                     new TempInsertTask(this).execute(Status.SCHEDULED);
@@ -134,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
     private static class TempInsertTask extends AsyncTask<String, Void, Integer> {
 
         private WeakReference<Activity> weakActivity;
+
         public TempInsertTask(Activity activity) {
             this.weakActivity = new WeakReference<>(activity);
         }
@@ -152,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
             MessageRecipientJoinDao mrjDao = db.messageRecipientJoinDao();
             Runnable create =
                     () -> {
-                        for(long i = 0; i < j; i++) {
+                        for (long i = 0; i < j; i++) {
                             Message message = createMessageWithVal(i, messageStatus);
                             Long messageId = mDao.createOrUpdateMessage(message);
                             Recipient recipient = createRecipientWithVal(i);
@@ -162,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
                             join.setMessageID(messageId);
                             mrjDao.insert(join);
 
-                            if(i % 2 == 0) {
+                            if (i % 2 == 0) {
                                 Recipient recipient2 = createRecipientWithVal(i * 100000000);
                                 Long recipientId2 = rDao.createOrUpdateRecipient(recipient2);
                                 MessageRecipientJoin join2 = new MessageRecipientJoin();

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Future Messenger</string>
     <!--Floating action menu labels-->
-    <string name="new_text_message_label">New Text Message</string>
+    <string name="new_text_message_label">NEW MESSAGE</string>
     <!--Tab labels-->
     <string name="scheduled_tab_title">Scheduled</string>
     <string name="sent_tab_title">Sent</string>

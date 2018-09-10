@@ -21,7 +21,7 @@ import static cs371m.hermes.futuremessenger.persistence.entities.embedded.Status
  *
  * @see EditTextMessageActivity
  */
-public class CloseEditActivityIfScheduledMessageInvalidated extends AsyncTask<Void, Integer, Message> {
+public class CloseEditActivityIfScheduledMessageInvalidated extends AsyncTask<Void, Integer, Boolean> {
 
     private AppDatabase mDb;
     private MessageDao mMessageDao;
@@ -39,20 +39,29 @@ public class CloseEditActivityIfScheduledMessageInvalidated extends AsyncTask<Vo
         this.mActivityToKill = new WeakReference<>(activityToKill);
     }
 
+    /**
+     * Return true if the activity should be killed, false otherwise.
+     */
     @Override
-    protected Message doInBackground(Void... voids) {
+    protected Boolean doInBackground(Void... voids) {
 
-        if (mDb == null || mMessageID == Long.MIN_VALUE) {
-            return null;
+        if (mDb == null || mMessageID == null || mMessageID == Long.MIN_VALUE) {
+            return false;
         }
+
         this.mMessageDao = mDb.messageDao();
-        return mMessageDao.findMessage(mMessageID);
+        Message foundMessage = mMessageDao.findMessage(mMessageID);
+        if (foundMessage == null || // message was deleted
+            !StringUtils.equals(SCHEDULED, foundMessage.getStatus().getCode())) { // message status changed
+            return true;
+        }
+
+        return false;
     }
 
     @Override
-    protected void onPostExecute(Message result) {
-        if (result == null ||
-            !StringUtils.equals(SCHEDULED, result.getStatus().getCode())) {
+    protected void onPostExecute(Boolean result) {
+        if (result != null && result == true) {
             AppCompatActivity activityToKill = mActivityToKill.get();
             if (activityToKill != null) {
                 activityToKill.finish();

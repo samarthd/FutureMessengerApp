@@ -50,7 +50,6 @@ public class SaveAndScheduleMessage extends AsyncTask<Void, Integer, Void> {
         this.mMessageRecipientJoinDao = mDb.messageRecipientJoinDao();
 
 
-        // TODO set alarm
         cs371m.hermes.futuremessenger.persistence.entities.embedded.Status scheduledStatus = new cs371m.hermes.futuremessenger.persistence.entities.embedded.Status();
         scheduledStatus.setCode(cs371m.hermes.futuremessenger.persistence.entities.embedded.Status.SCHEDULED);
         scheduledStatus.setDescription(cs371m.hermes.futuremessenger.persistence.entities.embedded.Status.SCHEDULED);
@@ -72,8 +71,8 @@ public class SaveAndScheduleMessage extends AsyncTask<Void, Integer, Void> {
         Message messageToSchedule = mMessageWithRecipients.getMessage();
         Long messageID = mMessageDao.createOrUpdateMessage(messageToSchedule);
         createRecipientsAndAssociations(messageID, mMessageWithRecipients.getRecipients());
-        // todo
 
+        // TODO set alarm
     }
 
     private void updateExistingMessage() {
@@ -88,6 +87,8 @@ public class SaveAndScheduleMessage extends AsyncTask<Void, Integer, Void> {
 
         deleteRelationshipsWithRecipients(messageID, recipientsToDissociate);
         createRecipientsAndAssociations(messageID, recipientsToPersist);
+
+        // TODO set alarm
     }
 
     private Pair<List<Recipient>, List<Recipient>> determineRecipientsToPersistAndDissociate(List<Recipient> currentlyAssociatedRecipients) {

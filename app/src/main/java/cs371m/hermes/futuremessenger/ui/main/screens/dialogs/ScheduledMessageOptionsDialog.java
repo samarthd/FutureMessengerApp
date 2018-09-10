@@ -31,7 +31,7 @@ import static cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSup
 import static cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport.updateScheduledDayTv;
 import static cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport.updateScheduledTimeTv;
 
-public class ScheduledMessageOptionsDialog extends DialogFragment implements View.OnClickListener {
+public class ScheduledMessageOptionsDialog extends DialogFragment {
 
     private MessageWithRecipients mMessageWithRecipients;
 
@@ -71,26 +71,6 @@ public class ScheduledMessageOptionsDialog extends DialogFragment implements Vie
         return dialogLayout;
     }
 
-    @Override
-    public void onClick(View v) {
-        switch(v.getId()) {
-            case R.id.edit_option:
-                dismiss();
-                Intent intent = new Intent(getContext(), EditTextMessageActivity.class);
-                intent.putExtra(MessageWithRecipients.BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS,
-                                mMessageWithRecipients);
-                getContext().startActivity(intent);
-                break;
-            case R.id.delete_option:
-                dismiss();
-                launchDeleteConfirmationDialog();
-                break;
-            default:
-                break;
-        }
-        dismiss();
-    }
-
     private void launchDeleteConfirmationDialog() {
         DeleteConfirmationDialog deleteConfirmationDialog =  new DeleteConfirmationDialog();
         Bundle args = new Bundle();
@@ -118,10 +98,21 @@ public class ScheduledMessageOptionsDialog extends DialogFragment implements Vie
                         R.drawable.message_background_shape));
 
         populateViews(dialogMessageDetailsLayout);
+        setUpButtons(dialogLayout);
+    }
 
-        // TODO change this to match the individual button listeners rather than having fragment implement it
-        dialogLayout.findViewById(R.id.edit_option).setOnClickListener(this);
-        dialogLayout.findViewById(R.id.delete_option).setOnClickListener(this);
+    private void setUpButtons(View dialogLayout) {
+        dialogLayout.findViewById(R.id.edit_option).setOnClickListener(view -> {
+            dismiss();
+            Intent intent = new Intent(getContext(), EditTextMessageActivity.class);
+            intent.putExtra(MessageWithRecipients.BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS,
+                    mMessageWithRecipients);
+            getContext().startActivity(intent);
+        });
+        dialogLayout.findViewById(R.id.delete_option).setOnClickListener(view -> {
+            dismiss();
+            launchDeleteConfirmationDialog();
+        });
     }
 
     private void populateViews(View dialogMessageDetailsLayout) {

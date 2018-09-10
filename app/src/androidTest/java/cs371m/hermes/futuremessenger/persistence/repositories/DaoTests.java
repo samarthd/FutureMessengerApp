@@ -10,15 +10,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.IOException;
 import java.util.Calendar;
 import java.util.logging.Logger;
 
 import cs371m.hermes.futuremessenger.persistence.AppDatabase;
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
+import cs371m.hermes.futuremessenger.persistence.entities.MessageRecipientJoin;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.entities.embedded.Status;
-import cs371m.hermes.futuremessenger.persistence.entities.MessageRecipientJoin;
 
 import static org.junit.Assert.assertEquals;
 
@@ -42,7 +41,7 @@ public class DaoTests {
     }
 
     @After
-    public void closeDb() throws IOException {
+    public void closeDb() {
         mDb.close();
     }
 
@@ -159,7 +158,7 @@ public class DaoTests {
 
         // create relationship
         MessageRecipientJoin messageRecipientJoin =
-                createAndInitializeMessageRecipientJoin(messageID,recipientID);
+                createAndInitializeMessageRecipientJoin(messageID, recipientID);
 
         // sanity check
         assertEquals(0, mMessageRecipientJoinDao.findAllRelationships().size());
@@ -197,7 +196,7 @@ public class DaoTests {
 
         // create relationship
         MessageRecipientJoin messageRecipientJoin =
-                createAndInitializeMessageRecipientJoin(messageID,recipientID);
+                createAndInitializeMessageRecipientJoin(messageID, recipientID);
 
         mMessageRecipientJoinDao.insert(messageRecipientJoin);
 
@@ -233,7 +232,7 @@ public class DaoTests {
 
         // create relationship
         MessageRecipientJoin messageRecipientJoin =
-                createAndInitializeMessageRecipientJoin(messageID,recipientID);
+                createAndInitializeMessageRecipientJoin(messageID, recipientID);
 
         mMessageRecipientJoinDao.insert(messageRecipientJoin);
 
@@ -267,7 +266,7 @@ public class DaoTests {
 
         // create relationship
         MessageRecipientJoin messageRecipientJoin =
-                createAndInitializeMessageRecipientJoin(messageID,recipientID);
+                createAndInitializeMessageRecipientJoin(messageID, recipientID);
 
         mMessageRecipientJoinDao.insert(messageRecipientJoin);
 

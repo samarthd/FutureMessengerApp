@@ -11,12 +11,12 @@ import java.util.Set;
 
 import cs371m.hermes.futuremessenger.persistence.AppDatabase;
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
-import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.entities.MessageRecipientJoin;
+import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
 import cs371m.hermes.futuremessenger.persistence.repositories.MessageDao;
-import cs371m.hermes.futuremessenger.persistence.repositories.RecipientDao;
 import cs371m.hermes.futuremessenger.persistence.repositories.MessageRecipientJoinDao;
+import cs371m.hermes.futuremessenger.persistence.repositories.RecipientDao;
 
 public class SaveAndScheduleMessage extends AsyncTask<Void, Integer, Void> {
 
@@ -32,7 +32,8 @@ public class SaveAndScheduleMessage extends AsyncTask<Void, Integer, Void> {
 
     /**
      * Set the arguments for this task.
-     * @param db an instance of the app's database
+     *
+     * @param db                an instance of the app's database
      * @param messageToSchedule the message to schedule with all recipients (should be validated prior to calling this)
      */
     public void setArguments(AppDatabase db, MessageWithRecipients messageToSchedule) {
@@ -58,8 +59,7 @@ public class SaveAndScheduleMessage extends AsyncTask<Void, Integer, Void> {
             // new message
             Log.d(TAG, "Creating new message as message ID was null.");
             mDb.runInTransaction(this::createNewMessage);
-        }
-        else {
+        } else {
             Log.d(TAG, "Updating existing message as message ID was not null.");
             // update of a previously scheduled message
             mDb.runInTransaction(this::updateExistingMessage);
@@ -104,8 +104,7 @@ public class SaveAndScheduleMessage extends AsyncTask<Void, Integer, Void> {
                 Log.d(TAG, "Currently associated recipient was found in the new list of recipients to persist");
                 // the recipient that needs to be persisted is already persisted, so remove it from the set of new recipients to be added
                 recipientsToPersist.remove(currentlyAssociatedRecipient);
-            }
-            else {
+            } else {
                 Log.d(TAG, "Currently associated recipient was not found in the new list of recipients to persist, will be removed.");
                 // if the new recipients set does not have this recipient, add it to the list that should be removed
                 recipientsToDissociate.add(currentlyAssociatedRecipient);
@@ -115,7 +114,7 @@ public class SaveAndScheduleMessage extends AsyncTask<Void, Integer, Void> {
         Log.d(TAG, "Final recipients to persist: " + recipientsToPersist.toString());
         Log.d(TAG, "Recipients to dissociate: " + recipientsToDissociate.toString());
 
-        return new Pair<>( new ArrayList<>(recipientsToPersist), recipientsToDissociate);
+        return new Pair<>(new ArrayList<>(recipientsToPersist), recipientsToDissociate);
     }
 
     private void createRecipientsAndAssociations(Long messageID, List<Recipient> recipientsToPersist) {
@@ -127,8 +126,7 @@ public class SaveAndScheduleMessage extends AsyncTask<Void, Integer, Void> {
             if (foundRecipient == null) {
                 // create a recipient in the database, as one with the same name/number doesn't exist
                 recipientIDToAssociate = mRecipientDao.createOrUpdateRecipient(recipientToPersist);
-            }
-            else {
+            } else {
                 recipientIDToAssociate = foundRecipient.getId();
             }
 

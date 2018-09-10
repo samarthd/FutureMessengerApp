@@ -9,16 +9,16 @@ import cs371m.hermes.futuremessenger.persistence.AppDatabase;
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.repositories.MessageDao;
-import cs371m.hermes.futuremessenger.persistence.repositories.RecipientDao;
 import cs371m.hermes.futuremessenger.persistence.repositories.MessageRecipientJoinDao;
+import cs371m.hermes.futuremessenger.persistence.repositories.RecipientDao;
 
 /**
  * Deletes a message from the database, along with all join entries. If the associated recipients
  * do not have any other messages, delete them as well.
- *
+ * <p>
  * All operations are performed in one database transaction.
  */
-public class DeleteMessageAndRelatedData extends AsyncTask<Void, Integer, Void>{
+public class DeleteMessageAndRelatedData extends AsyncTask<Void, Integer, Void> {
 
     private static final String TAG = DeleteMessageAndRelatedData.class.getName();
 
@@ -30,7 +30,7 @@ public class DeleteMessageAndRelatedData extends AsyncTask<Void, Integer, Void>{
     private Long mMessageID = Long.MIN_VALUE;
 
     /**
-     * @param db An instance of the database to query.
+     * @param db        An instance of the database to query.
      * @param messageID The ID of the message to delete.
      */
     public void setArguments(AppDatabase db, Long messageID) {
@@ -72,8 +72,7 @@ public class DeleteMessageAndRelatedData extends AsyncTask<Void, Integer, Void>{
                             int deletedRecipientCount = mRecipientDao.deleteRecipient(recipient);
                             if (deletedRecipientCount == 0) {
                                 Log.w(TAG, "Error deleting recipient: " + recipient);
-                            }
-                            else {
+                            } else {
                                 Log.d(TAG, "Recipient successfully deleted: " + recipient);
                             }
                         }

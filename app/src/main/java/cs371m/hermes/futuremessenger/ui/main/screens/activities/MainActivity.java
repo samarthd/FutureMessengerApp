@@ -188,6 +188,7 @@ public class MainActivity extends AppCompatActivity {
                     };
             db.runInTransaction(create);
         }
+
         private Message createMessageWithVal(Long val, String messageStatus) {
             Message message = new Message();
             message.setTextContent("Text content " + val);
@@ -213,6 +214,7 @@ public class MainActivity extends AppCompatActivity {
     private static class TempDeleteTask extends AsyncTask<String, Void, Integer> {
 
         private WeakReference<Activity> weakActivity;
+
         public TempDeleteTask(Activity activity) {
             this.weakActivity = new WeakReference<>(activity);
         }
@@ -239,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentPagerAdapter.addFragment(new SentMessagesFragment(),
                 getString(R.string.sent_tab_title));
         fragmentPagerAdapter.addFragment(new ScheduledMessagesFragment(),
-                                         getString(R.string.scheduled_tab_title));
+                getString(R.string.scheduled_tab_title));
         fragmentPagerAdapter.addFragment(new FailedMessagesFragment(),
                 getString(R.string.failed_tab_title));
         mViewPager.setAdapter(fragmentPagerAdapter);

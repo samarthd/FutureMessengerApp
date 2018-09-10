@@ -25,17 +25,16 @@ public class MessagesWithRecipientsLiveData extends MutableLiveData<List<Message
 
     /**
      * Override this method so we immediately query for data when we go from 0 observers to 1.
-     *
+     * <p>
      * This is important, as we cannot only update data when a table is invalidated and there
      * are active observers.
-     *
+     * <p>
      * There will come a moment when there is already some data present, then a table is
      * invalidated, and there are no active observers so this data is not updated. Then an observer
      * can come online and will only have the outdated data available to it.
-     *
+     * <p>
      * This method ensures that when we go from 0 observers to 1, we always query for fresh data
      * and thus each observer always has the latest data.
-     *
      */
     @Override
     protected void onActive() {

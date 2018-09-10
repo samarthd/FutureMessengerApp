@@ -46,10 +46,10 @@ public class ScheduledMessageAdapter extends MessageAdapter {
                             new ScheduledMessageOptionsDialog();
                     Bundle args = new Bundle();
                     args.putSerializable(MessageWithRecipients.BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS,
-                                         mMessagesWithRecipients.get(holder.getAdapterPosition()));
+                            mMessagesWithRecipients.get(holder.getAdapterPosition()));
                     optionsDialog.setArguments(args);
                     optionsDialog.show(mSupportFragmentManager,
-                                       ScheduledMessageOptionsDialog.class.getName());
+                            ScheduledMessageOptionsDialog.class.getName());
                 });
     }
 }

@@ -76,7 +76,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements
         super.onSaveInstanceState(outState);
         getMessageContentFromInputAndSetValue();
         outState.putSerializable(MessageWithRecipients.BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS,
-                                 mMessageWithRecipients);
+                mMessageWithRecipients);
     }
 
     private void getMessageContentFromInputAndSetValue() {
@@ -183,8 +183,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements
     private void updateRecipientListViewVisibility() {
         if (mMessageWithRecipients.getRecipients().isEmpty()) {
             findViewById(R.id.recipients_recyclerview).setVisibility(View.GONE);
-        }
-        else {
+        } else {
             findViewById(R.id.recipients_recyclerview).setVisibility(View.VISIBLE);
         }
     }
@@ -210,7 +209,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements
             args.putSerializable(BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS, mMessageWithRecipients);
             scheduleConfirmationDialog.setArguments(args);
             scheduleConfirmationDialog.show(getSupportFragmentManager(),
-                                            ScheduleConfirmationDialog.class.getName());
+                    ScheduleConfirmationDialog.class.getName());
         }
     }
 
@@ -235,7 +234,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements
         return true;
     }
 
-    private boolean areDateAndTimeValid()  {
+    private boolean areDateAndTimeValid() {
         Calendar scheduledDateTime = mMessageWithRecipients.getMessage().getScheduledDateTime();
         Calendar minimumDateTime = Calendar.getInstance();
         minimumDateTime.add(Calendar.MINUTE, 1); // messages must be scheduled for at least 1 minute into the future
@@ -290,6 +289,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements
             dialog.show();
         });
     }
+
     private void setUpRecipientButtons() {
         setUpContactButton();
         setUpPhoneNumberButton();
@@ -307,7 +307,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements
     private void setUpPhoneNumberButton() {
         Button phoneNumberButton = findViewById(R.id.phone_number_button);
         phoneNumberButton.setOnClickListener(v -> {
-            NewRecipientDialog newRecipientDialog =  new NewRecipientDialog();
+            NewRecipientDialog newRecipientDialog = new NewRecipientDialog();
             newRecipientDialog.show(getSupportFragmentManager(),
                     NewRecipientDialog.class.getName());
         });
@@ -395,8 +395,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements
             recipient.setName(contactName);
             recipient.setPhoneNumber(formattedPhoneNumber);
             addRecipientIfNotInCurrentListOrShowErrorToast(recipient);
-        }
-        else {
+        } else {
             Snackbar.make(findViewById(R.id.schedule_button), R.string.error_no_contact, Snackbar.LENGTH_LONG).show();
         }
         cursor.close();
@@ -404,7 +403,8 @@ public class EditTextMessageActivity extends AppCompatActivity implements
 
     /**
      * Called when the "Enter new recipient" dialog's save button is pressed.
-     * @param name the name of the new recipient
+     *
+     * @param name        the name of the new recipient
      * @param phoneNumber the phone number of the new recipient
      */
     @Override
@@ -420,8 +420,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements
     private void addRecipientIfNotInCurrentListOrShowErrorToast(Recipient recipient) {
         if (isRecipientInCurrentRecipientList(recipient)) {
             Snackbar.make(findViewById(R.id.schedule_button), R.string.error_duplicate_recipient, Snackbar.LENGTH_LONG).show();
-        }
-        else {
+        } else {
             mMessageWithRecipients.getRecipients().add(recipient);
             // notify the adapter
             updateRecipientAdapterAndAnimateChange();
@@ -445,12 +444,12 @@ public class EditTextMessageActivity extends AppCompatActivity implements
     }
 
     private String stripPunctuationAndWhiteSpace(String string) {
-        return string.replaceAll("\\s+","")
+        return string.replaceAll("\\s+", "")
                 .replaceAll("[^A-Za-z0-9]+", "");
     }
 
     private void showExitDialog() {
-        ExitConfirmationDialog exitConfirmationDialog =  new ExitConfirmationDialog();
+        ExitConfirmationDialog exitConfirmationDialog = new ExitConfirmationDialog();
         exitConfirmationDialog.show(getSupportFragmentManager(),
                 ExitConfirmationDialog.class.getName());
     }

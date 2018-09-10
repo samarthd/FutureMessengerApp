@@ -19,7 +19,6 @@ import cs371m.hermes.futuremessenger.ui.main.support.adapters.MessageAdapter;
  *
  * @see MessageAdapter
  * @see ScheduledMessageOptionsDialog
- *
  */
 public class MessageDetailsViewBindingSupport {
 
@@ -51,8 +50,7 @@ public class MessageDetailsViewBindingSupport {
                 messageDetailsLayout.findViewById(R.id.recipients_label_tv);
         if (isPlural) {
             recipientLabelTv.setText(R.string.recipients_label_plural);
-        }
-        else {
+        } else {
             recipientLabelTv.setText(R.string.recipients_label_singular);
         }
     }
@@ -99,7 +97,7 @@ public class MessageDetailsViewBindingSupport {
 
         result.append(recipients.get(0).getName());
 
-        for(int i = 1; i < recipients.size(); i++) {
+        for (int i = 1; i < recipients.size(); i++) {
             result.append("\n");
             result.append(recipients.get(i).getName());
         }

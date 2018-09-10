@@ -14,13 +14,13 @@ import cs371m.hermes.futuremessenger.persistence.AppDatabase;
 import cs371m.hermes.futuremessenger.persistence.entities.embedded.Status;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
 import cs371m.hermes.futuremessenger.tasks.QueryForMessagesWithRecipients;
-import cs371m.hermes.futuremessenger.ui.main.support.livedata.MessagesWithRecipientsLiveData;
 import cs371m.hermes.futuremessenger.ui.main.screens.activities.MainActivity;
+import cs371m.hermes.futuremessenger.ui.main.support.livedata.MessagesWithRecipientsLiveData;
 
 /**
  * This is a ViewModel that holds the data necessary to populate all of the tabs in
  * the {@link MainActivity}.
- *
+ * <p>
  * It observes the database's InvalidationTracker, and on changes to any tables,
  * runs a background task to query for the new data and updates the data it has.
  */
@@ -32,7 +32,7 @@ public class MainViewModel extends AndroidViewModel {
     /**
      * These are MutableLiveData objects that will be notified on changes in the
      * database, and upon seeing a change, will update themselves.
-     *
+     * <p>
      * They have lists that hold MessageWithRecipients objects, so when an update is triggered,
      * they will have the recipients for each message.
      */
@@ -43,7 +43,7 @@ public class MainViewModel extends AndroidViewModel {
 
     private AppDatabase mDb;
 
-    public MainViewModel (@NonNull Application application) {
+    public MainViewModel(@NonNull Application application) {
         super(application);
         // Get database
         mDb = AppDatabase.getInstance(application);
@@ -130,5 +130,5 @@ public class MainViewModel extends AndroidViewModel {
         }
         return mFailedMessagesWithRecipients;
     }
-    
+
 }

@@ -16,22 +16,22 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @Entity(tableName = "messages_recipients_join",
-        primaryKeys =  {"message_id", "recipient_id"},
+        primaryKeys = {"message_id", "recipient_id"},
         foreignKeys = {
-            @ForeignKey(entity = Message.class,
+                @ForeignKey(entity = Message.class,
                         parentColumns = "id",
                         childColumns = "message_id",
                         onUpdate = ForeignKey.CASCADE,
                         onDelete = ForeignKey.CASCADE),
-            @ForeignKey(entity = Recipient.class,
+                @ForeignKey(entity = Recipient.class,
                         parentColumns = "id",
                         childColumns = "recipient_id",
                         onUpdate = ForeignKey.CASCADE,
                         onDelete = ForeignKey.CASCADE)
         },
         indices = {
-            @Index(value = "message_id"),
-            @Index(value = "recipient_id")
+                @Index(value = "message_id"),
+                @Index(value = "recipient_id")
         })
 public class MessageRecipientJoin {
 

@@ -72,10 +72,10 @@ public class ScheduledMessageOptionsDialog extends DialogFragment {
     }
 
     private void launchDeleteConfirmationDialog() {
-        DeleteConfirmationDialog deleteConfirmationDialog =  new DeleteConfirmationDialog();
+        DeleteConfirmationDialog deleteConfirmationDialog = new DeleteConfirmationDialog();
         Bundle args = new Bundle();
         args.putSerializable(DeleteConfirmationDialog.MESSAGE_ID_TO_DELETE_BUNDLE_KEY,
-                             mMessageWithRecipients.getMessage().getId());
+                mMessageWithRecipients.getMessage().getId());
         deleteConfirmationDialog.setArguments(args);
         deleteConfirmationDialog.show(getActivity().getSupportFragmentManager(),
                 DeleteConfirmationDialog.class.getName());

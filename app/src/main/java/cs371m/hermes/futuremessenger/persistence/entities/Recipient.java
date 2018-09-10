@@ -38,7 +38,7 @@ public class Recipient implements Serializable {
 
     /**
      * The name of the recipient.
-     *
+     * <p>
      * Collation is set to NOCASE to ignore case when comparing strings. The index will have the
      * same collation setting as is defined on the column.
      */

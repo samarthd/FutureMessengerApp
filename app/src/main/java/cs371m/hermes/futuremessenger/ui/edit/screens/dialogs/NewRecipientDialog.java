@@ -78,20 +78,17 @@ public class NewRecipientDialog extends android.support.v4.app.DialogFragment {
             String unformattedPhoneNumber = mRecipientPhoneNumberInput.getText().toString().trim();
             String newRecipientPhoneNumber =
                     PhoneNumberUtils.formatNumber(unformattedPhoneNumber,
-                                                  Locale.getDefault().getCountry());
+                            Locale.getDefault().getCountry());
             if (StringUtils.isEmpty(newRecipientName)) {
                 mRecipientNameInput.setError(getString(R.string.error_blank));
                 mRecipientNameInput.requestFocus();
-            }
-            else if (StringUtils.isEmpty(unformattedPhoneNumber)){
+            } else if (StringUtils.isEmpty(unformattedPhoneNumber)) {
                 mRecipientPhoneNumberInput.setError(getString(R.string.error_blank));
                 mRecipientPhoneNumberInput.requestFocus();
-            }
-            else if (StringUtils.isEmpty(newRecipientPhoneNumber)) {
+            } else if (StringUtils.isEmpty(newRecipientPhoneNumber)) {
                 mRecipientPhoneNumberInput.setError(getString(R.string.error_invalid_phone));
                 mRecipientPhoneNumberInput.requestFocus();
-            }
-            else {
+            } else {
                 dismiss();
                 listeningActivity.onSaveNewManualRecipient(newRecipientName, newRecipientPhoneNumber);
             }

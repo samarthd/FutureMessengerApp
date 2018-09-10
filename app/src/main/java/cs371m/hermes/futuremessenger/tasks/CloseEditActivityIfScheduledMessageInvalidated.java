@@ -30,7 +30,7 @@ public class CloseEditActivityIfScheduledMessageInvalidated extends AsyncTask<Vo
     private WeakReference<AppCompatActivity> mActivityToKill;
 
     /**
-     * @param db An instance of the database to query.
+     * @param db        An instance of the database to query.
      * @param messageID The ID of the message to check for.
      */
     public void setArguments(AppDatabase db, Long messageID, AppCompatActivity activityToKill) {
@@ -51,12 +51,9 @@ public class CloseEditActivityIfScheduledMessageInvalidated extends AsyncTask<Vo
 
         this.mMessageDao = mDb.messageDao();
         Message foundMessage = mMessageDao.findMessage(mMessageID);
-        if (foundMessage == null || // message was deleted
-            !StringUtils.equals(SCHEDULED, foundMessage.getStatus().getCode())) { // message status changed
-            return true;
-        }
+        return foundMessage == null || // message was deleted
+                !StringUtils.equals(SCHEDULED, foundMessage.getStatus().getCode());
 
-        return false;
     }
 
     @Override

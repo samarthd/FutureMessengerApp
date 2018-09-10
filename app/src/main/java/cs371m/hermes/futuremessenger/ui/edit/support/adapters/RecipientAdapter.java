@@ -15,13 +15,13 @@ import cs371m.hermes.futuremessenger.R;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.ui.edit.support.viewholders.RecipientViewHolder;
 
-public class RecipientAdapter extends RecyclerView.Adapter<RecipientViewHolder>{
+public class RecipientAdapter extends RecyclerView.Adapter<RecipientViewHolder> {
 
     private final List<Recipient> mRecipientList = new ArrayList<>();
 
     private final RecipientRemoveListener mRecipientRemoveListener;
 
-    public RecipientAdapter(RecipientRemoveListener recipientRemoveListener)  {
+    public RecipientAdapter(RecipientRemoveListener recipientRemoveListener) {
         this.mRecipientRemoveListener = recipientRemoveListener;
     }
 

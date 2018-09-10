@@ -21,9 +21,11 @@
         android:id="@+id/exit_dialog_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="10dp"
         android:text="@string/exit_dialog_message"
-        android:textSize="15sp"
+        android:textSize="16sp"
         android:textColor="@android:color/white"/>
 
     <android.support.v7.widget.LinearLayoutCompat

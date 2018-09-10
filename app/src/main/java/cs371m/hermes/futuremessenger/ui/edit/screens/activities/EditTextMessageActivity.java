@@ -41,9 +41,9 @@ import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
 import cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport;
 import cs371m.hermes.futuremessenger.tasks.CloseEditActivityIfScheduledMessageInvalidated;
-import cs371m.hermes.futuremessenger.tasks.SaveAndScheduleMessage;
 import cs371m.hermes.futuremessenger.ui.edit.screens.dialogs.ExitConfirmationDialog;
 import cs371m.hermes.futuremessenger.ui.edit.screens.dialogs.NewRecipientDialog;
+import cs371m.hermes.futuremessenger.ui.edit.screens.dialogs.ScheduleConfirmationDialog;
 import cs371m.hermes.futuremessenger.ui.edit.support.adapters.RecipientAdapter;
 
 import static cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients.BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS;
@@ -205,11 +205,12 @@ public class EditTextMessageActivity extends AppCompatActivity implements
 
     private void validateFormAndPerformAppropriateAction() {
         if (areRecipientsValid() && isMessageContentValid() && areDateAndTimeValid()) {
-            // TODO show confirmation dialog
-            SaveAndScheduleMessage scheduleMessageTask = new SaveAndScheduleMessage();
-            scheduleMessageTask.setArguments(AppDatabase.getInstance(this), mMessageWithRecipients);
-            scheduleMessageTask.execute();
-            this.finish();
+            ScheduleConfirmationDialog scheduleConfirmationDialog = new ScheduleConfirmationDialog();
+            Bundle args = new Bundle();
+            args.putSerializable(BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS, mMessageWithRecipients);
+            scheduleConfirmationDialog.setArguments(args);
+            scheduleConfirmationDialog.show(getSupportFragmentManager(),
+                                            ScheduleConfirmationDialog.class.getName());
         }
     }
 

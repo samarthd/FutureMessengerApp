@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/schedule_confirm_dialog"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorPrimary"
@@ -9,23 +10,23 @@
     android:clipChildren="false">
 
     <TextView
+        android:id="@+id/schedule_confirm_dialog_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:text="@string/delete_dialog_title"
+        android:text="@string/schedule_dialog_title"
         android:textStyle="bold|italic"
         android:textSize="20sp"
         android:textColor="@android:color/white"/>
 
+    <include layout="@layout/listed_message_details" />
+
     <TextView
-        android:id="@+id/delete_dialog_message"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="10dp"
+        android:id="@+id/schedule_confirm_dialog_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/delete_dialog_message"
+        android:padding="15dp"
+        android:text="@string/schedule_dialog_message"
         android:textSize="16sp"
         android:textColor="@android:color/white"/>
 
@@ -36,9 +37,12 @@
         android:gravity="center_horizontal"
         android:clipToPadding="false"
         android:clipChildren="false"
-        android:layout_margin="10dp">
+        android:layout_marginTop="0dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp">
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/cancel_delete_button"
+            android:id="@+id/cancel_schedule_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/no"
@@ -50,7 +54,7 @@
             style="?android:attr/borderlessButtonStyle"
             android:elevation="4dp"/>
         <android.support.v7.widget.AppCompatButton
-            android:id="@+id/confirm_delete_button"
+            android:id="@+id/confirm_schedule_button"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="@string/yes"

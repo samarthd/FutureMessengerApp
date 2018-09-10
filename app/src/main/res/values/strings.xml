@@ -56,4 +56,8 @@
     <!--Exit Dialog-->
     <string name="exit_dialog_title">EXIT</string>
     <string name="exit_dialog_message">Are you sure you want to discard all changes and exit?</string>
+
+    <!--Confirm Schedule Dialog-->
+    <string name="schedule_dialog_title">SCHEDULE MESSAGE</string>
+    <string name="schedule_dialog_message">Are you sure you want to save and schedule this message?</string>
 </resources>

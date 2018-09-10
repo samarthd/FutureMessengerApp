@@ -3,6 +3,7 @@ package cs371m.hermes.futuremessenger.ui.edit.screens.dialogs;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
@@ -16,14 +17,18 @@ import cs371m.hermes.futuremessenger.tasks.DeleteMessageAndRelatedData;
 
 public class DeleteConfirmationDialog extends DialogFragment {
 
+    public static String MESSAGE_ID_TO_DELETE_BUNDLE_KEY = "message_id_to_delete";
+
     private Long mMessageIDToDelete = Long.MIN_VALUE;
 
     public DeleteConfirmationDialog() {
         // empty constructor
     }
 
-    public void setMessageIDToDelete(Long messageIDToDelete) {
-        mMessageIDToDelete = messageIDToDelete;
+    @Override
+    public void setArguments(@Nullable Bundle args) {
+        super.setArguments(args);
+        mMessageIDToDelete = args.getLong(MESSAGE_ID_TO_DELETE_BUNDLE_KEY);
     }
 
     @NonNull

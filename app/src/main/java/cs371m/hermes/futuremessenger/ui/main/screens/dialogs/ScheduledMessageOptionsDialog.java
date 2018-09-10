@@ -93,7 +93,10 @@ public class ScheduledMessageOptionsDialog extends DialogFragment implements Vie
 
     private void launchDeleteConfirmationDialog() {
         DeleteConfirmationDialog deleteConfirmationDialog =  new DeleteConfirmationDialog();
-        deleteConfirmationDialog.setMessageIDToDelete(mMessageWithRecipients.getMessage().getId());
+        Bundle args = new Bundle();
+        args.putSerializable(DeleteConfirmationDialog.MESSAGE_ID_TO_DELETE_BUNDLE_KEY,
+                             mMessageWithRecipients.getMessage().getId());
+        deleteConfirmationDialog.setArguments(args);
         deleteConfirmationDialog.show(getActivity().getSupportFragmentManager(),
                 DeleteConfirmationDialog.class.getName());
     }

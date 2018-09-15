@@ -90,10 +90,9 @@ public class EditTextMessageActivity extends AppCompatActivity implements
         super.onRestoreInstanceState(savedInstanceState);
         Log.d(TAG, "onRestoreInstanceState() restoring data");
 
-        MessageWithRecipients savedInstanceMessageWithRecipients =
+        mMessageWithRecipients =
                 (MessageWithRecipients) savedInstanceState
                         .getSerializable(BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS);
-        mMessageWithRecipients = savedInstanceMessageWithRecipients;
         updateViewsFromData();
         setUpAllButtons();
     }
@@ -237,9 +236,13 @@ public class EditTextMessageActivity extends AppCompatActivity implements
 
     private boolean areDateAndTimeValid() {
         Calendar scheduledDateTime = mMessageWithRecipients.getMessage().getScheduledDateTime();
-        Calendar minimumDateTime = Calendar.getInstance();
-        minimumDateTime.add(Calendar.MINUTE, 1); // messages must be scheduled for at least 1 minute into the future
+        scheduledDateTime.set(Calendar.SECOND, 0); // set the seconds to 0 to avoid delays
 
+        Calendar minimumDateTime = Calendar.getInstance();
+        // messages must be scheduled for at least 2 minutes more than the current minute
+        minimumDateTime.add(Calendar.MINUTE, 2);
+        // reset the seconds to 0 to avoid confusing the user when they set it 2 minutes ahead but the seconds cause it to fail the check
+        minimumDateTime.set(Calendar.SECOND, 0);
         if (scheduledDateTime.before(minimumDateTime)) {
             Snackbar.make(findViewById(R.id.schedule_button), R.string.error_datetime_not_future, Snackbar.LENGTH_LONG).show();
             return false;

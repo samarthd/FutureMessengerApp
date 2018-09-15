@@ -225,8 +225,9 @@ public class EditTextMessageActivity extends AppCompatActivity implements
         // trim the content first
         String textContent = mMessageWithRecipients.getMessage().getTextContent().trim();
         mMessageWithRecipients.getMessage().setTextContent(textContent);
+        EditText messageContentInput = findViewById(R.id.message_content_edittext);
+        messageContentInput.setText(textContent);
         if (StringUtils.isEmpty(textContent)) {
-            EditText messageContentInput = findViewById(R.id.message_content_edittext);
             messageContentInput.setError(getString(R.string.error_no_message));
             messageContentInput.requestFocus();
             return false;

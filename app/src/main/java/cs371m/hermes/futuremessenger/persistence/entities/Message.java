@@ -7,6 +7,7 @@ import android.arch.persistence.room.Index;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
 import cs371m.hermes.futuremessenger.persistence.entities.embedded.Status;
@@ -20,8 +21,13 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(exclude = "id")
 @Entity(tableName = "messages",
-        indices = {@Index("status_code")})
-public class Message {
+        indices = {
+                @Index(value = "id", unique = true),
+                @Index("status_code")
+        })
+public class Message implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @PrimaryKey(autoGenerate = true)
     private Long id;
@@ -31,7 +37,7 @@ public class Message {
      */
     @ColumnInfo(name = "scheduled_datetime")
     @NonNull
-    private Calendar scheduledDateTime;
+    private Calendar scheduledDateTime = Calendar.getInstance();
 
     /**
      * The actual text content of the message.

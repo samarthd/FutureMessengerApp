@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.main.screens.fragments.FailedMessagesFragment">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/failed_messages_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!--Alternate view to show if recyclerview is empty-->
+    <LinearLayout
+        android:id="@+id/failed_messages_empty_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:paddingTop="70dp"
+        android:visibility="gone">
+        <ImageView
+            android:id="@+id/no_failed_icon"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_thumbs_up_vector" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:text="@string/no_failures_message"
+            android:gravity="center"/>
+    </LinearLayout>
+
+
+</FrameLayout>

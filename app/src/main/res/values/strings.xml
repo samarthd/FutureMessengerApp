@@ -1,3 +1,63 @@
 <resources>
     <string name="app_name">Future Messenger</string>
+    <!--Floating action menu labels-->
+    <string name="new_text_message_label">NEW MESSAGE</string>
+    <!--Tab labels-->
+    <string name="scheduled_tab_title">Scheduled</string>
+    <string name="sent_tab_title">Sent</string>
+    <string name="failed_tab_title">Failed</string>
+    <!--Message list item labels-->
+    <string name="message_content_label">MESSAGE</string>
+    <string name="recipients_label_singular">RECIPIENT</string>
+    <string name="recipients_label_plural">RECIPIENTS</string>
+
+    <!-- Options Dialog Labels -->
+    <string name="edit_message_option_label">EDIT</string>
+    <string name="delete_message_option_label">DELETE</string>
+
+    <!-- Confirmation Dialog Labels -->
+    <string name="delete_dialog_title">CANCEL &amp; DELETE</string>
+    <string name="delete_dialog_message">Are you sure you want to cancel sending this message and delete it?</string>
+    <string name="yes">YES</string>
+    <string name="no">NO</string>
+
+    <!--Failed fragment-->
+    <string name="no_failures_message">Smooth sailing - no failed messages, boss!</string>
+
+    <!--Edit Activity -->
+    <string name="edit_activity_label">Edit Text Message</string>
+    <string name="date_time_edit_label">WHEN</string>
+    <string name="recipient_edit_label">WHO</string>
+    <string name="message_edit_label">WHAT</string>
+
+    <string name="add_from_contacts">ADD FROM CONTACTS</string>
+    <string name="add_phone_number">ADD RECIPIENT MANUALLY</string>
+
+    <string name="message_edittext_hint">Enter a message to send</string>
+
+
+    <string name="new_recipient_dialog_title">New Recipient</string>
+    <string name="new_recipient_name_label">NAME</string>
+    <string name="new_recipient_phone_label">NUMBER</string>
+    <string name="new_recipient_dialog_name_edittext_hint">Enter a name</string>
+    <string name="new_recipient_dialog_phone_edittext_hint">Enter a phone number</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="error_blank">You can\'t leave this blank!</string>
+    <string name="error_invalid_phone">This phone number is not valid.</string>
+    <string name="error_duplicate_recipient">That phone number is already in the recipients list!</string>
+    <string name="error_no_number_for_contact">That contact didn\'t have a phone number!</string>
+    <string name="error_no_contact">Something went wrong when adding that contact.</string>
+
+    <string name="error_no_recipients">You have to specify at least one recipient for this message!</string>
+    <string name="error_no_message">Your message is empty!</string>
+    <string name="error_datetime_not_future">Your message must be scheduled at least 2 minutes into the future!</string>
+    <!--Exit Dialog-->
+    <string name="exit_dialog_title">EXIT</string>
+    <string name="exit_dialog_message">Are you sure you want to discard all changes and exit?</string>
+
+    <!--Confirm Schedule Dialog-->
+    <string name="schedule_dialog_title">SCHEDULE MESSAGE</string>
+    <string name="schedule_dialog_message">Are you sure you want to save and schedule this message?</string>
 </resources>

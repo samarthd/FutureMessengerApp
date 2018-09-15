@@ -1,12 +1,10 @@
 package cs371m.hermes.futuremessenger.persistence.entities.embedded;
 
 import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.Index;
-import android.arch.persistence.room.PrimaryKey;
-import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.NonNull;
+
+import java.io.Serializable;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -21,7 +19,9 @@ import lombok.ToString;
 @Setter
 @ToString
 @EqualsAndHashCode
-public class Status {
+public class Status implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Ignore
     public static final String SCHEDULED = "SCHEDULED";

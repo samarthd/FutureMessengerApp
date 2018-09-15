@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/message_edit_layout_background"
+    android:padding="10dp"
+    android:layout_marginTop="10dp"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/message_edit_label"
+        android:textStyle="bold|italic"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"/>
+
+
+    <EditText
+        android:id="@+id/message_content_edittext"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/message_edittext_hint"
+        android:textColor="@android:color/black"
+        android:textCursorDrawable="@drawable/message_edittext_cursor"
+        android:padding="10dp"
+        android:background="@drawable/white_rounded_background"/>
+
+</LinearLayout>

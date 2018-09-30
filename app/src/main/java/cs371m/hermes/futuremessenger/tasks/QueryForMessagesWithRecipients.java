@@ -6,6 +6,7 @@ import android.util.Log;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 import cs371m.hermes.futuremessenger.persistence.AppDatabase;
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
@@ -50,13 +51,21 @@ public class QueryForMessagesWithRecipients
         this.mMessageDao = mDb.messageDao();
         this.mJoinDao = mDb.messageRecipientJoinDao();
 
-        List<Message> messages = mMessageDao.findAllMessagesWithStatusCode(mMessageStatus);
-        if (mMessageStatus.equals(cs371m.hermes.futuremessenger.persistence.entities.embedded.Status.SCHEDULED))
-            Log.d("In async query task",
-                    "Found " + messages.size() + " messages with status " + mMessageStatus);
-        if (messages.isEmpty())
-            return new ArrayList<>();
-        return mapFromMessagesToMessagesWithRecipients(messages);
+        Callable<List<MessageWithRecipients>> queryRunner= () -> {
+            List<Message> messages = mMessageDao.findAllMessagesWithStatusCode(mMessageStatus);
+            if (mMessageStatus.equals(cs371m.hermes.futuremessenger.persistence.entities.embedded.Status.SCHEDULED)) {
+                Log.d("In async query task",
+                        "Found " + messages.size() + " messages with status " + mMessageStatus);
+            }
+            if (messages.isEmpty()) {
+                return new ArrayList<>();
+            }
+            return mapFromMessagesToMessagesWithRecipients(messages);
+        };
+
+        List<MessageWithRecipients> result = mDb.runInTransaction(queryRunner);
+
+        return result;
     }
 
     @Override

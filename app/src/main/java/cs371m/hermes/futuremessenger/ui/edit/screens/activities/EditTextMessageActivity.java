@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -28,7 +27,6 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -238,20 +236,26 @@ public class EditTextMessageActivity extends AppCompatActivity implements
 
     private boolean areDateAndTimeValid() {
         Calendar scheduledDateTime = mMessageWithRecipients.getMessage().getScheduledDateTime();
-        scheduledDateTime.set(Calendar.SECOND, 0); // set the seconds to 0 to avoid delays
-        scheduledDateTime.set(Calendar.MILLISECOND, 0);
-
-        Calendar minimumDateTime = Calendar.getInstance();
-        // messages must be scheduled for at least 2 minutes more than the current minute
-        minimumDateTime.add(Calendar.MINUTE, 2);
-        // reset the seconds to 0 to avoid confusing the user when they set it 2 minutes ahead but the seconds cause it to fail the check
-        minimumDateTime.set(Calendar.SECOND, 0);
-        minimumDateTime.set(Calendar.MILLISECOND, 0);
-        if (scheduledDateTime.before(minimumDateTime)) {
-            Snackbar.make(findViewById(R.id.schedule_button), R.string.error_datetime_not_future, Snackbar.LENGTH_LONG).show();
-            return false;
-        }
+        // TODO remove
+        scheduledDateTime.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
+        scheduledDateTime.add(Calendar.SECOND, 1);
         return true;
+
+        // TODO move this entire method into scheduling support so dialog can perform the same validation
+//        scheduledDateTime.set(Calendar.SECOND, 0); // set the seconds to 0 to avoid delays
+//        scheduledDateTime.set(Calendar.MILLISECOND, 0);
+//
+//        Calendar minimumDateTime = Calendar.getInstance();
+//        // messages must be scheduled for at least 2 minutes more than the current minute
+//        minimumDateTime.add(Calendar.MINUTE, 2);
+//        // reset the seconds to 0 to avoid confusing the user when they set it 2 minutes ahead but the seconds cause it to fail the check
+//        minimumDateTime.set(Calendar.SECOND, 0);
+//        minimumDateTime.set(Calendar.MILLISECOND, 0);
+//        if (scheduledDateTime.before(minimumDateTime)) {
+//            Snackbar.make(findViewById(R.id.schedule_button), R.string.error_datetime_not_future, Snackbar.LENGTH_LONG).show();
+//            return false;
+//        }
+//        return true;
     }
 
 

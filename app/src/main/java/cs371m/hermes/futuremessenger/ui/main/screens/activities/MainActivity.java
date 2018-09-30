@@ -2,11 +2,17 @@ package cs371m.hermes.futuremessenger.ui.main.screens.activities;
 
 
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +20,8 @@ import android.support.v7.widget.Toolbar;
 
 import com.leinardi.android.speeddial.SpeedDialActionItem;
 import com.leinardi.android.speeddial.SpeedDialView;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
@@ -33,7 +41,14 @@ import cs371m.hermes.futuremessenger.ui.main.screens.fragments.ScheduledMessages
 import cs371m.hermes.futuremessenger.ui.main.screens.fragments.SentMessagesFragment;
 import cs371m.hermes.futuremessenger.ui.main.support.adapters.MainFragmentPagerAdapter;
 
-public class MainActivity extends AppCompatActivity {
+import static android.Manifest.permission.SEND_SMS;
+
+public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
+
+    public static final String NOTIFICATION_CHANNEL_ID =
+            "cs371m.hermes.futuremessenger.sent_notification_channel";
+
+    public static final int REQUEST_SEND_SMS_PERMISSION = 9000;
 
     private Toolbar mToolbar;
     private TabLayout mTabLayout;
@@ -57,6 +72,57 @@ public class MainActivity extends AppCompatActivity {
 
 
         setUpFloatingActionMenu();
+        setUpNotificationChannel();
+
+        checkForPermissionsAndRequestIfNecessary();
+
+    }
+    private void checkForPermissionsAndRequestIfNecessary() {
+
+        if (ContextCompat.checkSelfPermission(this, SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+            // TODO figure out a way to make some sort of dialog to explain why permission is needed, as toasts don't show up when permission dialog is up
+//            if (ActivityCompat.shouldShowRequestPermissionRationale(this, SEND_SMS)) {
+//                Toast.makeText(this, R.string.request_send_sms_explanation, Toast.LENGTH_LONG).show();
+//            }
+            ActivityCompat.requestPermissions(this, new String[]{SEND_SMS}, REQUEST_SEND_SMS_PERMISSION);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_SEND_SMS_PERMISSION) {
+            int indexOfSmsPermission = ArrayUtils.indexOf(grantResults, REQUEST_SEND_SMS_PERMISSION);
+            if (indexOfSmsPermission == -1 || grantResults[indexOfSmsPermission] != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, SEND_SMS)) {
+                    checkForPermissionsAndRequestIfNecessary();
+                }
+            }
+        }
+        else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
+    private void setUpNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.notification_channel_name);
+            String description = getString(R.string.notification_channel_description);
+            int importance = NotificationManager.IMPORTANCE_HIGH;
+
+            NotificationChannel channel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            channel.enableLights(true);
+            channel.setLightColor(ContextCompat.getColor(this, R.color.colorQuinary));
+            // TODO set sound
+
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+
     }
 
     private void setUpFloatingActionMenu() {
@@ -198,7 +264,6 @@ public class MainActivity extends AppCompatActivity {
             message.setScheduledDateTime(calendar);
             cs371m.hermes.futuremessenger.persistence.entities.embedded.Status status = new cs371m.hermes.futuremessenger.persistence.entities.embedded.Status();
             status.setCode(messageStatus);
-            status.setDescription("Status description " + val);
             message.setStatus(status);
             return message;
         }

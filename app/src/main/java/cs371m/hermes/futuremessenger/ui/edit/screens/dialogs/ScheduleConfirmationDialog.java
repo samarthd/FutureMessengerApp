@@ -126,7 +126,8 @@ public class ScheduleConfirmationDialog extends DialogFragment {
 
     private void runScheduleTask() {
         SaveAndScheduleMessage scheduleMessageTask = new SaveAndScheduleMessage();
-        scheduleMessageTask.setArguments(AppDatabase.getInstance(getContext()), mMessageWithRecipients);
+        scheduleMessageTask.setArguments(getContext(), AppDatabase.getInstance(getContext()),
+                mMessageWithRecipients);
         scheduleMessageTask.execute();
         getActivity().finish();
     }

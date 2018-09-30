@@ -51,10 +51,9 @@ public class DaoTests {
         return calendar;
     }
 
-    Status createAndInitializeStatus(String code, String description) {
+    Status createAndInitializeStatus(String code) {
         Status status = new Status();
         status.setCode(code);
-        status.setDescription(description);
         return status;
     }
 
@@ -85,7 +84,7 @@ public class DaoTests {
 
         // Test creating a message
         Calendar calendar = createAndInitializeCalendar(1);
-        Status status = createAndInitializeStatus(Status.SCHEDULED, "Description of status.");
+        Status status = createAndInitializeStatus(Status.SCHEDULED);
         Message message = createAndInitializeMessage("The message text.", calendar, status);
 
         Long id = mMessageDao.createOrUpdateMessage(message);
@@ -95,7 +94,7 @@ public class DaoTests {
         assertEquals(message, mMessageDao.findAllMessages().get(0));
 
         // Test updating a message
-        Status updatedStatus = createAndInitializeStatus(Status.FAILED, "Updated description");
+        Status updatedStatus = createAndInitializeStatus(Status.FAILED);
         Calendar updatedCalendar = createAndInitializeCalendar(2);
         String updatedText = "Updated Text";
 
@@ -146,7 +145,7 @@ public class DaoTests {
     @Test
     public void testMessageRecipientRelationship() {
         Calendar calendar = createAndInitializeCalendar(1);
-        Status status = createAndInitializeStatus(Status.SCHEDULED, "Description");
+        Status status = createAndInitializeStatus(Status.SCHEDULED);
 
         Message message = createAndInitializeMessage("Content", calendar, status);
         Recipient recipient = createAndInitializeRecipient("Name", "Phone");
@@ -184,7 +183,7 @@ public class DaoTests {
     @Test
     public void testMessageRecipientRelationshipDeleteMessage() {
         Calendar calendar = createAndInitializeCalendar(1);
-        Status status = createAndInitializeStatus(Status.SCHEDULED, "Description");
+        Status status = createAndInitializeStatus(Status.SCHEDULED);
 
         Message message = createAndInitializeMessage("Content", calendar, status);
         Recipient recipient = createAndInitializeRecipient("Name", "Phone");
@@ -220,7 +219,7 @@ public class DaoTests {
     @Test
     public void testMessageRecipientRelationshipDeleteRecipient() {
         Calendar calendar = createAndInitializeCalendar(1);
-        Status status = createAndInitializeStatus(Status.SCHEDULED, "Description");
+        Status status = createAndInitializeStatus(Status.SCHEDULED);
 
         Message message = createAndInitializeMessage("Content", calendar, status);
         Recipient recipient = createAndInitializeRecipient("Name", "Phone");
@@ -254,7 +253,7 @@ public class DaoTests {
     @Test
     public void testMessageRecipientRelationshipDeleteRelationship() {
         Calendar calendar = createAndInitializeCalendar(1);
-        Status status = createAndInitializeStatus(Status.SCHEDULED, "Description");
+        Status status = createAndInitializeStatus(Status.SCHEDULED);
 
         Message message = createAndInitializeMessage("Content", calendar, status);
         Recipient recipient = createAndInitializeRecipient("Name", "Phone");

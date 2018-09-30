@@ -6,6 +6,8 @@ import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 
+import cs371m.hermes.futuremessenger.persistence.pojo.StatusDetails;
+import cs371m.hermes.futuremessenger.persistence.typeconverters.StatusDetailsConverter;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,9 +39,12 @@ public class Status implements Serializable {
     @NonNull
     private String code;
 
-    @ColumnInfo(name = "description")
+    /**
+     * @see StatusDetailsConverter
+     */
+    @ColumnInfo(name = "details", typeAffinity = ColumnInfo.BLOB)
     @NonNull
-    private String description;
+    private StatusDetails details;
 
 }
 

@@ -13,13 +13,14 @@ import cs371m.hermes.futuremessenger.persistence.repositories.MessageDao;
 import cs371m.hermes.futuremessenger.persistence.repositories.MessageRecipientJoinDao;
 import cs371m.hermes.futuremessenger.persistence.repositories.RecipientDao;
 import cs371m.hermes.futuremessenger.persistence.typeconverters.CalendarConverter;
+import cs371m.hermes.futuremessenger.persistence.typeconverters.StatusDetailsConverter;
 
 /**
  * @author samarthd
  */
 @Database(version = 1, entities = {Message.class, Recipient.class, MessageRecipientJoin.class},
         exportSchema = false)
-@TypeConverters({CalendarConverter.class})
+@TypeConverters({CalendarConverter.class, StatusDetailsConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
 
     public static final String APP_DATABASE_NAME = "future_messenger_db";

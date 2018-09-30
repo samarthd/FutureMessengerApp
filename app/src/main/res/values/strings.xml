@@ -21,6 +21,8 @@
     <string name="yes">YES</string>
     <string name="no">NO</string>
 
+    <!-- Permissions checks -->
+    <string name="request_send_sms_explanation">The app cannot send scheduled messages without this permission!</string>
     <!--Failed fragment-->
     <string name="no_failures_message">Smooth sailing - no failed messages, boss!</string>
 
@@ -60,4 +62,28 @@
     <!--Confirm Schedule Dialog-->
     <string name="schedule_dialog_title">SCHEDULE MESSAGE</string>
     <string name="schedule_dialog_message">Are you sure you want to save and schedule this message?</string>
+
+    <!-- Sending reports -->
+    <string name="notification_channel_name">Sent Message Reports</string>
+    <string name="notification_channel_description">Notifies you when a scheduled message has been sent, including information about success/failure.</string>
+    <string name="send_success"><![CDATA[<b>Scheduled message successfully sent!</b>]]></string>
+    <string name="send_fail"><![CDATA[<font color=\"#ff0000\"><b>There were errors in sending your scheduled message!</b></font>]]></string>
+    <!-- colorQuinary -->
+    <string name="message_headline"><![CDATA[
+        <font color=\"#ffb12e\"><b><i>MESSAGE</i></b></font>
+        <cite>%1$s</cite>
+        <br/>
+    ]]></string>
+    <!-- colorQuaternary-->
+    <string name="recipient_result_notification"><![CDATA[
+        <p>
+        <font color=\"#007c89\">
+            <b><i>RECIPIENT</i> </font><font color=\"#000000\"> %1$s </b><i>%2$s</i></font> %3$s
+        </p>
+    ]]></string>
+    <string name="message_part_success"><![CDATA[<i>Part %1$d of %2$d sent successfully</i>]]></string>
+    <string name="generic_error"><![CDATA[<i>Part %1$d of %2$d failed: generic error</i>]]></string>
+    <string name="radio_off"><![CDATA[<i>Part %1$d of %2$d failed: radio was off</i>]]></string>
+    <string name="no_pdu"><![CDATA[<i>Part %1$d of %2$d failed: no PDU defined</i>]]></string>
+    <string name="no_service"><![CDATA[<i>Part %1$d of %2$d failed: no service</i>]]></string>
 </resources>

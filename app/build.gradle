@@ -24,10 +24,24 @@ android {
 
 dependencies {
     /**
-     * Lombok
+     * Lombok.
+     * IMPORTANT: UPGRADING LOMBOK TO ANYTHING HIGHER THAN 1.16.18 CAUSES ISSUES WITH THE
+     * D8 DESUGARING WHICH IS FORCIBLY ENABLED IN ANDROID GRADLE PLUGIN VERSION 3.2.0+.
+     *
+     * DO NOT UPDATE THIS DEPENDENCY UNLESS THE ISSUE IS RESOLVED.
+     * DETAILS HERE: https://github.com/rzwitserloot/lombok/issues/1882
+     *
+     * And for what it's worth, the 'Run' button/functionality in Android Studio
+     * (the one that quickly compiles changes and deploys to the test device) was actually
+     * broken even in earlier versions of the Android Gradle Plugin (<3.2.0) by Lombok versions
+     * higher than 1.16.18. If I made changes, then hit the run button, it would fail due to an
+     * 'IllegalArgumentException'. However, it was still "usable" because I could clean and
+     * rebuild the project fully, uninstall the APK from the test device, and then hit the run
+     * button to deploy it freshly and it would work. This definitely was not acceptable,
+     * however, so it's definitely not truly usable even in Android Gradle Plugin <3.2.0.
      */
-    compileOnly 'org.projectlombok:lombok:1.18.2'
-    annotationProcessor "org.projectlombok:lombok:1.18.2"
+    compileOnly "org.projectlombok:lombok:1.16.18"
+    annotationProcessor "org.projectlombok:lombok:1.16.18"
     /**
      * Room Persistence Dependencies
      */

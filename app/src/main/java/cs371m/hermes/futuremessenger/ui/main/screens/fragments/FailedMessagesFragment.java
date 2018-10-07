@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import cs371m.hermes.futuremessenger.R;
+import cs371m.hermes.futuremessenger.ui.main.support.adapters.FailedMessageAdapter;
 import cs371m.hermes.futuremessenger.ui.main.support.adapters.MessageAdapter;
 import cs371m.hermes.futuremessenger.ui.main.support.adapters.ScheduledMessageAdapter;
 import cs371m.hermes.futuremessenger.ui.main.support.viewmodels.MainViewModel;
@@ -35,8 +36,8 @@ public class FailedMessagesFragment extends Fragment {
         // Get the ViewModel from the activity, which means each fragment will have the same
         mModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
 
-        // TODO change this to FailedMessageAdapter
-        mMessageAdapter = new ScheduledMessageAdapter(getActivity().getSupportFragmentManager());
+        mMessageAdapter = new FailedMessageAdapter(getActivity().getSupportFragmentManager());
+        mMessageAdapter.setHasStableIds(true); // do this as we've overriden getItemId()
 
         // Add the current fragment as an observer to any changes in stored messages
         mModel.getFailedMessagesWithRecipients().observe(this,

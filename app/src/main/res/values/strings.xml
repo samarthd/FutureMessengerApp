@@ -14,6 +14,8 @@
     <!-- Options Dialog Labels -->
     <string name="edit_message_option_label">EDIT</string>
     <string name="delete_message_option_label">DELETE</string>
+    <string name="resend_message_option_label">SCHEDULE AGAIN</string>
+
 
     <!-- Confirmation Dialog Labels -->
     <string name="delete_dialog_title">CANCEL &amp; DELETE</string>

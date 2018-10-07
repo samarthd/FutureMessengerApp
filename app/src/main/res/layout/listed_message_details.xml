@@ -14,6 +14,7 @@
         android:src="@drawable/text_icon" />
 
     <LinearLayout
+        android:id="@+id/listed_message_datetime_layout"
         android:layout_weight="6"
         android:layout_width="0dp"
         android:layout_height="match_parent"

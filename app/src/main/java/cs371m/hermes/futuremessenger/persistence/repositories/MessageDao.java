@@ -5,6 +5,7 @@ import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import java.util.List;
 
@@ -14,14 +15,22 @@ import cs371m.hermes.futuremessenger.persistence.entities.Message;
 public interface MessageDao {
 
     /**
-     * Will create a new message in the database if the database has no message with the same ID,
-     * otherwise it will update the existing value with this ID.
+     * Will create a new message in the database if the database has no message with the same ID.
      *
      * @param message
-     * @return The row ID of the created or updated item
+     * @return The row ID of the created item
      */
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    Long createOrUpdateMessage(Message message);
+    @Insert
+    Long createMessage(Message message);
+
+    /**
+     * Will update a message in the database with the same ID.
+     *
+     * @param message
+     * @return the number of updated rows
+     */
+    @Update
+    int updateMessage(Message message);
 
     /**
      * Finds the message with the given ID.

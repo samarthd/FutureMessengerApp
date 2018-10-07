@@ -20,6 +20,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    buildToolsVersion '28.0.3'
 }
 
 dependencies {
@@ -40,8 +41,8 @@ dependencies {
      * button to deploy it freshly and it would work. This definitely was not acceptable,
      * however, so it's definitely not truly usable even in Android Gradle Plugin <3.2.0.
      */
-    compileOnly "org.projectlombok:lombok:1.16.18"
-    annotationProcessor "org.projectlombok:lombok:1.16.18"
+    compileOnly 'org.projectlombok:lombok:1.16.18'
+    annotationProcessor 'org.projectlombok:lombok:1.16.18'
     /**
      * Room Persistence Dependencies
      */

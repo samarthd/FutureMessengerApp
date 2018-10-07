@@ -93,7 +93,7 @@ public class SaveAndScheduleMessage extends AsyncTask<Void, Integer, Void> {
 
     private void createNewMessage() {
         Message messageToSchedule = mMessageWithRecipients.getMessage();
-        Long messageID = mMessageDao.createOrUpdateMessage(messageToSchedule);
+        Long messageID = mMessageDao.createMessage(messageToSchedule);
         mMessageWithRecipients.getMessage().setId(messageID);
         createRecipientsAndAssociations(messageID, mMessageWithRecipients.getRecipients());
 
@@ -101,7 +101,8 @@ public class SaveAndScheduleMessage extends AsyncTask<Void, Integer, Void> {
     }
 
     private void updateExistingMessage() {
-        Long messageID = mMessageDao.createOrUpdateMessage(mMessageWithRecipients.getMessage());
+        Long messageID = mMessageWithRecipients.getMessage().getId();
+        mMessageDao.updateMessage(mMessageWithRecipients.getMessage());
         mMessageWithRecipients.getMessage().setId(messageID);
         List<Recipient> currentlyAssociatedRecipients = mMessageRecipientJoinDao.findRecipientsForMessage(messageID);
 
@@ -151,7 +152,7 @@ public class SaveAndScheduleMessage extends AsyncTask<Void, Integer, Void> {
             Long recipientIDToAssociate;
             if (foundRecipient == null) {
                 // create a recipient in the database, as one with the same name/number doesn't exist
-                recipientIDToAssociate = mRecipientDao.createOrUpdateRecipient(recipientToPersist);
+                recipientIDToAssociate = mRecipientDao.createRecipient(recipientToPersist);
             } else {
                 recipientIDToAssociate = foundRecipient.getId();
             }

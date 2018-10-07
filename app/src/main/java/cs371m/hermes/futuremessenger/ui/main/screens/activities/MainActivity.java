@@ -234,9 +234,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     () -> {
                         for (long i = 0; i < j; i++) {
                             Message message = createMessageWithVal(i, messageStatus);
-                            Long messageId = mDao.createOrUpdateMessage(message);
+                            Long messageId = mDao.createMessage(message);
                             Recipient recipient = createRecipientWithVal(i);
-                            Long recipientId = rDao.createOrUpdateRecipient(recipient);
+                            Long recipientId = rDao.createRecipient(recipient);
                             MessageRecipientJoin join = new MessageRecipientJoin();
                             join.setRecipientID(recipientId);
                             join.setMessageID(messageId);
@@ -244,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
                             if (i % 2 == 0) {
                                 Recipient recipient2 = createRecipientWithVal(i * 100000000);
-                                Long recipientId2 = rDao.createOrUpdateRecipient(recipient2);
+                                Long recipientId2 = rDao.createRecipient(recipient2);
                                 MessageRecipientJoin join2 = new MessageRecipientJoin();
                                 join2.setRecipientID(recipientId2);
                                 join2.setMessageID(messageId);

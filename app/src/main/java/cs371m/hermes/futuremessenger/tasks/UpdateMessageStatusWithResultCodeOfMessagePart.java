@@ -8,12 +8,14 @@ import android.os.AsyncTask;
 
 import org.apache.commons.lang3.ObjectUtils;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 import cs371m.hermes.futuremessenger.persistence.AppDatabase;
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
+import cs371m.hermes.futuremessenger.persistence.entities.MessageRecipientJoin;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.pojo.StatusDetails;
 
@@ -97,7 +99,7 @@ public class UpdateMessageStatusWithResultCodeOfMessagePart extends AsyncTask<Vo
         } else {
             foundMessage.getStatus().setCode(FAILED);
         }
-        mDb.messageDao().createOrUpdateMessage(foundMessage);
+        mDb.messageDao().updateMessage(foundMessage);
         return foundMessage;
     }
 

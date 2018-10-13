@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
+import java.util.Calendar;
 import java.util.List;
 
 import cs371m.hermes.futuremessenger.R;
@@ -19,6 +20,7 @@ import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
 import cs371m.hermes.futuremessenger.tasks.SaveAndScheduleMessage;
+import cs371m.hermes.futuremessenger.ui.edit.screens.activities.EditTextMessageActivity;
 
 import static cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport.getConcatenatedRecipientNames;
 import static cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport.getFormattedDateOnly;
@@ -30,6 +32,7 @@ import static cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSup
 import static cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport.updateScheduledDateTv;
 import static cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport.updateScheduledDayTv;
 import static cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport.updateScheduledTimeTv;
+import static cs371m.hermes.futuremessenger.support.SchedulingSupport.areDateAndTimeValid;
 
 public class ScheduleConfirmationDialog extends DialogFragment {
 
@@ -115,7 +118,9 @@ public class ScheduleConfirmationDialog extends DialogFragment {
         AppCompatButton confirmScheduleButton = scheduleConfirmationDialogLayout.findViewById(R.id.confirm_schedule_button);
         confirmScheduleButton.setOnClickListener(view -> {
             dismiss();
-            runScheduleTask();
+            if (areDateAndTimeValid(mMessageWithRecipients.getMessage().getScheduledDateTime(), (EditTextMessageActivity) getActivity())) {
+                runScheduleTask();
+            }
         });
 
         AppCompatButton cancelButton = scheduleConfirmationDialogLayout.findViewById(R.id.cancel_schedule_button);

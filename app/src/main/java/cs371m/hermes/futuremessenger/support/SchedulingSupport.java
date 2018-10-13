@@ -7,15 +7,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.text.HtmlCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
 import android.text.Html;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 import java.util.SortedMap;
@@ -28,6 +31,7 @@ import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
 import cs371m.hermes.futuremessenger.persistence.pojo.StatusDetails;
 import cs371m.hermes.futuremessenger.support.sending.ScheduledMessageBroadcastReceiver;
 import cs371m.hermes.futuremessenger.support.sending.SentBroadcastReceiver;
+import cs371m.hermes.futuremessenger.ui.edit.screens.activities.EditTextMessageActivity;
 import cs371m.hermes.futuremessenger.ui.main.screens.activities.MainActivity;
 
 import static android.text.Html.FROM_HTML_SEPARATOR_LINE_BREAK_BLOCKQUOTE;
@@ -243,6 +247,29 @@ public class SchedulingSupport {
         }
         return stringCode;
     }
+
+    public static boolean areDateAndTimeValid(Calendar scheduledDateTime, EditTextMessageActivity editTextMessageActivity) {
+//        // TODO remove
+//        scheduledDateTime.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
+//        scheduledDateTime.add(Calendar.SECOND, 1);
+//        return true;
+        scheduledDateTime.set(Calendar.SECOND, 0); // set the seconds to 0 to avoid delays
+        scheduledDateTime.set(Calendar.MILLISECOND, 0);
+
+        Calendar minimumDateTime = Calendar.getInstance();
+        // messages must be scheduled for at least 2 minutes more than the current minute
+        minimumDateTime.add(Calendar.MINUTE, 2);
+        // reset the seconds to 0 to avoid confusing the user when they set it 2 minutes ahead but the seconds cause it to fail the check
+        minimumDateTime.set(Calendar.SECOND, 0);
+        minimumDateTime.set(Calendar.MILLISECOND, 0);
+        if (scheduledDateTime.before(minimumDateTime)) {
+            Snackbar.make(editTextMessageActivity.findViewById(R.id.schedule_button),
+                    R.string.error_datetime_not_future, Snackbar.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
+    }
+
 
 
 }

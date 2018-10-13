@@ -47,6 +47,7 @@ import cs371m.hermes.futuremessenger.ui.edit.screens.dialogs.ScheduleConfirmatio
 import cs371m.hermes.futuremessenger.ui.edit.support.adapters.RecipientAdapter;
 
 import static cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients.BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS;
+import static cs371m.hermes.futuremessenger.support.SchedulingSupport.areDateAndTimeValid;
 
 public class EditTextMessageActivity extends AppCompatActivity implements
         DatePickerDialog.OnDateSetListener,
@@ -202,7 +203,8 @@ public class EditTextMessageActivity extends AppCompatActivity implements
     }
 
     private void validateFormAndPerformAppropriateAction() {
-        if (areRecipientsValid() && isMessageContentValid() && areDateAndTimeValid()) {
+        if (areRecipientsValid() && isMessageContentValid()
+                && areDateAndTimeValid(mMessageWithRecipients.getMessage().getScheduledDateTime(), this)) {
             ScheduleConfirmationDialog scheduleConfirmationDialog = new ScheduleConfirmationDialog();
             Bundle args = new Bundle();
             args.putSerializable(BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS, mMessageWithRecipients);
@@ -232,30 +234,6 @@ public class EditTextMessageActivity extends AppCompatActivity implements
             return false;
         }
         return true;
-    }
-
-    private boolean areDateAndTimeValid() {
-        Calendar scheduledDateTime = mMessageWithRecipients.getMessage().getScheduledDateTime();
-        // TODO remove
-        scheduledDateTime.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
-        scheduledDateTime.add(Calendar.SECOND, 1);
-        return true;
-
-        // TODO move this entire method into scheduling support so dialog can perform the same validation
-//        scheduledDateTime.set(Calendar.SECOND, 0); // set the seconds to 0 to avoid delays
-//        scheduledDateTime.set(Calendar.MILLISECOND, 0);
-//
-//        Calendar minimumDateTime = Calendar.getInstance();
-//        // messages must be scheduled for at least 2 minutes more than the current minute
-//        minimumDateTime.add(Calendar.MINUTE, 2);
-//        // reset the seconds to 0 to avoid confusing the user when they set it 2 minutes ahead but the seconds cause it to fail the check
-//        minimumDateTime.set(Calendar.SECOND, 0);
-//        minimumDateTime.set(Calendar.MILLISECOND, 0);
-//        if (scheduledDateTime.before(minimumDateTime)) {
-//            Snackbar.make(findViewById(R.id.schedule_button), R.string.error_datetime_not_future, Snackbar.LENGTH_LONG).show();
-//            return false;
-//        }
-//        return true;
     }
 
 

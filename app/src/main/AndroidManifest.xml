@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cs371m.hermes.futuremessenger">
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
@@ -25,6 +26,11 @@
 
         <receiver android:name=".support.sending.ScheduledMessageBroadcastReceiver" />
         <receiver android:name=".support.sending.SentBroadcastReceiver" />
+        <receiver android:name=".support.sending.DeviceBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

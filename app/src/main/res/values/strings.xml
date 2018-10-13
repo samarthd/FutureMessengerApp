@@ -88,4 +88,9 @@
     <string name="radio_off"><![CDATA[<i>Part %1$d of %2$d failed: radio was off</i>]]></string>
     <string name="no_pdu"><![CDATA[<i>Part %1$d of %2$d failed: no PDU defined</i>]]></string>
     <string name="no_service"><![CDATA[<i>Part %1$d of %2$d failed: no service</i>]]></string>
+    <string name="device_off"><![CDATA[
+        <p>
+        The device was off at the time the message was scheduled to be sent!
+        </p>
+    ]]></string>
 </resources>

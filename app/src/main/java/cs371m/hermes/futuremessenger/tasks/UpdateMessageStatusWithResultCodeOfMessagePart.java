@@ -5,22 +5,25 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.AsyncTask;
+import android.support.v4.text.HtmlCompat;
+import android.text.Html;
 
 import org.apache.commons.lang3.ObjectUtils;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 import cs371m.hermes.futuremessenger.persistence.AppDatabase;
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
-import cs371m.hermes.futuremessenger.persistence.entities.MessageRecipientJoin;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.pojo.StatusDetails;
 
+import static android.text.Html.FROM_HTML_SEPARATOR_LINE_BREAK_BLOCKQUOTE;
+import static android.text.Html.FROM_HTML_SEPARATOR_LINE_BREAK_LIST;
 import static cs371m.hermes.futuremessenger.persistence.entities.embedded.Status.FAILED;
 import static cs371m.hermes.futuremessenger.persistence.entities.embedded.Status.SENT;
+import static cs371m.hermes.futuremessenger.support.SchedulingSupport.getContentTextForMessageFromSentResults;
 import static cs371m.hermes.futuremessenger.support.SchedulingSupport.showOrUpdateSentNotificationForMessage;
 
 public class UpdateMessageStatusWithResultCodeOfMessagePart extends AsyncTask<Void, Integer, Void> {
@@ -65,7 +68,8 @@ public class UpdateMessageStatusWithResultCodeOfMessagePart extends AsyncTask<Vo
     private void updateMessageStatusAndNotify(boolean wasSendingSuccessful) {
         mDb.runInTransaction(() -> {
             Message updatedMessage = updateMessage(wasSendingSuccessful);
-            showOrUpdateSentNotificationForMessage(mContext, updatedMessage);
+            CharSequence notificationContentText = getContentTextForMessageFromSentResults(mContext, updatedMessage);
+            showOrUpdateSentNotificationForMessage(mContext, updatedMessage, notificationContentText);
         });
     }
 

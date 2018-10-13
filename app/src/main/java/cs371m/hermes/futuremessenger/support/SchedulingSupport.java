@@ -10,8 +10,8 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.text.HtmlCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.telephony.SmsManager;
 import android.text.Html;
 
@@ -133,7 +133,7 @@ public class SchedulingSupport {
         return intent;
     }
 
-    public static void showOrUpdateSentNotificationForMessage(Context context, Message message) {
+    public static void showOrUpdateSentNotificationForMessage(Context context, Message message, CharSequence notificationContentText) {
         context = context.getApplicationContext();
 
         CharSequence notificationTitle;
@@ -150,13 +150,6 @@ public class SchedulingSupport {
                 FROM_HTML_SEPARATOR_LINE_BREAK_BLOCKQUOTE);
 
 
-        CharSequence contentText =
-                HtmlCompat.fromHtml(getContentTextForMessage(context, message).toString(),
-                Html.FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM |
-                        FROM_HTML_SEPARATOR_LINE_BREAK_LIST |
-                        FROM_HTML_SEPARATOR_LINE_BREAK_BLOCKQUOTE);
-
-
         // TODO add arguments to select the appropriate tab after launch
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -168,9 +161,9 @@ public class SchedulingSupport {
                .setCategory(NotificationCompat.CATEGORY_EVENT)
                .setSmallIcon(R.drawable.text_icon)
                .setContentTitle(notificationTitle)
-               .setContentText(contentText)
+               .setContentText(notificationContentText)
                .setStyle(new NotificationCompat.BigTextStyle()
-                            .bigText(contentText))
+                            .bigText(notificationContentText))
                .setContentIntent(pendingIntent)
                .setAutoCancel(true);
         // todo get channel sound or get default sound
@@ -180,13 +173,8 @@ public class SchedulingSupport {
     }
 
     // TODO examine https://developer.android.com/guide/topics/resources/string-resource#java
-    public static CharSequence getContentTextForMessage(Context context, Message message) {
-        int maxLength = (message.getTextContent().length() < 140) ? message.getTextContent().length() : 140;
-        String shortenedString = message.getTextContent().substring(0, maxLength);
-        if (shortenedString.length() < message.getTextContent().length()) {
-            shortenedString += "...";
-        }
-        String messageHeadline = context.getString(R.string.message_headline, shortenedString);
+    public static CharSequence getContentTextForMessageFromSentResults(Context context, Message message) {
+        String messageHeadline = getNotificationMessageHeadlineWithMessageTextContent(context, message);
         StatusDetails statusDetails = Objects.requireNonNull(message.getStatus().getDetails());
         int totalMessageParts = statusDetails.getTotalMessagePartCountForEachRecipient();
         StringBuilder result = new StringBuilder(messageHeadline);
@@ -197,7 +185,27 @@ public class SchedulingSupport {
                             statusDetails.getDetailsMap().get(recipient),
                             totalMessageParts));
         }
-        return result;
+        return convertFromHtml(result);
+    }
+
+    public static CharSequence getContentTextForMessageScheduledWhileOff(Context context, Message message) {
+        String messageHeadline = getNotificationMessageHeadlineWithMessageTextContent(context, message);
+        return convertFromHtml(messageHeadline + context.getString(R.string.device_off));
+    }
+
+    private static String getNotificationMessageHeadlineWithMessageTextContent(Context context, Message message) {
+        int maxLength = (message.getTextContent().length() < 140) ? message.getTextContent().length() : 140;
+        String shortenedString = message.getTextContent().substring(0, maxLength);
+        if (shortenedString.length() < message.getTextContent().length()) {
+            shortenedString += "...";
+        }
+        return context.getString(R.string.message_headline, shortenedString);
+    }
+    private static CharSequence convertFromHtml(CharSequence htmlText) {
+        return HtmlCompat.fromHtml(htmlText.toString(),
+                        Html.FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM |
+                                FROM_HTML_SEPARATOR_LINE_BREAK_LIST |
+                                FROM_HTML_SEPARATOR_LINE_BREAK_BLOCKQUOTE);
     }
 
     private static CharSequence getContextTextForRecipient(Context context,

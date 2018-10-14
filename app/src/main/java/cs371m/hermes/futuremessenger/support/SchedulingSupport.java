@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.text.HtmlCompat;
@@ -217,28 +216,48 @@ public class SchedulingSupport {
                                                            int totalMessagePartCount) {
         context = context.getApplicationContext();
 
-        List<CharSequence> messagePartResultListItems = new ArrayList<>(resultMapForRecipient.keySet().size());
-        for (Integer messagePartIndex : resultMapForRecipient.keySet()) {
-            int stringCode =
-                    getAppropriateStringResourceForResultCode(
-                            resultMapForRecipient.get(messagePartIndex));
-            messagePartResultListItems.add(
-                    context.getString(stringCode,
-                            messagePartIndex + 1,
-                            totalMessagePartCount));
-        }
+        List<CharSequence> messagePartErrorResultStrings =
+                getResultStringsForErroredParts(context, resultMapForRecipient, totalMessagePartCount);
 
+        String fullRecipientResultText;
+        if (messagePartErrorResultStrings.isEmpty()) {
+            fullRecipientResultText = context.getString(R.string.message_full_success);
+        } else if (messagePartErrorResultStrings.size() == totalMessagePartCount) {
+            // all messages failed
+            fullRecipientResultText =
+                    StringUtils.join(messagePartErrorResultStrings.toArray(), ", ");
+        } else {
+            // not all messages experienced errors
+            fullRecipientResultText =
+                    StringUtils.join(messagePartErrorResultStrings.toArray(), ", ") +
+                            ", " + context.getString(R.string.remaining_parts_success);
+        }
         return context.getString(R.string.recipient_result_notification,
                 recipient.getName().toUpperCase(),
-                StringUtils.join(messagePartResultListItems.toArray(), ", "));
+                fullRecipientResultText);
     }
 
-    private static int getAppropriateStringResourceForResultCode(int resultCode) {
+    private static List<CharSequence> getResultStringsForErroredParts(Context context, SortedMap<Integer,
+            Integer> resultMapForRecipient, int totalMessagePartCount) {
+        List<CharSequence> messagePartErrorResultStrings = new ArrayList<>();
+        for (Integer messagePartIndex : resultMapForRecipient.keySet()) {
+            int resultCodeForMessagePart = resultMapForRecipient.get(messagePartIndex);
+            if (resultCodeForMessagePart != Activity.RESULT_OK) {
+                int stringCode =
+                        getAppropriateStringResourceForErrorResultCode(
+                                resultMapForRecipient.get(messagePartIndex));
+                messagePartErrorResultStrings.add(
+                        context.getString(stringCode,
+                                messagePartIndex + 1,
+                                totalMessagePartCount));
+            }
+        }
+        return messagePartErrorResultStrings;
+    }
+
+    private static int getAppropriateStringResourceForErrorResultCode(int resultCode) {
         int stringCode;
         switch (resultCode) {
-            case Activity.RESULT_OK:
-                stringCode = R.string.message_part_success;
-                break;
             case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
                 stringCode = R.string.generic_error;
                 break;
@@ -260,24 +279,24 @@ public class SchedulingSupport {
 
     public static boolean areDateAndTimeValid(Calendar scheduledDateTime, EditTextMessageActivity editTextMessageActivity) {
 //        // TODO remove
-//        scheduledDateTime.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
-//        scheduledDateTime.add(Calendar.SECOND, 1);
-//        return true;
-        scheduledDateTime.set(Calendar.SECOND, 0); // set the seconds to 0 to avoid delays
-        scheduledDateTime.set(Calendar.MILLISECOND, 0);
-
-        Calendar minimumDateTime = Calendar.getInstance();
-        // messages must be scheduled for at least 2 minutes more than the current minute
-        minimumDateTime.add(Calendar.MINUTE, 2);
-        // reset the seconds to 0 to avoid confusing the user when they set it 2 minutes ahead but the seconds cause it to fail the check
-        minimumDateTime.set(Calendar.SECOND, 0);
-        minimumDateTime.set(Calendar.MILLISECOND, 0);
-        if (scheduledDateTime.before(minimumDateTime)) {
-            Snackbar.make(editTextMessageActivity.findViewById(R.id.schedule_button),
-                    R.string.error_datetime_not_future, Snackbar.LENGTH_LONG).show();
-            return false;
-        }
+        scheduledDateTime.setTimeInMillis(Calendar.getInstance().getTimeInMillis());
+        scheduledDateTime.add(Calendar.SECOND, 1);
         return true;
+//        scheduledDateTime.set(Calendar.SECOND, 0); // set the seconds to 0 to avoid delays
+//        scheduledDateTime.set(Calendar.MILLISECOND, 0);
+//
+//        Calendar minimumDateTime = Calendar.getInstance();
+//        // messages must be scheduled for at least 2 minutes more than the current minute
+//        minimumDateTime.add(Calendar.MINUTE, 2);
+//        // reset the seconds to 0 to avoid confusing the user when they set it 2 minutes ahead but the seconds cause it to fail the check
+//        minimumDateTime.set(Calendar.SECOND, 0);
+//        minimumDateTime.set(Calendar.MILLISECOND, 0);
+//        if (scheduledDateTime.before(minimumDateTime)) {
+//            Snackbar.make(editTextMessageActivity.findViewById(R.id.schedule_button),
+//                    R.string.error_datetime_not_future, Snackbar.LENGTH_LONG).show();
+//            return false;
+//        }
+//        return true;
     }
 
 

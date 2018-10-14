@@ -80,11 +80,12 @@
         <br/>
         <font color=\"#007c89\"><b><i>%1$s:  </i></b></font><font color=\"#000000\"><i>%2$s</i></font>
     ]]></string>
-    <string name="message_part_success"><![CDATA[<i>Part %1$d of %2$d sent successfully</i>]]></string>
-    <string name="generic_error"><![CDATA[<i>Part %1$d of %2$d failed: generic error</i>]]></string>
-    <string name="radio_off"><![CDATA[<i>Part %1$d of %2$d failed: radio was off</i>]]></string>
-    <string name="no_pdu"><![CDATA[<i>Part %1$d of %2$d failed: no PDU defined</i>]]></string>
-    <string name="no_service"><![CDATA[<i>Part %1$d of %2$d failed: no service</i>]]></string>
+    <string name="message_full_success"><![CDATA[<i>Full message successfully sent</i>]]></string>
+    <string name="remaining_parts_success"><![CDATA[<i>All other parts sent successfully"</i>]]></string>
+    <string name="generic_error"><![CDATA[<i>Part %1$d/%2$d failed: generic error</i>]]></string>
+    <string name="radio_off"><![CDATA[<i>Part %1$d/%2$d failed: radio was off</i>]]></string>
+    <string name="no_pdu"><![CDATA[<i>Part %1$d/%2$d failed: no PDU defined</i>]]></string>
+    <string name="no_service"><![CDATA[<i>Part %1$d/%2$d failed: no service</i>]]></string>
     <string name="device_off"><![CDATA[
         <p>
         The device was off at the time the message was scheduled to be sent!

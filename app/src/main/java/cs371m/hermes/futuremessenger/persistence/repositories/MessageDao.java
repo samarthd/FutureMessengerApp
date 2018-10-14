@@ -51,10 +51,20 @@ public interface MessageDao {
     /**
      * Finds all messages in the database with a particular status code (ex: "SCHEDULED")
      *
-     * @return The message objects found in the database with that status code.
+     * @return The message objects found in the database with that status code, ordered by
+     * scheduled datetime in ascending order.
      */
     @Query("SELECT * FROM messages WHERE status_code = :statusCode ORDER BY scheduled_datetime ASC")
-    List<Message> findAllMessagesWithStatusCode(String statusCode);
+    List<Message> findAllMessagesWithStatusCodeSortAscending(String statusCode);
+
+    /**
+     * Finds all messages in the database with a particular status code (ex: "SCHEDULED")
+     *
+     * @return The message objects found in the database with that status code, ordered by
+     * scheduled datetime in descending order.
+     */
+    @Query("SELECT * FROM messages WHERE status_code = :statusCode ORDER BY scheduled_datetime DESC")
+    List<Message> findAllMessagesWithStatusCodeSortDescending(String statusCode);
 
     /**
      * Deletes the row in the database which has a matching primary key.

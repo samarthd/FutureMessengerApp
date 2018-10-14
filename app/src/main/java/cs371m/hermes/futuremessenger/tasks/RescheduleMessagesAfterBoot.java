@@ -30,7 +30,7 @@ public class RescheduleMessagesAfterBoot extends AsyncTask<Void, Void, Void> {
     protected Void doInBackground(Void... voids) {
         AppDatabase db = AppDatabase.getInstance(mContext);
         List<Message> scheduledMessages =
-                db.messageDao().findAllMessagesWithStatusCode(SCHEDULED);
+                db.messageDao().findAllMessagesWithStatusCodeSortAscending(SCHEDULED);
         Calendar currentTime = Calendar.getInstance();
         for (Message message : scheduledMessages) {
             if (currentTime.after(message.getScheduledDateTime())) {

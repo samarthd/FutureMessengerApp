@@ -3,6 +3,8 @@ package cs371m.hermes.futuremessenger.tasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,8 @@ import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
 import cs371m.hermes.futuremessenger.persistence.repositories.MessageDao;
 import cs371m.hermes.futuremessenger.persistence.repositories.MessageRecipientJoinDao;
 import cs371m.hermes.futuremessenger.ui.main.support.livedata.MessagesWithRecipientsLiveData;
+
+import static cs371m.hermes.futuremessenger.persistence.entities.embedded.Status.SCHEDULED;
 
 /**
  * An asynchronous task that can query for messages with a certain status, retrieve their recipients,
@@ -52,13 +56,13 @@ public class QueryForMessagesWithRecipients
         this.mJoinDao = mDb.messageRecipientJoinDao();
 
         Callable<List<MessageWithRecipients>> queryRunner = () -> {
-            List<Message> messages = mMessageDao.findAllMessagesWithStatusCode(mMessageStatus);
-            if (mMessageStatus.equals(cs371m.hermes.futuremessenger.persistence.entities.embedded.Status.SCHEDULED)) {
+            List<Message> messages = new ArrayList<>();
+            if (mMessageStatus.equals(SCHEDULED)) {
+                messages = mMessageDao.findAllMessagesWithStatusCodeSortAscending(mMessageStatus);
                 Log.d("In async query task",
                         "Found " + messages.size() + " messages with status " + mMessageStatus);
-            }
-            if (messages.isEmpty()) {
-                return new ArrayList<>();
+            } else {
+                messages = mMessageDao.findAllMessagesWithStatusCodeSortDescending(mMessageStatus);
             }
             return mapFromMessagesToMessagesWithRecipients(messages);
         };

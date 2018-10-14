@@ -1,6 +1,7 @@
 package cs371m.hermes.futuremessenger.tasks;
 
 import android.os.AsyncTask;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 
 import org.apache.commons.lang3.StringUtils;
@@ -11,32 +12,35 @@ import cs371m.hermes.futuremessenger.persistence.AppDatabase;
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.repositories.MessageDao;
 import cs371m.hermes.futuremessenger.ui.edit.screens.activities.EditTextMessageActivity;
+import cs371m.hermes.futuremessenger.ui.main.screens.dialogs.ScheduledMessageOptionsDialog;
 
 import static cs371m.hermes.futuremessenger.persistence.entities.embedded.Status.SCHEDULED;
 
 /**
  * Checks if a given scheduled message has become deleted/sent or otherwise invalidated
- * and thus should no longer be editable. Sets a signal to kill the activity where the
- * message is being edited.
+ * and thus is no longer valid to be interacted with. If the given object is a dialog, dismisses
+ * it, or if it's an activity, will finish it so that the user can't interact with it anymore.
  *
  * @see EditTextMessageActivity
+ * @see ScheduledMessageOptionsDialog
  */
-public class CloseEditActivityIfScheduledMessageInvalidated extends AsyncTask<Void, Integer, Boolean> {
+public class FinishActivityOrDismissDialogIfScheduledMessageInvalidated
+        extends AsyncTask<Void, Integer, Boolean> {
 
     private AppDatabase mDb;
     private MessageDao mMessageDao;
     private Long mMessageID = Long.MIN_VALUE;
 
-    private WeakReference<AppCompatActivity> mActivityToKill;
+    private WeakReference<Object> mActivityOrDialogToKill;
 
     /**
      * @param db        An instance of the database to query.
      * @param messageID The ID of the message to check for.
      */
-    public void setArguments(AppDatabase db, Long messageID, AppCompatActivity activityToKill) {
+    public void setArguments(AppDatabase db, Long messageID, Object activityOrDialogToKill) {
         this.mDb = db;
         this.mMessageID = messageID;
-        this.mActivityToKill = new WeakReference<>(activityToKill);
+        this.mActivityOrDialogToKill = new WeakReference<>(activityOrDialogToKill);
     }
 
     /**
@@ -58,10 +62,15 @@ public class CloseEditActivityIfScheduledMessageInvalidated extends AsyncTask<Vo
 
     @Override
     protected void onPostExecute(Boolean result) {
-        if (result != null && result == true) {
-            AppCompatActivity activityToKill = mActivityToKill.get();
-            if (activityToKill != null) {
-                activityToKill.finish();
+        if (result != null && result) {
+            Object activityOrDialogToKill = mActivityOrDialogToKill.get();
+            if (activityOrDialogToKill != null) {
+                if (activityOrDialogToKill instanceof AppCompatActivity) {
+                    ((AppCompatActivity) activityOrDialogToKill).finish();
+                }
+                else if (activityOrDialogToKill instanceof DialogFragment) {
+                    ((DialogFragment) activityOrDialogToKill).dismiss();
+                }
             }
         }
     }

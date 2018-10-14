@@ -40,7 +40,7 @@ import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
 import cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport;
-import cs371m.hermes.futuremessenger.tasks.CloseEditActivityIfScheduledMessageInvalidated;
+import cs371m.hermes.futuremessenger.tasks.FinishActivityOrDismissDialogIfScheduledMessageInvalidated;
 import cs371m.hermes.futuremessenger.ui.edit.screens.dialogs.ExitConfirmationDialog;
 import cs371m.hermes.futuremessenger.ui.edit.screens.dialogs.NewRecipientDialog;
 import cs371m.hermes.futuremessenger.ui.edit.screens.dialogs.ScheduleConfirmationDialog;
@@ -127,14 +127,14 @@ public class EditTextMessageActivity extends AppCompatActivity implements
         AppCompatActivity currentActivity = this;
         mTableChangeTracker.addObserver(new InvalidationTracker.Observer(tablesToTrack) {
             /**
-             * When the table is invalidated, close the activity.
+             * If the message being edited is invalidated, close the activity.
              * @param tables the tables that were invalidated
              */
             @Override
             public void onInvalidated(@NonNull Set<String> tables) {
                 Log.d(this.getClass().getName(), "Tables invalidated: " + tables.toString());
-                CloseEditActivityIfScheduledMessageInvalidated checkIfMessageInvalidatedTask =
-                        new CloseEditActivityIfScheduledMessageInvalidated();
+                FinishActivityOrDismissDialogIfScheduledMessageInvalidated checkIfMessageInvalidatedTask =
+                        new FinishActivityOrDismissDialogIfScheduledMessageInvalidated();
                 checkIfMessageInvalidatedTask.setArguments(mDb,
                         mMessageWithRecipients.getMessage().getId(),
                         currentActivity);

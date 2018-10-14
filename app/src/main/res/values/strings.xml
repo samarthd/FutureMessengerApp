@@ -93,4 +93,9 @@
         The device was off at the time the message was scheduled to be sent!
         </p>
     ]]></string>
+    <string name="permission_not_available"><![CDATA[
+        <p>
+        Future Messenger did not have the SMS permission to send text messages!
+        </p>
+    ]]></string>
 </resources>

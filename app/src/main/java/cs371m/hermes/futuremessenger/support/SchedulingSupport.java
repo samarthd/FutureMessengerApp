@@ -190,6 +190,11 @@ public class SchedulingSupport {
         return convertFromHtml(messageHeadline + context.getString(R.string.device_off));
     }
 
+    public static CharSequence getContentTextForMessageFailedDueToPermissions(Context context, Message message) {
+        String messageHeadline = getNotificationMessageHeadlineWithMessageTextContent(context, message);
+        return convertFromHtml(messageHeadline + context.getString(R.string.permission_not_available));
+    }
+
     private static String getNotificationMessageHeadlineWithMessageTextContent(Context context, Message message) {
         int maxLength = (message.getTextContent().length() < 140) ? message.getTextContent().length() : 140;
         String shortenedString = message.getTextContent().substring(0, maxLength);

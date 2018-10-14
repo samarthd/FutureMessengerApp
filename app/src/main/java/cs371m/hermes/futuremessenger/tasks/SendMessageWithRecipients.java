@@ -4,7 +4,9 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.telephony.SmsManager;
 import android.util.Log;
 
@@ -21,8 +23,12 @@ import cs371m.hermes.futuremessenger.persistence.repositories.MessageDao;
 import cs371m.hermes.futuremessenger.persistence.repositories.MessageRecipientJoinDao;
 import cs371m.hermes.futuremessenger.support.EntityMissingException;
 
+import static android.Manifest.permission.SEND_SMS;
+import static cs371m.hermes.futuremessenger.persistence.entities.embedded.Status.FAILED;
+import static cs371m.hermes.futuremessenger.support.SchedulingSupport.getContentTextForMessageFailedDueToPermissions;
 import static cs371m.hermes.futuremessenger.support.SchedulingSupport.getSentIntentForMessagePart;
 import static cs371m.hermes.futuremessenger.support.SchedulingSupport.getUniquePendingIntentIdForMessagePart;
+import static cs371m.hermes.futuremessenger.support.SchedulingSupport.showOrUpdateSentNotificationForMessage;
 
 public class SendMessageWithRecipients extends AsyncTask<Void, Void, Void> {
 
@@ -58,8 +64,11 @@ public class SendMessageWithRecipients extends AsyncTask<Void, Void, Void> {
 
         Runnable runnable = () -> {
             MessageWithRecipients messageWithRecipients = findMessageWithRecipients();
-            sendMessageToAllRecipients(messageWithRecipients);
-            updateAlarmIfNecessary();
+            if (ContextCompat.checkSelfPermission(mContext, SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                setMessageFailedDueToPermissionsAndNotify(messageWithRecipients.getMessage());
+            } else {
+                sendMessageToAllRecipients(messageWithRecipients);
+            }
         };
 
         try {
@@ -71,6 +80,12 @@ public class SendMessageWithRecipients extends AsyncTask<Void, Void, Void> {
         return null;
     }
 
+    private void setMessageFailedDueToPermissionsAndNotify(Message message) {
+        message.getStatus().setCode(FAILED);
+        mDb.messageDao().updateMessage(message);
+        CharSequence notificationContentText = getContentTextForMessageFailedDueToPermissions(mContext, message);
+        showOrUpdateSentNotificationForMessage(mContext, message, notificationContentText);
+    }
 
     private MessageWithRecipients findMessageWithRecipients() {
         Message message = mMessageDao.findMessage(mMessageID);
@@ -113,10 +128,5 @@ public class SendMessageWithRecipients extends AsyncTask<Void, Void, Void> {
         smsManager.sendMultipartTextMessage(recipient.getPhoneNumber(),
                 null, messageParts, sentIntents, null);
 
-    }
-
-
-    private void updateAlarmIfNecessary() {
-        // TODO set another alarm if repeating
     }
 }

@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
-import java.util.Calendar;
 import java.util.List;
 
 import cs371m.hermes.futuremessenger.R;

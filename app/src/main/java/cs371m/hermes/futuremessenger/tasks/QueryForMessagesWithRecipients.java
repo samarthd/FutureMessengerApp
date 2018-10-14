@@ -51,7 +51,7 @@ public class QueryForMessagesWithRecipients
         this.mMessageDao = mDb.messageDao();
         this.mJoinDao = mDb.messageRecipientJoinDao();
 
-        Callable<List<MessageWithRecipients>> queryRunner= () -> {
+        Callable<List<MessageWithRecipients>> queryRunner = () -> {
             List<Message> messages = mMessageDao.findAllMessagesWithStatusCode(mMessageStatus);
             if (mMessageStatus.equals(cs371m.hermes.futuremessenger.persistence.entities.embedded.Status.SCHEDULED)) {
                 Log.d("In async query task",

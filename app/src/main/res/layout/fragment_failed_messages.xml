@@ -20,17 +20,19 @@
         android:gravity="center_horizontal"
         android:paddingTop="70dp"
         android:visibility="gone">
+
         <ImageView
             android:id="@+id/no_failed_icon"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_thumbs_up_vector" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:text="@string/no_failures_message"
-            android:gravity="center"/>
+            android:gravity="center" />
     </LinearLayout>
 
 

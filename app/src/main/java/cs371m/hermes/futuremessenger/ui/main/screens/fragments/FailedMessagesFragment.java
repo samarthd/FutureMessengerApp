@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import cs371m.hermes.futuremessenger.R;
 import cs371m.hermes.futuremessenger.ui.main.support.adapters.FailedMessageAdapter;
 import cs371m.hermes.futuremessenger.ui.main.support.adapters.MessageAdapter;
-import cs371m.hermes.futuremessenger.ui.main.support.adapters.ScheduledMessageAdapter;
 import cs371m.hermes.futuremessenger.ui.main.support.viewmodels.MainViewModel;
 import jp.wasabeef.recyclerview.animators.ScaleInAnimator;
 

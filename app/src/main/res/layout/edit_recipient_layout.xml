@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/recipient_edit_layout_background"
     android:padding="10dp"
@@ -15,7 +16,7 @@
         android:text="@string/recipient_edit_label"
         android:textStyle="bold|italic"
         android:textSize="20sp"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recipients_recyclerview"
@@ -23,12 +24,13 @@
         android:layout_height="wrap_content"
         android:layout_margin="3dp"
         android:background="@drawable/white_rounded_background"
-        android:padding="4dp"/>
+        android:padding="4dp" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/contact_button"
             android:layout_weight="1"
@@ -42,7 +44,8 @@
             android:background="@drawable/recipient_button_background"
             android:layout_margin="3dp"
             style="?android:attr/borderlessButtonStyle"
-            android:elevation="4dp"/>
+            android:elevation="4dp" />
+
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/phone_number_button"
             android:layout_weight="1"
@@ -56,7 +59,7 @@
             android:background="@drawable/recipient_button_background"
             android:layout_margin="3dp"
             style="?android:attr/borderlessButtonStyle"
-            android:elevation="4dp"/>
+            android:elevation="4dp" />
 
     </LinearLayout>
 

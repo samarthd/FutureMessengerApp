@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/schedule_confirm_dialog"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -19,12 +18,13 @@
         android:text="@string/schedule_dialog_title"
         android:textStyle="bold|italic"
         android:textSize="20sp"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
+
         <include layout="@layout/listed_message_details" />
     </android.support.v4.widget.NestedScrollView>
 
@@ -35,7 +35,7 @@
         android:padding="15dp"
         android:text="@string/schedule_dialog_message"
         android:textSize="16sp"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white" />
 
     <!-- Need this stupid extra wrapped layout to exclude the buttons from clip padding and
          clip children, which both need to be true in order for the scrollview to be clipped. -->
@@ -45,6 +45,7 @@
         android:orientation="vertical"
         android:clipToPadding="false"
         android:clipChildren="false">
+
         <android.support.v7.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -56,6 +57,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="10dp">
+
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/cancel_schedule_button"
                 android:layout_width="wrap_content"
@@ -67,7 +69,8 @@
                 android:padding="10dp"
                 android:layout_marginEnd="5dp"
                 style="?android:attr/borderlessButtonStyle"
-                android:elevation="4dp"/>
+                android:elevation="4dp" />
+
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/confirm_schedule_button"
                 android:layout_width="wrap_content"
@@ -79,7 +82,7 @@
                 android:padding="10dp"
                 android:layout_marginStart="5dp"
                 style="?android:attr/borderlessButtonStyle"
-                android:elevation="4dp"/>
+                android:elevation="4dp" />
         </android.support.v7.widget.LinearLayoutCompat>
     </LinearLayout>
 </LinearLayout>

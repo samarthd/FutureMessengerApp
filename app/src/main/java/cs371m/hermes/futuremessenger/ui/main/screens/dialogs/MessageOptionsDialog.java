@@ -1,7 +1,6 @@
 package cs371m.hermes.futuremessenger.ui.main.screens.dialogs;
 
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -17,7 +16,6 @@ import cs371m.hermes.futuremessenger.R;
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
-import cs371m.hermes.futuremessenger.ui.edit.screens.activities.EditTextMessageActivity;
 import cs371m.hermes.futuremessenger.ui.edit.screens.dialogs.DeleteConfirmationDialog;
 
 import static cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport.getConcatenatedRecipientNames;

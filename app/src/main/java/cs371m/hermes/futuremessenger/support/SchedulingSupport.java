@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.text.HtmlCompat;
 import android.telephony.SmsManager;
 import android.text.Html;
@@ -27,7 +26,6 @@ import cs371m.hermes.futuremessenger.R;
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.entities.embedded.Status;
-import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
 import cs371m.hermes.futuremessenger.persistence.pojo.StatusDetails;
 import cs371m.hermes.futuremessenger.support.sending.ScheduledMessageBroadcastReceiver;
 import cs371m.hermes.futuremessenger.support.sending.SentBroadcastReceiver;
@@ -54,7 +52,7 @@ public class SchedulingSupport {
      * as an argument.
      */
     public static Intent createMessageSendingIntent(Context context,
-                                                     Message message) {
+                                                    Message message) {
         context = context.getApplicationContext();
 
         Intent messageSendingIntent = new Intent(context, ScheduledMessageBroadcastReceiver.class);
@@ -139,15 +137,14 @@ public class SchedulingSupport {
         CharSequence notificationTitle;
         if (StringUtils.equals(message.getStatus().getCode(), Status.SENT)) {
             notificationTitle = context.getString(R.string.send_success);
-        }
-        else {
+        } else {
             notificationTitle = context.getString(R.string.send_fail);
         }
 
         notificationTitle = HtmlCompat.fromHtml(notificationTitle.toString(),
                 Html.FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM |
-                FROM_HTML_SEPARATOR_LINE_BREAK_LIST |
-                FROM_HTML_SEPARATOR_LINE_BREAK_BLOCKQUOTE);
+                        FROM_HTML_SEPARATOR_LINE_BREAK_LIST |
+                        FROM_HTML_SEPARATOR_LINE_BREAK_BLOCKQUOTE);
 
 
         // TODO add arguments to select the appropriate tab after launch
@@ -157,15 +154,15 @@ public class SchedulingSupport {
 
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, MainActivity.NOTIFICATION_CHANNEL_ID)
-               .setPriority(NotificationCompat.PRIORITY_HIGH)
-               .setCategory(NotificationCompat.CATEGORY_EVENT)
-               .setSmallIcon(R.drawable.text_icon)
-               .setContentTitle(notificationTitle)
-               .setContentText(notificationContentText)
-               .setStyle(new NotificationCompat.BigTextStyle()
-                            .bigText(notificationContentText))
-               .setContentIntent(pendingIntent)
-               .setAutoCancel(true);
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setCategory(NotificationCompat.CATEGORY_EVENT)
+                        .setSmallIcon(R.drawable.text_icon)
+                        .setContentTitle(notificationTitle)
+                        .setContentText(notificationContentText)
+                        .setStyle(new NotificationCompat.BigTextStyle()
+                                .bigText(notificationContentText))
+                        .setContentIntent(pendingIntent)
+                        .setAutoCancel(true);
         // todo get channel sound or get default sound
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
@@ -201,17 +198,18 @@ public class SchedulingSupport {
         }
         return context.getString(R.string.message_headline, shortenedString);
     }
+
     private static CharSequence convertFromHtml(CharSequence htmlText) {
         return HtmlCompat.fromHtml(htmlText.toString(),
-                        Html.FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM |
-                                FROM_HTML_SEPARATOR_LINE_BREAK_LIST |
-                                FROM_HTML_SEPARATOR_LINE_BREAK_BLOCKQUOTE);
+                Html.FROM_HTML_SEPARATOR_LINE_BREAK_LIST_ITEM |
+                        FROM_HTML_SEPARATOR_LINE_BREAK_LIST |
+                        FROM_HTML_SEPARATOR_LINE_BREAK_BLOCKQUOTE);
     }
 
     private static CharSequence getContextTextForRecipient(Context context,
-                                                     Recipient recipient,
-                                                     SortedMap<Integer, Integer> resultMapForRecipient,
-                                                     int totalMessagePartCount) {
+                                                           Recipient recipient,
+                                                           SortedMap<Integer, Integer> resultMapForRecipient,
+                                                           int totalMessagePartCount) {
         context = context.getApplicationContext();
 
         List<CharSequence> messagePartResultListItems = new ArrayList<>(resultMapForRecipient.keySet().size());
@@ -220,9 +218,9 @@ public class SchedulingSupport {
                     getAppropriateStringResourceForResultCode(
                             resultMapForRecipient.get(messagePartIndex));
             messagePartResultListItems.add(
-                        context.getString(stringCode,
-                                messagePartIndex + 1,
-                                totalMessagePartCount));
+                    context.getString(stringCode,
+                            messagePartIndex + 1,
+                            totalMessagePartCount));
         }
 
         return context.getString(R.string.recipient_result_notification,
@@ -233,7 +231,7 @@ public class SchedulingSupport {
 
     private static int getAppropriateStringResourceForResultCode(int resultCode) {
         int stringCode;
-        switch(resultCode) {
+        switch (resultCode) {
             case Activity.RESULT_OK:
                 stringCode = R.string.message_part_success;
                 break;
@@ -277,7 +275,6 @@ public class SchedulingSupport {
         }
         return true;
     }
-
 
 
 }

@@ -26,7 +26,7 @@ public class SentBroadcastReceiver extends BroadcastReceiver {
          */
         Recipient recipient =
                 (Recipient) intent.getBundleExtra(BUNDLE_KEY_RECIPIENT)
-                                  .getSerializable(BUNDLE_KEY_RECIPIENT);
+                        .getSerializable(BUNDLE_KEY_RECIPIENT);
 
         int messagePartIndex = intent.getIntExtra(BUNDLE_KEY_MESSAGE_PART_INDEX, Integer.MIN_VALUE);
         Long messageID = intent.getLongExtra(BUNDLE_KEY_MESSAGE_ID, Long.MIN_VALUE);

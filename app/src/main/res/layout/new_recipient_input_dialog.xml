@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/colorQuaternary"
     android:padding="10dp"
@@ -15,7 +16,7 @@
         android:text="@string/new_recipient_name_label"
         android:textStyle="bold|italic"
         android:textSize="20sp"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white" />
 
 
     <EditText
@@ -27,7 +28,7 @@
         android:padding="10dp"
         android:background="@drawable/white_rounded_background"
         android:maxLines="1"
-        android:textCursorDrawable="@drawable/recipient_edittext_cursor"/>
+        android:textCursorDrawable="@drawable/recipient_edittext_cursor" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -36,7 +37,7 @@
         android:text="@string/new_recipient_phone_label"
         android:textStyle="bold|italic"
         android:textSize="20sp"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white" />
 
     <EditText
         android:id="@+id/new_recipient_phone_number_input"
@@ -47,7 +48,7 @@
         android:padding="10dp"
         android:background="@drawable/white_rounded_background"
         android:maxLines="1"
-        android:textCursorDrawable="@drawable/recipient_edittext_cursor"/>
+        android:textCursorDrawable="@drawable/recipient_edittext_cursor" />
 
     <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -58,6 +59,7 @@
         android:clipToPadding="false"
         android:clipChildren="false"
         android:layout_margin="10dp">
+
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/cancel_new_recipient_button"
             android:layout_width="wrap_content"
@@ -70,7 +72,8 @@
             android:padding="10dp"
             android:layout_marginEnd="5dp"
             style="?android:attr/borderlessButtonStyle"
-            android:elevation="4dp"/>
+            android:elevation="4dp" />
+
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/save_new_recipient_button"
             android:layout_width="wrap_content"
@@ -83,7 +86,7 @@
             android:padding="10dp"
             android:layout_marginStart="5dp"
             style="?android:attr/borderlessButtonStyle"
-            android:elevation="4dp"/>
+            android:elevation="4dp" />
     </android.support.v7.widget.LinearLayoutCompat>
 
 </LinearLayout>

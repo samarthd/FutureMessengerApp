@@ -1,4 +1,5 @@
 package cs371m.hermes.futuremessenger.ui.main.screens.dialogs;
+
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;

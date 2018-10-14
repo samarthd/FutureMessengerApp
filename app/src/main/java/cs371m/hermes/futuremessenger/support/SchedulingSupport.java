@@ -162,8 +162,8 @@ public class SchedulingSupport {
                         .setStyle(new NotificationCompat.BigTextStyle()
                                 .bigText(notificationContentText))
                         .setContentIntent(pendingIntent)
-                        .setAutoCancel(true);
-        // todo get channel sound or get default sound
+                        .setAutoCancel(true)
+                        .setOnlyAlertOnce(true);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(getUniqueHashIdForMessage(message.getId()), builder.build());
@@ -196,7 +196,7 @@ public class SchedulingSupport {
     }
 
     private static String getNotificationMessageHeadlineWithMessageTextContent(Context context, Message message) {
-        int maxLength = (message.getTextContent().length() < 140) ? message.getTextContent().length() : 140;
+        int maxLength = (message.getTextContent().length() < 30) ? message.getTextContent().length() : 30;
         String shortenedString = message.getTextContent().substring(0, maxLength);
         if (shortenedString.length() < message.getTextContent().length()) {
             shortenedString += "...";
@@ -229,9 +229,8 @@ public class SchedulingSupport {
         }
 
         return context.getString(R.string.recipient_result_notification,
-                recipient.getName(),
-                recipient.getPhoneNumber(),
-                StringUtils.join(messagePartResultListItems.toArray(), ","));
+                recipient.getName().toUpperCase(),
+                StringUtils.join(messagePartResultListItems.toArray(), ", "));
     }
 
     private static int getAppropriateStringResourceForResultCode(int resultCode) {

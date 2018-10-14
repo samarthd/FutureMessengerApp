@@ -94,10 +94,10 @@ public class SaveAndScheduleMessage extends AsyncTask<Void, Integer, Void> {
     private void createNewMessage() {
         Message messageToSchedule = mMessageWithRecipients.getMessage();
         Long messageID = mMessageDao.createMessage(messageToSchedule);
-        mMessageWithRecipients.getMessage().setId(messageID);
+        messageToSchedule.setId(messageID);
         createRecipientsAndAssociations(messageID, mMessageWithRecipients.getRecipients());
 
-        SchedulingSupport.scheduleMessageNonRepeating(mContext, mMessageWithRecipients);
+        SchedulingSupport.scheduleMessageNonRepeating(mContext, messageToSchedule);
     }
 
     private void updateExistingMessage() {
@@ -114,8 +114,7 @@ public class SaveAndScheduleMessage extends AsyncTask<Void, Integer, Void> {
         deleteRelationshipsWithRecipients(messageID, recipientsToDissociate);
         createRecipientsAndAssociations(messageID, recipientsToPersist);
 
-        // TODO cancel alarm
-        SchedulingSupport.scheduleMessageNonRepeating(mContext, mMessageWithRecipients);
+        SchedulingSupport.scheduleMessageNonRepeating(mContext, mMessageWithRecipients.getMessage());
     }
 
     private Pair<List<Recipient>, List<Recipient>> determineRecipientsToPersistAndDissociate(List<Recipient> currentlyAssociatedRecipients) {

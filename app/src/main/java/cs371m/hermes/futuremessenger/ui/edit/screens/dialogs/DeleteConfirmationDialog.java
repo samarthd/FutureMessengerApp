@@ -61,6 +61,7 @@ public class DeleteConfirmationDialog extends DialogFragment {
             dismiss();
             DeleteMessageAndRelatedData deleteTask = new DeleteMessageAndRelatedData();
             deleteTask.setArguments(
+                    getContext(),
                     AppDatabase.getInstance(getContext()),
                     mMessageIDToDelete);
             deleteTask.execute();

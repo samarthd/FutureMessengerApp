@@ -44,7 +44,7 @@ public class RescheduleMessagesAfterBoot extends AsyncTask<Void, Void, Void> {
                 CharSequence notificationContentText = getContentTextForMessageScheduledWhileOff(mContext, message);
                 showOrUpdateSentNotificationForMessage(mContext, message, notificationContentText);
             } else {
-                scheduleMessageNonRepeating(mContext, new MessageWithRecipients(message, null));
+                scheduleMessageNonRepeating(mContext, message);
             }
         }
         mPendingResult.finish();

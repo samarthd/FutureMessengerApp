@@ -53,28 +53,28 @@ public class SchedulingSupport {
      * Creates the intent that will start the target message sending service with the message ID
      * as an argument.
      */
-    private static Intent createMessageSendingIntent(Context context,
-                                                     MessageWithRecipients messageWithRecipients) {
+    public static Intent createMessageSendingIntent(Context context,
+                                                     Message message) {
         context = context.getApplicationContext();
 
         Intent messageSendingIntent = new Intent(context, ScheduledMessageBroadcastReceiver.class);
         Bundle bundle = new Bundle();
-        bundle.putLong(BUNDLE_KEY_MESSAGE_ID, messageWithRecipients.getMessage().getId());
+        bundle.putLong(BUNDLE_KEY_MESSAGE_ID, message.getId());
         messageSendingIntent.putExtras(bundle);
 
         return messageSendingIntent;
     }
 
     public static void scheduleMessageNonRepeating(Context context,
-                                                   MessageWithRecipients messageWithRecipients) {
+                                                   Message message) {
         context = context.getApplicationContext();
 
-        long timeToSend = messageWithRecipients.getMessage().getScheduledDateTime().getTimeInMillis();
-        Intent messageSendingIntent = createMessageSendingIntent(context, messageWithRecipients);
+        long timeToSend = message.getScheduledDateTime().getTimeInMillis();
+        Intent messageSendingIntent = createMessageSendingIntent(context, message);
 
 
         int pendingIntentUniqueId =
-                getUniqueHashIdForMessage(messageWithRecipients.getMessage().getId());
+                getUniqueHashIdForMessage(message.getId());
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                 pendingIntentUniqueId,

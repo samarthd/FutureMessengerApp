@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.text.HtmlCompat;
 import android.telephony.SmsManager;
 import android.text.Html;
@@ -155,7 +156,8 @@ public class SchedulingSupport {
                 new NotificationCompat.Builder(context, MainActivity.NOTIFICATION_CHANNEL_ID)
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setCategory(NotificationCompat.CATEGORY_EVENT)
-                        .setSmallIcon(R.drawable.text_icon)
+                        .setSmallIcon(R.drawable.ic_text)
+                        .setColor(ContextCompat.getColor(context, R.color.colorTertiary))
                         .setContentTitle(notificationTitle)
                         .setContentText(notificationContentText)
                         .setStyle(new NotificationCompat.BigTextStyle()

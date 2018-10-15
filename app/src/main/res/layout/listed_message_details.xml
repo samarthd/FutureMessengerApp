@@ -11,7 +11,7 @@
         android:padding="8dp"
         android:layout_gravity="center"
         android:background="@drawable/listed_message_icon_background"
-        android:src="@drawable/text_icon" />
+        android:src="@drawable/ic_text" />
 
     <LinearLayout
         android:id="@+id/listed_message_datetime_layout"

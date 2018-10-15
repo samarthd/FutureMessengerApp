@@ -72,8 +72,8 @@
     <string name="send_fail"><![CDATA[<font color=\"#ff0000\">Message failed to send!</font>]]></string>
     <!-- colorQuinary -->
     <string name="message_headline"><![CDATA[
-        <font color=\"#ffb12e\"><b><i>MESSAGE</i></b></font>
-        <cite>%1$s</cite>
+        <font color=\"#ffb12e\"><b><i>MESSAGE:</i></b></font>
+        <font color=\"#000000\"><cite>%1$s</cite></font>
     ]]></string>
     <!-- colorQuaternary-->
     <string name="recipient_result_notification"><![CDATA[

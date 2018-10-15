@@ -30,6 +30,7 @@ public class FailedMessageOptionsDialog extends MessageOptionsDialog {
         dialogLayout.findViewById(R.id.resend_option).setOnClickListener(view -> {
             dismiss();
             Intent intent = new Intent(getContext(), EditTextMessageActivity.class);
+            mMessageWithRecipients.getMessage().setId(null);
             intent.putExtra(MessageWithRecipients.BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS,
                     mMessageWithRecipients);
             getContext().startActivity(intent);

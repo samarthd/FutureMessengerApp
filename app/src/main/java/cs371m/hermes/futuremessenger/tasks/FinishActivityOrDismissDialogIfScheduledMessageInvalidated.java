@@ -67,8 +67,7 @@ public class FinishActivityOrDismissDialogIfScheduledMessageInvalidated
             if (activityOrDialogToKill != null) {
                 if (activityOrDialogToKill instanceof AppCompatActivity) {
                     ((AppCompatActivity) activityOrDialogToKill).finish();
-                }
-                else if (activityOrDialogToKill instanceof DialogFragment) {
+                } else if (activityOrDialogToKill instanceof DialogFragment) {
                     ((DialogFragment) activityOrDialogToKill).dismiss();
                 }
             }

@@ -3,8 +3,6 @@ package cs371m.hermes.futuremessenger.tasks;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;

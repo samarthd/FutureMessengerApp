@@ -11,9 +11,7 @@ import android.telephony.SmsManager;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.SortedMap;
 
 import cs371m.hermes.futuremessenger.persistence.AppDatabase;
 import cs371m.hermes.futuremessenger.persistence.entities.Message;

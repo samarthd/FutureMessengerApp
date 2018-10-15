@@ -35,6 +35,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public static final String NOTIFICATION_CHANNEL_ID =
             "cs371m.hermes.futuremessenger.sent_notification_channel";
 
+    public static final String BUNDLE_KEY_TAB_TO_SELECT = "tab_to_select";
+    public static final int SCHEDULED_TAB_INDEX = 1;
+    public static final int SENT_TAB_INDEX = 0;
+    public static final int FAILED_TAB_INDEX = 2;
+
+
     public static final int REQUEST_SEND_SMS_PERMISSION = 9000;
 
     private Toolbar mToolbar;
@@ -56,7 +62,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         mTabLayout = findViewById(R.id.main_tab_layout);
         mTabLayout.setupWithViewPager(mViewPager);
-        mTabLayout.getTabAt(1).select(); // index of scheduled
+        int tabToSelect = getTabToSelect();
+        mTabLayout.getTabAt(tabToSelect).select();
 
 
         setUpFloatingActionMenu();
@@ -64,6 +71,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         checkForPermissionsAndRequestIfNecessary();
 
+    }
+
+    private int getTabToSelect() {
+        int tabToSelect = SCHEDULED_TAB_INDEX;
+        if (getIntent().getExtras() != null) {
+            tabToSelect = getIntent().getIntExtra(BUNDLE_KEY_TAB_TO_SELECT, SCHEDULED_TAB_INDEX);
+        }
+        return tabToSelect;
     }
 
     private void checkForPermissionsAndRequestIfNecessary() {

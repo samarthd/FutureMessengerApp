@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
@@ -136,10 +135,13 @@ public class SchedulingSupport {
         context = context.getApplicationContext();
 
         CharSequence notificationTitle;
+        int tabToSelectInMainActivityOnOpen = MainActivity.SCHEDULED_TAB_INDEX;
         if (StringUtils.equals(message.getStatus().getCode(), Status.SENT)) {
             notificationTitle = context.getString(R.string.send_success);
+            tabToSelectInMainActivityOnOpen = MainActivity.SENT_TAB_INDEX;
         } else {
             notificationTitle = context.getString(R.string.send_fail);
+            tabToSelectInMainActivityOnOpen = MainActivity.FAILED_TAB_INDEX;
         }
 
         notificationTitle = HtmlCompat.fromHtml(notificationTitle.toString(),
@@ -147,11 +149,11 @@ public class SchedulingSupport {
                         FROM_HTML_SEPARATOR_LINE_BREAK_LIST |
                         FROM_HTML_SEPARATOR_LINE_BREAK_BLOCKQUOTE);
 
-
-        // TODO add arguments to select the appropriate tab after launch
         Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(MainActivity.BUNDLE_KEY_TAB_TO_SELECT, tabToSelectInMainActivityOnOpen);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        PendingIntent pendingIntent =
+                PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, MainActivity.NOTIFICATION_CHANNEL_ID)
@@ -171,7 +173,6 @@ public class SchedulingSupport {
         notificationManager.notify(getUniqueHashIdForMessage(message.getId()), builder.build());
     }
 
-    // TODO examine https://developer.android.com/guide/topics/resources/string-resource#java
     public static CharSequence getContentTextForMessageFromSentResults(Context context, Message message) {
         String messageHeadline = getNotificationMessageHeadlineWithMessageTextContent(context, message);
         StatusDetails statusDetails = Objects.requireNonNull(message.getStatus().getDetails());

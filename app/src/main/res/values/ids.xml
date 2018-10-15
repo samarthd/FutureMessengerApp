@@ -1,13 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item type="id" name="schedule_new_message_floating_button" />
-    <!--TODO delete these-->
-    <item type="id" name="floating_action_menu_main_button" />
-    <item type="id" name="floating_action_menu_message_button" />
-    <item type="id" name="floating_action_menu_message_button2" />
-    <item type="id" name="floating_action_menu_message_button3" />
-    <item type="id" name="floating_action_menu_message_button4" />
-    <item type="id" name="floating_action_menu_message_button5" />
-    <item type="id" name="floating_action_menu_message_button6" />
-
 </resources>

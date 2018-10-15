@@ -40,11 +40,8 @@ public class SendMessageWithRecipients extends AsyncTask<Void, Void, Void> {
 
     private Context mContext;
 
-    private BroadcastReceiver.PendingResult mPendingResult; // TODO
+    private BroadcastReceiver.PendingResult mPendingResult;
     private Long mMessageID;
-
-    // Maps a recipient to a sorted map of <[index of message part], [result of sending the part to recipient]>
-    private HashMap<Recipient, SortedMap<Integer, String>> mSentResultsForRecipients = new HashMap<>();
 
     public void setArguments(Context context, AppDatabase db, Long messageID, BroadcastReceiver.PendingResult pendingResult) {
         mContext = context.getApplicationContext();

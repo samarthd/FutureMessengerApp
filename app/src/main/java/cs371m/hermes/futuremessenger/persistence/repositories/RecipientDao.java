@@ -3,25 +3,36 @@ package cs371m.hermes.futuremessenger.persistence.repositories;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
+import android.arch.persistence.room.Update;
 
 import java.util.List;
 
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 
+/**
+ * Repository to manage {@link Recipient}.
+ */
 @Dao
 public interface RecipientDao {
 
     /**
-     * Will create a new recipient in the database if the database has no recipient with the same ID,
-     * otherwise it will update the existing value with this ID.
+     * Will create a new recipient in the database if the database has no recipient with the same ID.
      *
      * @param recipient
-     * @return The row ID of the created or updated item
+     * @return The row ID of the created item
      */
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    Long createOrUpdateRecipient(Recipient recipient);
+    @Insert
+    Long createRecipient(Recipient recipient);
+
+    /**
+     * Will update a recipient in the database with the same ID.
+     *
+     * @param recipient
+     * @return the number of updated rows
+     */
+    @Update
+    int updateRecipient(Recipient recipient);
 
     /**
      * Finds the recipient with the given ID.

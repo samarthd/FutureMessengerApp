@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/message_edit_layout_background"
     android:padding="10dp"
@@ -14,7 +15,7 @@
         android:text="@string/message_edit_label"
         android:textStyle="bold|italic"
         android:textSize="20sp"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white" />
 
 
     <EditText
@@ -25,6 +26,6 @@
         android:textColor="@android:color/black"
         android:textCursorDrawable="@drawable/message_edittext_cursor"
         android:padding="10dp"
-        android:background="@drawable/white_rounded_background"/>
+        android:background="@drawable/white_rounded_background" />
 
 </LinearLayout>

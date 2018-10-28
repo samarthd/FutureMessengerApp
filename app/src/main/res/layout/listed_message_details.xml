@@ -11,9 +11,10 @@
         android:padding="8dp"
         android:layout_gravity="center"
         android:background="@drawable/listed_message_icon_background"
-        android:src="@drawable/text_icon" />
+        android:src="@drawable/ic_text" />
 
     <LinearLayout
+        android:id="@+id/listed_message_datetime_layout"
         android:layout_weight="6"
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -22,27 +23,30 @@
         android:gravity="center"
         android:padding="5dp"
         android:background="@drawable/listed_message_datetime_background">
+
         <TextView
             android:id="@+id/scheduled_day_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textStyle="bold|italic"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white" />
+
         <TextView
             android:id="@+id/scheduled_date_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textStyle="bold|italic"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white" />
+
         <TextView
             android:id="@+id/scheduled_time_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textStyle="bold|italic"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white" />
     </LinearLayout>
 
 
@@ -62,13 +66,13 @@
             android:layout_height="match_parent"
             android:text="@string/message_content_label"
             android:textStyle="bold|italic"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black" />
 
         <TextView
             android:id="@+id/message_content_tv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColor="@android:color/black"/>
+            android:textColor="@android:color/black" />
 
         <TextView
             android:id="@+id/recipients_label_tv"
@@ -77,13 +81,12 @@
             android:text="@string/recipients_label_singular"
             android:textStyle="bold|italic"
             android:textColor="@android:color/black"
-            android:paddingTop="5dp"/>
+            android:paddingTop="5dp" />
 
         <TextView
             android:id="@+id/recipients_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@android:color/black">
-        </TextView>
+            android:textColor="@android:color/black"></TextView>
     </LinearLayout>
 </LinearLayout>

@@ -11,6 +11,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * A many-to-many association between recipients and messages.
+ */
 @Getter
 @Setter
 @ToString

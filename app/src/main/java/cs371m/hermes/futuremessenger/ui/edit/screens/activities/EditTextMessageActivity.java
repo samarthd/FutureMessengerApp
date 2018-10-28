@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -28,7 +27,6 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,13 +40,14 @@ import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
 import cs371m.hermes.futuremessenger.support.MessageDetailsViewBindingSupport;
-import cs371m.hermes.futuremessenger.tasks.CloseEditActivityIfScheduledMessageInvalidated;
+import cs371m.hermes.futuremessenger.tasks.FinishActivityOrDismissDialogIfScheduledMessageInvalidated;
 import cs371m.hermes.futuremessenger.ui.edit.screens.dialogs.ExitConfirmationDialog;
 import cs371m.hermes.futuremessenger.ui.edit.screens.dialogs.NewRecipientDialog;
 import cs371m.hermes.futuremessenger.ui.edit.screens.dialogs.ScheduleConfirmationDialog;
 import cs371m.hermes.futuremessenger.ui.edit.support.adapters.RecipientAdapter;
 
 import static cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients.BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS;
+import static cs371m.hermes.futuremessenger.support.SchedulingSupport.areDateAndTimeValid;
 
 public class EditTextMessageActivity extends AppCompatActivity implements
         DatePickerDialog.OnDateSetListener,
@@ -101,6 +100,7 @@ public class EditTextMessageActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_edit_text_message);
@@ -128,14 +128,14 @@ public class EditTextMessageActivity extends AppCompatActivity implements
         AppCompatActivity currentActivity = this;
         mTableChangeTracker.addObserver(new InvalidationTracker.Observer(tablesToTrack) {
             /**
-             * When the table is invalidated, close the activity.
+             * If the message being edited is invalidated, close the activity.
              * @param tables the tables that were invalidated
              */
             @Override
             public void onInvalidated(@NonNull Set<String> tables) {
                 Log.d(this.getClass().getName(), "Tables invalidated: " + tables.toString());
-                CloseEditActivityIfScheduledMessageInvalidated checkIfMessageInvalidatedTask =
-                        new CloseEditActivityIfScheduledMessageInvalidated();
+                FinishActivityOrDismissDialogIfScheduledMessageInvalidated checkIfMessageInvalidatedTask =
+                        new FinishActivityOrDismissDialogIfScheduledMessageInvalidated();
                 checkIfMessageInvalidatedTask.setArguments(mDb,
                         mMessageWithRecipients.getMessage().getId(),
                         currentActivity);
@@ -204,7 +204,8 @@ public class EditTextMessageActivity extends AppCompatActivity implements
     }
 
     private void validateFormAndPerformAppropriateAction() {
-        if (areRecipientsValid() && isMessageContentValid() && areDateAndTimeValid()) {
+        if (areRecipientsValid() && isMessageContentValid()
+                && areDateAndTimeValid(mMessageWithRecipients.getMessage().getScheduledDateTime(), this)) {
             ScheduleConfirmationDialog scheduleConfirmationDialog = new ScheduleConfirmationDialog();
             Bundle args = new Bundle();
             args.putSerializable(BUNDLE_KEY_MESSAGE_WITH_RECIPIENTS, mMessageWithRecipients);
@@ -231,24 +232,6 @@ public class EditTextMessageActivity extends AppCompatActivity implements
         if (StringUtils.isEmpty(textContent)) {
             messageContentInput.setError(getString(R.string.error_no_message));
             messageContentInput.requestFocus();
-            return false;
-        }
-        return true;
-    }
-
-    private boolean areDateAndTimeValid() {
-        Calendar scheduledDateTime = mMessageWithRecipients.getMessage().getScheduledDateTime();
-        scheduledDateTime.set(Calendar.SECOND, 0); // set the seconds to 0 to avoid delays
-        scheduledDateTime.set(Calendar.MILLISECOND, 0);
-
-        Calendar minimumDateTime = Calendar.getInstance();
-        // messages must be scheduled for at least 2 minutes more than the current minute
-        minimumDateTime.add(Calendar.MINUTE, 2);
-        // reset the seconds to 0 to avoid confusing the user when they set it 2 minutes ahead but the seconds cause it to fail the check
-        minimumDateTime.set(Calendar.SECOND, 0);
-        minimumDateTime.set(Calendar.MILLISECOND, 0);
-        if (scheduledDateTime.before(minimumDateTime)) {
-            Snackbar.make(findViewById(R.id.schedule_button), R.string.error_datetime_not_future, Snackbar.LENGTH_LONG).show();
             return false;
         }
         return true;

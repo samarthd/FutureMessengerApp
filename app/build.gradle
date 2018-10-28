@@ -20,62 +20,65 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    buildToolsVersion '28.0.3'
 }
 
 dependencies {
-
     /**
-     * Lombok
+     * Lombok.
+     * IMPORTANT: UPGRADING LOMBOK TO ANYTHING HIGHER THAN 1.16.18 CAUSES ISSUES WITH THE
+     * D8 DESUGARING WHICH IS FORCIBLY ENABLED IN ANDROID GRADLE PLUGIN VERSION 3.2.0+.
+     *
+     * DO NOT UPDATE THIS DEPENDENCY UNLESS THE ISSUE IS RESOLVED.
+     * DETAILS HERE: https://github.com/rzwitserloot/lombok/issues/1882
+     *
+     * And for what it's worth, the 'Run' button/functionality in Android Studio
+     * (the one that quickly compiles changes and deploys to the test device) was actually
+     * broken even in earlier versions of the Android Gradle Plugin (<3.2.0) by Lombok versions
+     * higher than 1.16.18. If I made changes, then hit the run button, it would fail due to an
+     * 'IllegalArgumentException'. However, it was still "usable" because I could clean and
+     * rebuild the project fully, uninstall the APK from the test device, and then hit the run
+     * button to deploy it freshly and it would work. This definitely was not acceptable,
+     * however, so it's definitely not truly usable even in Android Gradle Plugin <3.2.0.
      */
-    compileOnly "org.projectlombok:lombok:1.18.2"
-    annotationProcessor "org.projectlombok:lombok:1.18.2"
-
+    compileOnly 'org.projectlombok:lombok:1.16.18'
+    annotationProcessor 'org.projectlombok:lombok:1.16.18'
     /**
      * Room Persistence Dependencies
      */
     def room_version = "1.1.1"
-
     implementation "android.arch.persistence.room:runtime:$room_version"
     annotationProcessor "android.arch.persistence.room:compiler:$room_version"
     // Test helpers
     testImplementation "android.arch.persistence.room:testing:$room_version"
-
     /**
      * Lifecycle Dependencies (LiveData and ViewModel)
      */
     def lifecycle_version = "1.1.1"
-
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$lifecycle_version"
     implementation "android.arch.lifecycle:common-java8:$lifecycle_version"
-
     // optional - ReactiveStreams support for LiveData
     implementation "android.arch.lifecycle:reactivestreams:$lifecycle_version"
-
     // optional - Test helpers for LiveData
     testImplementation "android.arch.core:core-testing:$lifecycle_version"
-
     /**
      * Floating Action Button Speed Dial: https://github.com/leinardi/FloatingActionButtonSpeedDial
      */
-    implementation "com.leinardi.android:speed-dial:1.0.2"
-
+    implementation 'com.leinardi.android:speed-dial:1.0.2'
     /**
      * RecyclerView animators
      */
     implementation 'jp.wasabeef:recyclerview-animators:2.3.0'
-
     /**
      * Apache Utils
      */
     implementation 'org.apache.commons:commons-lang3:3.8'
-
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation 'com.android.support:appcompat-v7:28.0.0-rc02'
-
+    implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation 'com.android.support:design:28.0.0-rc02'
-    implementation 'com.android.support:support-fragment:28.0.0-rc02'
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'com.android.support:support-fragment:28.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'

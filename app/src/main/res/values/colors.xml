@@ -17,4 +17,5 @@
     <color name="offWhite">#f5f5f5</color>
     <color name="messageBorder">#e0e0e0</color>
     <color name="messageOptionsBackground">@color/colorPrimary</color>
+    <color name="success">#FFA8E667</color>
 </resources>

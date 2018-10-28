@@ -58,9 +58,4 @@ public class ScheduledMessagesFragment extends Fragment {
         return fragmentView;
     }
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-
 }

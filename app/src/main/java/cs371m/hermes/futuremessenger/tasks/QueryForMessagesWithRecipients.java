@@ -15,6 +15,8 @@ import cs371m.hermes.futuremessenger.persistence.repositories.MessageDao;
 import cs371m.hermes.futuremessenger.persistence.repositories.MessageRecipientJoinDao;
 import cs371m.hermes.futuremessenger.ui.main.support.livedata.MessagesWithRecipientsLiveData;
 
+import static cs371m.hermes.futuremessenger.persistence.entities.embedded.Status.SCHEDULED;
+
 /**
  * An asynchronous task that can query for messages with a certain status, retrieve their recipients,
  * and then update the specified LiveData object with the updated values.
@@ -50,13 +52,17 @@ public class QueryForMessagesWithRecipients
         this.mMessageDao = mDb.messageDao();
         this.mJoinDao = mDb.messageRecipientJoinDao();
 
-        List<Message> messages = mMessageDao.findAllMessagesWithStatusCode(mMessageStatus);
-        if (mMessageStatus.equals(cs371m.hermes.futuremessenger.persistence.entities.embedded.Status.SCHEDULED))
-            Log.d("In async query task",
-                    "Found " + messages.size() + " messages with status " + mMessageStatus);
-        if (messages.isEmpty())
-            return new ArrayList<>();
-        return mapFromMessagesToMessagesWithRecipients(messages);
+        return mDb.runInTransaction(() -> {
+            List<Message> messages = new ArrayList<>();
+            if (mMessageStatus.equals(SCHEDULED)) {
+                messages = mMessageDao.findAllMessagesWithStatusCodeSortAscending(mMessageStatus);
+                Log.d("In async query task",
+                        "Found " + messages.size() + " messages with status " + mMessageStatus);
+            } else {
+                messages = mMessageDao.findAllMessagesWithStatusCodeSortDescending(mMessageStatus);
+            }
+            return mapFromMessagesToMessagesWithRecipients(messages);
+        });
     }
 
     @Override

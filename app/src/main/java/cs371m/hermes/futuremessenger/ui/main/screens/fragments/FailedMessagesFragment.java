@@ -5,14 +5,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import cs371m.hermes.futuremessenger.R;
+import cs371m.hermes.futuremessenger.ui.main.support.adapters.FailedMessageAdapter;
 import cs371m.hermes.futuremessenger.ui.main.support.adapters.MessageAdapter;
-import cs371m.hermes.futuremessenger.ui.main.support.adapters.ScheduledMessageAdapter;
 import cs371m.hermes.futuremessenger.ui.main.support.viewmodels.MainViewModel;
 import jp.wasabeef.recyclerview.animators.ScaleInAnimator;
 
@@ -35,23 +34,12 @@ public class FailedMessagesFragment extends Fragment {
         // Get the ViewModel from the activity, which means each fragment will have the same
         mModel = ViewModelProviders.of(getActivity()).get(MainViewModel.class);
 
-        // TODO change this to FailedMessageAdapter
-        mMessageAdapter = new ScheduledMessageAdapter(getActivity().getSupportFragmentManager());
+        mMessageAdapter = new FailedMessageAdapter(getActivity().getSupportFragmentManager());
+        mMessageAdapter.setHasStableIds(true); // do this as we've overriden getItemId()
 
         // Add the current fragment as an observer to any changes in stored messages
         mModel.getFailedMessagesWithRecipients().observe(this,
-                failedMessages -> {
-                    mMessageAdapter.updateMessageList(failedMessages);
-                    if (failedMessages.size() == 0) {
-                        Log.d("Failed Message Fragment", "Failed message update - empty list so setting visibility");
-                        getActivity().findViewById(R.id.failed_messages_recycler_view).setVisibility(View.GONE);
-                        getActivity().findViewById(R.id.failed_messages_empty_layout).setVisibility(View.VISIBLE);
-                    } else {
-                        Log.d("Failed Message Fragment", "Failed message update - full list so setting visibility");
-                        getActivity().findViewById(R.id.failed_messages_recycler_view).setVisibility(View.VISIBLE);
-                        getActivity().findViewById(R.id.failed_messages_empty_layout).setVisibility(View.GONE);
-                    }
-                });
+                failedMessages -> mMessageAdapter.updateMessageList(failedMessages));
     }
 
 

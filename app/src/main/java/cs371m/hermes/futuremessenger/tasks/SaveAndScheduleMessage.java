@@ -1,5 +1,6 @@
 package cs371m.hermes.futuremessenger.tasks;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.util.Pair;
@@ -14,10 +15,19 @@ import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.entities.MessageRecipientJoin;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 import cs371m.hermes.futuremessenger.persistence.pojo.MessageWithRecipients;
+import cs371m.hermes.futuremessenger.persistence.pojo.StatusDetails;
 import cs371m.hermes.futuremessenger.persistence.repositories.MessageDao;
 import cs371m.hermes.futuremessenger.persistence.repositories.MessageRecipientJoinDao;
 import cs371m.hermes.futuremessenger.persistence.repositories.RecipientDao;
+import cs371m.hermes.futuremessenger.support.SchedulingSupport;
 
+import static cs371m.hermes.futuremessenger.persistence.entities.embedded.Status.SCHEDULED;
+
+/**
+ * Takes a message, and saves it (either updating an existing message or creating a new one in the
+ * database), and schedules its alarm. This includes any related Recipient management that needs
+ * to occur.
+ */
 public class SaveAndScheduleMessage extends AsyncTask<Void, Integer, Void> {
 
     private static final String TAG = SaveAndScheduleMessage.class.getName();
@@ -30,15 +40,18 @@ public class SaveAndScheduleMessage extends AsyncTask<Void, Integer, Void> {
     private RecipientDao mRecipientDao;
     private MessageRecipientJoinDao mMessageRecipientJoinDao;
 
+    private Context mContext;
+
     /**
      * Set the arguments for this task.
      *
      * @param db                an instance of the app's database
      * @param messageToSchedule the message to schedule with all recipients (should be validated prior to calling this)
      */
-    public void setArguments(AppDatabase db, MessageWithRecipients messageToSchedule) {
+    public void setArguments(Context context, AppDatabase db, MessageWithRecipients messageToSchedule) {
         this.mDb = db;
         this.mMessageWithRecipients = messageToSchedule;
+        this.mContext = context.getApplicationContext();
     }
 
     @Override
@@ -51,10 +64,8 @@ public class SaveAndScheduleMessage extends AsyncTask<Void, Integer, Void> {
         this.mMessageRecipientJoinDao = mDb.messageRecipientJoinDao();
 
 
-        cs371m.hermes.futuremessenger.persistence.entities.embedded.Status scheduledStatus = new cs371m.hermes.futuremessenger.persistence.entities.embedded.Status();
-        scheduledStatus.setCode(cs371m.hermes.futuremessenger.persistence.entities.embedded.Status.SCHEDULED);
-        scheduledStatus.setDescription(cs371m.hermes.futuremessenger.persistence.entities.embedded.Status.SCHEDULED);
-        mMessageWithRecipients.getMessage().setStatus(scheduledStatus);
+        setMessageStatus();
+
         if (mMessageWithRecipients.getMessage().getId() == null) {
             // new message
             Log.d(TAG, "Creating new message as message ID was null.");
@@ -67,17 +78,37 @@ public class SaveAndScheduleMessage extends AsyncTask<Void, Integer, Void> {
         return null;
     }
 
+    private void setMessageStatus() {
+
+        StatusDetails statusDetails = new StatusDetails();
+        statusDetails.setTotalMessagePartCountForEachRecipient(getTotalMessagePartCount());
+
+        cs371m.hermes.futuremessenger.persistence.entities.embedded.Status scheduledStatus =
+                new cs371m.hermes.futuremessenger.persistence.entities.embedded.Status();
+        scheduledStatus.setCode(SCHEDULED);
+        scheduledStatus.setDetails(statusDetails);
+
+        mMessageWithRecipients.getMessage().setStatus(scheduledStatus);
+    }
+
+    private int getTotalMessagePartCount() {
+        int messageLength = mMessageWithRecipients.getMessage().getTextContent().length();
+        return (int) Math.ceil(messageLength / 160.0);
+    }
+
     private void createNewMessage() {
         Message messageToSchedule = mMessageWithRecipients.getMessage();
-        Long messageID = mMessageDao.createOrUpdateMessage(messageToSchedule);
+        Long messageID = mMessageDao.createMessage(messageToSchedule);
+        messageToSchedule.setId(messageID);
         createRecipientsAndAssociations(messageID, mMessageWithRecipients.getRecipients());
 
-        // TODO set alarm
+        SchedulingSupport.scheduleMessageNonRepeating(mContext, messageToSchedule);
     }
 
     private void updateExistingMessage() {
-        Long messageID = mMessageDao.createOrUpdateMessage(mMessageWithRecipients.getMessage());
-
+        Long messageID = mMessageWithRecipients.getMessage().getId();
+        mMessageDao.updateMessage(mMessageWithRecipients.getMessage());
+        mMessageWithRecipients.getMessage().setId(messageID);
         List<Recipient> currentlyAssociatedRecipients = mMessageRecipientJoinDao.findRecipientsForMessage(messageID);
 
         Pair<List<Recipient>, List<Recipient>> organizedRecipients = determineRecipientsToPersistAndDissociate(currentlyAssociatedRecipients);
@@ -88,7 +119,7 @@ public class SaveAndScheduleMessage extends AsyncTask<Void, Integer, Void> {
         deleteRelationshipsWithRecipients(messageID, recipientsToDissociate);
         createRecipientsAndAssociations(messageID, recipientsToPersist);
 
-        // TODO set alarm
+        SchedulingSupport.scheduleMessageNonRepeating(mContext, mMessageWithRecipients.getMessage());
     }
 
     private Pair<List<Recipient>, List<Recipient>> determineRecipientsToPersistAndDissociate(List<Recipient> currentlyAssociatedRecipients) {
@@ -125,7 +156,7 @@ public class SaveAndScheduleMessage extends AsyncTask<Void, Integer, Void> {
             Long recipientIDToAssociate;
             if (foundRecipient == null) {
                 // create a recipient in the database, as one with the same name/number doesn't exist
-                recipientIDToAssociate = mRecipientDao.createOrUpdateRecipient(recipientToPersist);
+                recipientIDToAssociate = mRecipientDao.createRecipient(recipientToPersist);
             } else {
                 recipientIDToAssociate = foundRecipient.getId();
             }

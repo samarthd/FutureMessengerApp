@@ -14,6 +14,8 @@
     <!-- Options Dialog Labels -->
     <string name="edit_message_option_label">EDIT</string>
     <string name="delete_message_option_label">DELETE</string>
+    <string name="resend_message_option_label">SCHEDULE AGAIN</string>
+
 
     <!-- Confirmation Dialog Labels -->
     <string name="delete_dialog_title">CANCEL &amp; DELETE</string>
@@ -21,6 +23,8 @@
     <string name="yes">YES</string>
     <string name="no">NO</string>
 
+    <!-- Permissions checks -->
+    <string name="request_send_sms_explanation">The app cannot send scheduled messages without this permission!</string>
     <!--Failed fragment-->
     <string name="no_failures_message">Smooth sailing - no failed messages, boss!</string>
 
@@ -60,4 +64,36 @@
     <!--Confirm Schedule Dialog-->
     <string name="schedule_dialog_title">SCHEDULE MESSAGE</string>
     <string name="schedule_dialog_message">Are you sure you want to save and schedule this message?</string>
+
+    <!-- Sending reports -->
+    <string name="notification_channel_name">Sent Message Reports</string>
+    <string name="notification_channel_description">Notifies you when a scheduled message has been sent, including information about success/failure.</string>
+    <string name="send_success"><![CDATA[Message successfully sent!]]></string>
+    <string name="send_fail"><![CDATA[<font color=\"#ff0000\">Message failed to send!</font>]]></string>
+    <!-- colorQuinary -->
+    <string name="message_headline"><![CDATA[
+        <font color=\"#ffb12e\"><b><i>MESSAGE:</i></b></font>
+        <font color=\"#000000\"><cite>%1$s</cite></font>
+    ]]></string>
+    <!-- colorQuaternary-->
+    <string name="recipient_result_notification"><![CDATA[
+        <br/>
+        <font color=\"#007c89\"><b><i>%1$s:  </i></b></font><font color=\"#000000\"><i>%2$s</i></font>
+    ]]></string>
+    <string name="message_full_success"><![CDATA[<i>Full message successfully sent</i>]]></string>
+    <string name="remaining_parts_success"><![CDATA[<i>All other parts sent successfully"</i>]]></string>
+    <string name="generic_error"><![CDATA[<i>Part %1$d/%2$d failed: generic error</i>]]></string>
+    <string name="radio_off"><![CDATA[<i>Part %1$d/%2$d failed: radio was off</i>]]></string>
+    <string name="no_pdu"><![CDATA[<i>Part %1$d/%2$d failed: no PDU defined</i>]]></string>
+    <string name="no_service"><![CDATA[<i>Part %1$d/%2$d failed: no service</i>]]></string>
+    <string name="device_off"><![CDATA[
+        <p>
+        The device was off at the time the message was scheduled to be sent!
+        </p>
+    ]]></string>
+    <string name="permission_not_available"><![CDATA[
+        <p>
+        Future Messenger did not have the SMS permission to send text messages!
+        </p>
+    ]]></string>
 </resources>

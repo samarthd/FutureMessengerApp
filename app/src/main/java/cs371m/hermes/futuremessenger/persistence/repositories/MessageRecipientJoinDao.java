@@ -12,6 +12,9 @@ import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.entities.MessageRecipientJoin;
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 
+/**
+ * Repository to manage {@link MessageRecipientJoin}.
+ */
 @Dao
 public interface MessageRecipientJoinDao {
 

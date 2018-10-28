@@ -16,6 +16,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Holds the basic information pertaining to a single Message.
+ */
 @Getter
 @Setter
 @ToString

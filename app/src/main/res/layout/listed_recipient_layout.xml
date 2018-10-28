@@ -14,13 +14,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/listed_recipient_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="bold"
             android:textColor="@android:color/white"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
 
         <TextView
             android:id="@+id/listed_recipient_phone_number"
@@ -28,7 +29,7 @@
             android:layout_height="wrap_content"
             android:textStyle="italic"
             android:textColor="@android:color/white"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
     </LinearLayout>
 
     <ImageButton
@@ -36,6 +37,6 @@
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:background="@drawable/ic_remove_24dp"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center" />
 
 </LinearLayout>

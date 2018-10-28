@@ -37,6 +37,6 @@
         android:layout_gravity="bottom|end"
         android:src="@drawable/ic_check"
         app:rippleColor="@android:color/white"
-        android:layout_margin="16dp"/>
+        android:layout_margin="16dp" />
 
 </android.support.design.widget.CoordinatorLayout>

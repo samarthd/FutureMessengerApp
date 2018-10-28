@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         // The "New Text Message" option
         mSpeedDialView.addActionItem(
                 new SpeedDialActionItem.Builder(R.id.schedule_new_message_floating_button, R.drawable.ic_text)
-                        .setFabBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary))
+                        .setFabBackgroundColor(ContextCompat.getColor(this, R.color.colorQuinary))
                         .setLabel(getString(R.string.new_text_message_label))
                         .setLabelColor(ContextCompat.getColor(this, R.color.colorPrimary))
                         .setLabelBackgroundColor(Color.WHITE)

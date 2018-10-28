@@ -37,7 +37,8 @@ import static android.text.Html.FROM_HTML_SEPARATOR_LINE_BREAK_BLOCKQUOTE;
 import static android.text.Html.FROM_HTML_SEPARATOR_LINE_BREAK_LIST;
 
 /**
- * Class that has support methods necessary for scheduling messages.
+ * Class that has support methods for basic scheduling, notifications, and other miscellaneous
+ * related functionality.
  */
 public class SchedulingSupport {
 
@@ -300,6 +301,4 @@ public class SchedulingSupport {
         }
         return true;
     }
-
-
 }

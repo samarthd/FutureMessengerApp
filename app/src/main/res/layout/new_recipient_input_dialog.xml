@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorQuaternary"
+    android:padding="10dp"
+    android:gravity="center_horizontal"
+    android:clipToPadding="false"
+    android:clipChildren="false">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="5dp"
+        android:paddingBottom="10dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/new_recipient_name_label"
+        android:textStyle="bold|italic"
+        android:textSize="20sp"
+        android:textColor="@android:color/white" />
+
+
+    <EditText
+        android:id="@+id/new_recipient_name_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/new_recipient_dialog_name_edittext_hint"
+        android:textColor="@android:color/black"
+        android:padding="10dp"
+        android:background="@drawable/white_rounded_background"
+        android:maxLines="1"
+        android:textCursorDrawable="@drawable/recipient_edittext_cursor" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/new_recipient_phone_label"
+        android:textStyle="bold|italic"
+        android:textSize="20sp"
+        android:textColor="@android:color/white" />
+
+    <EditText
+        android:id="@+id/new_recipient_phone_number_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/new_recipient_dialog_phone_edittext_hint"
+        android:textColor="@android:color/black"
+        android:padding="10dp"
+        android:background="@drawable/white_rounded_background"
+        android:maxLines="1"
+        android:textCursorDrawable="@drawable/recipient_edittext_cursor" />
+
+    <android.support.v7.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="15dp"
+        android:gravity="center_horizontal"
+        android:clipToPadding="false"
+        android:clipChildren="false"
+        android:layout_margin="5dp">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/cancel_new_recipient_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/cancel"
+            android:textColor="@color/colorQuaternary"
+            android:textStyle="bold|italic"
+            android:background="@drawable/manual_recipient_button_background"
+            android:padding="10dp"
+            android:layout_marginEnd="5dp"
+            style="?android:attr/borderlessButtonStyle"
+            android:elevation="4dp" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/save_new_recipient_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/save"
+            android:textColor="@color/colorQuaternary"
+            android:textStyle="bold|italic"
+            android:background="@drawable/manual_recipient_button_background"
+            android:padding="10dp"
+            android:layout_marginStart="5dp"
+            style="?android:attr/borderlessButtonStyle"
+            android:elevation="4dp" />
+    </android.support.v7.widget.LinearLayoutCompat>
+
+</LinearLayout>

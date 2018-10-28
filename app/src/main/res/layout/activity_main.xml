@@ -1,68 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    tools:context="cs371m.hermes.futuremessenger.MainActivity">
+    android:background="@color/offWhite">
 
     <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
+        android:id="@+id/main_app_bar"
         android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_width="match_parent">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/main_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:layout_scrollFlags="scroll|snap"
+            android:theme="@style/FutureMessengerToolbar" />
 
+        <android.support.design.widget.TabLayout
+            android:id="@+id/main_tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabMode="fixed"
+            app:tabGravity="center"
+            app:tabTextAppearance="@style/FutureMessengerTabTextAppearance"
+            app:tabSelectedTextColor="@android:color/white"
+            app:tabIndicatorColor="@android:color/white"
+            android:background="@color/colorPrimary"
+            app:tabBackground="@drawable/tab_background_color_selector" />
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_main" />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/main_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+    <com.leinardi.android.speeddial.SpeedDialOverlayLayout
+        android:id="@+id/floating_action_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-    <com.getbase.floatingactionbutton.FloatingActionsMenu
-        android:id="@+id/main_menu"
+    <com.leinardi.android.speeddial.SpeedDialView
+        android:id="@+id/floating_action_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp"
-        app:fab_expandDirection="up"
-        app:fab_addButtonColorNormal="@color/colorAccent"
-        app:fab_addButtonColorPressed="@color/pressedAccent"
         android:layout_gravity="bottom|end"
-        app:fab_labelsPosition="left"
-        app:fab_labelStyle="@style/main_menu_labels_style">
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/create_preset_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fab_colorNormal="@color/menuOption"
-            app:fab_colorPressed="@color/pressedMenuOption"
-            app:fab_title="@string/create_manage_presets" />
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/new_text_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fab_colorNormal="@color/menuOption"
-            app:fab_colorPressed="@color/pressedMenuOption"
-            app:fab_title="@string/new_text_message"/>
-        <com.getbase.floatingactionbutton.FloatingActionButton
-            android:id="@+id/new_pic_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fab_colorNormal="@color/menuOption"
-            app:fab_colorPressed="@color/pressedMenuOption"
-            app:fab_title="@string/new_picture_message"/>
-    </com.getbase.floatingactionbutton.FloatingActionsMenu>
-
-
+        app:sdMainFabClosedSrc="@drawable/ic_plus_icon"
+        app:sdOverlayLayout="@id/floating_action_overlay" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/date_time_edit_layout_background"
+    android:padding="10dp"
+    android:layout_marginTop="10dp"
+    android:gravity="center_horizontal"
+    android:clipToPadding="false"
+    android:clipChildren="false">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/date_time_edit_label"
+        android:textStyle="bold|italic"
+        android:textSize="20sp"
+        android:textColor="@android:color/white" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/date_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textStyle="bold|italic"
+            android:textSize="16sp"
+            android:textColor="@color/colorTertiary"
+            android:background="@drawable/date_time_edit_button_background"
+            android:layout_margin="3dp"
+            style="?android:attr/borderlessButtonStyle"
+            android:elevation="4dp" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/time_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textStyle="bold|italic"
+            android:textSize="16sp"
+            android:textColor="@color/colorTertiary"
+            android:background="@drawable/date_time_edit_button_background"
+            android:layout_margin="3dp"
+            style="?android:attr/borderlessButtonStyle"
+            android:elevation="4dp" />
+
+    </LinearLayout>
+</LinearLayout>

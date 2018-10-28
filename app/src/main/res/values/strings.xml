@@ -1,103 +1,99 @@
 <resources>
     <string name="app_name">Future Messenger</string>
-    <string name="action_about">About</string>
-    <string name="edit_message">Edit Message</string>
-    <string name="delete_message">Delete Message</string>
-    <string name="edit_preset">Edit Preset</string>
-    <string name="delete_preset">Delete Preset</string>
-    <string name="title_activity_edit_text_message">Edit Text Message</string>
-    <string name="recipients">Recipient(s)</string>
-    <string name="create_manage_presets">Create/Manage Presets</string>
-    <string name="new_text_message">New Text Message</string>
-    <string name="new_picture_message">New Picture Message</string>
-    <string name="message">Message&#160;</string>
-    <string name="date_and_time">Date &#038; Time to Send&#160;</string>
-    <string name="recipients_lv">Recipients</string>
-    <string name="currently_scheduled_tv">Scheduled Messages</string>
-    <string name="add_phone_number">ADD A PHONE NUMBER</string>
-    <string name="enter_phone_number">Enter a phone number</string>
-    <string name="choose_contacts">ADD FROM CONTACTS</string>
-    <string name="enter_message">Enter message</string>
-    <string name="cancel">Cancel</string>
-    <string name="add">Add</string>
-    <string name="empty_number">You can\'t leave this blank!</string>
-    <string name="already_recipient">Already a recipient!</string>
-    <string name="title_activity_multimedia_message">Edit Picture Message</string>
-    <string name="error">ERROR</string>
-    <string name="header_image">Image</string>
-    <string name="header_text">Text</string>
-    <string name="title_activity_manage_presets">Manage Presets</string>
-    <string name="title_activity_edit_preset">Edit Preset</string>
-    <string name="preset_header_name">Preset Name</string>
-    <string name="preset_header_message">Preset Message</string>
-    <string name="hint_preset_name">Enter a name for the preset</string>
-    <string name="hint_preset_message">Enter the text you want to save</string>
-    <string name="no_presets_message">You currently don\'t have any presets saved.\nClick the button below to make one!</string>
-    <string name="title_activity_select_preset">Select Preset</string>
-    <string name="no_selectable_presets_message">You don\'t have any presets saved.</string>
-    <string name="populate_from_preset">POPULATE FROM PRESET</string>
-    <string name="no_scheduled_messages">No messages are currently scheduled.</string>
-    <string name="no_contacts_entered">No recipient specified!</string>
-    <string name="no_message_entered">No message entered!</string>
-    <string name="bad_date_entered">The message isn\'t scheduled for the future!</string>
-    <string name="edit_error">Something went wrong with that contact.</string>
-    <string name="send_success">Message successfully sent</string>
-    <string name="send_fail">Message failed to send</string>
-    <string name="radio_off">Radio was off, message failed</string>
-    <string name="no_pdu">No PDU defined, message failed</string>
-    <string name="no_service">No service, message failed</string>
-    <string name="group_ready">Click to send your group message</string>
-    <string name="cancel_message">Cancel and delete message</string>
-    <string name="send_picture_message">Click to send your picture message</string>
-    <string-array name="group_choice">
-        <item>@string/group_group</item>
-        <item>@string/group_indiv</item>
-    </string-array>
-    <string name="group_group">Group</string>
-    <string name="group_indiv">Individually</string>
-    <string name="mms_chooser_text">Send MMS</string>
-    <string name="restricted_to_one_recipient">You can only send picture messages to one recipient
-        at a time.</string>
-    <string name="recipient_tv_singular">Recipient</string>
-    <string name="about_text_welcome">Welcome to Future Messenger!</string>
-    <string name="some_tips">Some tips to get you started:</string>
-    <string name="about_text_created_by">Future Messenger created and developed by:</string>
-    <string name="dev_names">Samarth Dhruva\nBilly Do\nArthur Storey\n\n</string>
-    <string name="about_text_title">About</string>
-    <string name="three_types_detail">You can schedule basic SMS text messages, group MMS text messages, and
-        picture messages.</string>
-    <string name="text_delivery_options">Multi-Recipient Options</string>
-    <string name="text_delivery_detail">If you request a text message be sent to more than one recipient,
-        you can choose from two delivery methods. You can send each message \"individually,\" where
-        every recipient gets an independent copy of the message as if you sent it to them
-        one-on-one. Alternatively, you can select the \"group\" option to send the message as
-        a group MMS, where all recipients can participate in a single conversation with yourself
-        and each other. All messages and replies in this conversation are visible to every recipient.</string>
-    <string name="mms_delivery_detail">If you schedule a group MMS text message or a picture message,
-        Future Messenger will push a notification at the time you specified.
-        Click this notification and choose which app you would like to use to send the
-        message. Future Messenger will build your message in the chosen app as you saved it, so all
-        you have to do is hit send!</string>
-    <string name="preset_details">We all get tired of typing from time to time. If you find yourself
-        typing a certain message often, you can create a preset for it! Once you have a preset saved,
-        you can use it to help you fill in the text field of messages as you\'re editing or drafting them.
-        (That\'s what the \"Populate from Preset\" button is for!) You can even chain multiple
-        presets together&#8212;try it out!</string>
-    <string name="group_dialog_title">Send as a group conversation?</string>
-    <string name="what_is_fumes_detail">Future Messenger is a pre-scheduled messaging utility that
-        allows you to schedule your messages ahead of time.</string>
-    <string name="three_types">3 Types of Messages</string>
-    <string name="mms_delivery">MMS Delivery</string>
-    <string name="sms_delivery">SMS Delivery</string>
-    <string name="sms_delivery_detail">If you schedule a text message for one recipient or specify
-        multiple recipients to receive a text message \"individually,\" Future Messenger will automatically
-        send the message and notify you upon doing so.</string>
-    <string name="about_preset">Message Presets</string>
-    <string name="exit_dialog_title">Exit without saving?</string>
-    <string name="exit_confirmation_message">Are you sure you want to exit without saving?</string>
+    <!--Floating action menu labels-->
+    <string name="new_text_message_label">NEW MESSAGE</string>
+    <!--Tab labels-->
+    <string name="scheduled_tab_title">Scheduled</string>
+    <string name="sent_tab_title">Sent</string>
+    <string name="failed_tab_title">Failed</string>
+    <!--Message list item labels-->
+    <string name="message_content_label">MESSAGE</string>
+    <string name="recipients_label_singular">RECIPIENT</string>
+    <string name="recipients_label_plural">RECIPIENTS</string>
+
+    <!-- Options Dialog Labels -->
+    <string name="edit_message_option_label">EDIT</string>
+    <string name="delete_message_option_label">DELETE</string>
+    <string name="resend_message_option_label">SCHEDULE AGAIN</string>
+
+
+    <!-- Confirmation Dialog Labels -->
+    <string name="delete_dialog_title">CANCEL &amp; DELETE</string>
+    <string name="delete_dialog_message">Are you sure you want to cancel sending this message and delete it?</string>
     <string name="yes">YES</string>
     <string name="no">NO</string>
-    <string name="must_select_image">You haven\'t selected an image!</string>
-    <string name="no_preset_name">You haven\'t given this preset a name!</string>
-    <string name="no_preset_message">You haven\'t entered a message for this preset!</string>
+
+    <!-- Permissions checks -->
+    <string name="request_send_sms_explanation">The app cannot send scheduled messages without this permission!</string>
+    <!--Failed fragment-->
+    <string name="no_failures_message">Smooth sailing - no failed messages, boss!</string>
+
+    <!--Edit Activity -->
+    <string name="edit_activity_label">Edit Text Message</string>
+    <string name="date_time_edit_label">WHEN</string>
+    <string name="recipient_edit_label">WHO</string>
+    <string name="message_edit_label">WHAT</string>
+
+    <string name="add_from_contacts">ADD FROM CONTACTS</string>
+    <string name="add_phone_number">ADD RECIPIENT MANUALLY</string>
+
+    <string name="message_edittext_hint">Enter a message to send</string>
+
+
+    <string name="new_recipient_dialog_title">New Recipient</string>
+    <string name="new_recipient_name_label">NAME</string>
+    <string name="new_recipient_phone_label">NUMBER</string>
+    <string name="new_recipient_dialog_name_edittext_hint">Enter a name</string>
+    <string name="new_recipient_dialog_phone_edittext_hint">Enter a phone number</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="error_blank">You can\'t leave this blank!</string>
+    <string name="error_invalid_phone">This phone number is not valid.</string>
+    <string name="error_duplicate_recipient">That phone number is already in the recipients list!</string>
+    <string name="error_no_number_for_contact">That contact didn\'t have a phone number!</string>
+    <string name="error_no_contact">Something went wrong when adding that contact.</string>
+
+    <string name="error_no_recipients">You have to specify at least one recipient for this message!</string>
+    <string name="error_no_message">Your message is empty!</string>
+    <string name="error_datetime_not_future">Your message must be scheduled at least 2 minutes into the future!</string>
+    <!--Exit Dialog-->
+    <string name="exit_dialog_title">EXIT</string>
+    <string name="exit_dialog_message">Are you sure you want to discard all changes and exit?</string>
+
+    <!--Confirm Schedule Dialog-->
+    <string name="schedule_dialog_title">SCHEDULE MESSAGE</string>
+    <string name="schedule_dialog_message">Are you sure you want to save and schedule this message?</string>
+
+    <!-- Sending reports -->
+    <string name="notification_channel_name">Sent Message Reports</string>
+    <string name="notification_channel_description">Notifies you when a scheduled message has been sent, including information about success/failure.</string>
+    <string name="send_success"><![CDATA[Message successfully sent!]]></string>
+    <string name="send_fail"><![CDATA[<font color=\"#ff0000\">Message failed to send!</font>]]></string>
+    <!-- colorQuinary -->
+    <string name="message_headline"><![CDATA[
+        <font color=\"#ffb12e\"><b><i>MESSAGE:</i></b></font>
+        <font color=\"#000000\"><cite>%1$s</cite></font>
+    ]]></string>
+    <!-- colorQuaternary-->
+    <string name="recipient_result_notification"><![CDATA[
+        <br/>
+        <font color=\"#007c89\"><b><i>%1$s:  </i></b></font><font color=\"#000000\"><i>%2$s</i></font>
+    ]]></string>
+    <string name="message_full_success"><![CDATA[<i>Full message successfully sent</i>]]></string>
+    <string name="remaining_parts_success"><![CDATA[<i>All other parts sent successfully"</i>]]></string>
+    <string name="generic_error"><![CDATA[<i>Part %1$d/%2$d failed: generic error</i>]]></string>
+    <string name="radio_off"><![CDATA[<i>Part %1$d/%2$d failed: radio was off</i>]]></string>
+    <string name="no_pdu"><![CDATA[<i>Part %1$d/%2$d failed: no PDU defined</i>]]></string>
+    <string name="no_service"><![CDATA[<i>Part %1$d/%2$d failed: no service</i>]]></string>
+    <string name="device_off"><![CDATA[
+        <p>
+        The device was off at the time the message was scheduled to be sent!
+        </p>
+    ]]></string>
+    <string name="permission_not_available"><![CDATA[
+        <p>
+        Future Messenger did not have the SMS permission to send text messages!
+        </p>
+    ]]></string>
 </resources>

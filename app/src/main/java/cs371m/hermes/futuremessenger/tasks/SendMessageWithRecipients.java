@@ -57,17 +57,15 @@ public class SendMessageWithRecipients extends AsyncTask<Void, Void, Void> {
         this.mMessageDao = mDb.messageDao();
         this.mJoinDao = mDb.messageRecipientJoinDao();
 
-        Runnable runnable = () -> {
-            MessageWithRecipients messageWithRecipients = findMessageWithRecipients();
-            if (ContextCompat.checkSelfPermission(mContext, SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-                setMessageFailedDueToPermissionsAndNotify(messageWithRecipients.getMessage());
-            } else {
-                sendMessageToAllRecipients(messageWithRecipients);
-            }
-        };
-
         try {
-            mDb.runInTransaction(runnable);
+            mDb.runInTransaction(() -> {
+                MessageWithRecipients messageWithRecipients = findMessageWithRecipients();
+                if (ContextCompat.checkSelfPermission(mContext, SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                    setMessageFailedDueToPermissionsAndNotify(messageWithRecipients.getMessage());
+                } else {
+                    sendMessageToAllRecipients(messageWithRecipients);
+                }
+            });
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
         }
@@ -86,7 +84,7 @@ public class SendMessageWithRecipients extends AsyncTask<Void, Void, Void> {
         Message message = mMessageDao.findMessage(mMessageID);
         if (message == null) {
             Log.e(TAG, "Couldn't find any message with that ID.");
-            throw new EntityMissingException("Couldnt' find any message with that ID");
+            throw new EntityMissingException("Couldn't find any message with that ID");
         }
 
         List<Recipient> recipientList = mJoinDao.findRecipientsForMessage(mMessageID);

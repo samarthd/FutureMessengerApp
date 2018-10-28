@@ -22,11 +22,14 @@ import static cs371m.hermes.futuremessenger.persistence.entities.embedded.Status
 import static cs371m.hermes.futuremessenger.support.SchedulingSupport.getContentTextForMessageFromSentResults;
 import static cs371m.hermes.futuremessenger.support.SchedulingSupport.showOrUpdateSentNotificationForMessage;
 
+/**
+ * When a message part's sent result comes in, this task is called to update the status of the
+ * message.
+ */
 public class UpdateMessageStatusWithResultCodeOfMessagePart extends AsyncTask<Void, Integer, Void> {
 
     private BroadcastReceiver.PendingResult mPendingResult;
     private AppDatabase mDb;
-    private Resources mResources;
     private Recipient mRecipient;
     private Long mMessageID;
     private Context mContext;
@@ -34,12 +37,11 @@ public class UpdateMessageStatusWithResultCodeOfMessagePart extends AsyncTask<Vo
     private int mSentResultCode;
 
     public void setArguments(Context context,
-                             BroadcastReceiver.PendingResult pendingResult, Resources resources,
+                             BroadcastReceiver.PendingResult pendingResult,
                              AppDatabase db, Long messageID, Recipient recipient, int messagePartIndex,
                              int sentResultCode) {
         mPendingResult = pendingResult;
         mContext = context.getApplicationContext();
-        mResources = resources;
         mDb = db;
         mRecipient = recipient;
         mMessagePartIndex = messagePartIndex;

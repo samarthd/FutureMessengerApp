@@ -23,6 +23,11 @@ import cs371m.hermes.futuremessenger.support.SchedulingSupport;
 
 import static cs371m.hermes.futuremessenger.persistence.entities.embedded.Status.SCHEDULED;
 
+/**
+ * Takes a message, and saves it (either updating an existing message or creating a new one in the
+ * database), and schedules its alarm. This includes any related Recipient management that needs
+ * to occur.
+ */
 public class SaveAndScheduleMessage extends AsyncTask<Void, Integer, Void> {
 
     private static final String TAG = SaveAndScheduleMessage.class.getName();

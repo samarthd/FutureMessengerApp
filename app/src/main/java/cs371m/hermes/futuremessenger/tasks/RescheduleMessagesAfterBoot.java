@@ -16,6 +16,10 @@ import static cs371m.hermes.futuremessenger.support.SchedulingSupport.getContent
 import static cs371m.hermes.futuremessenger.support.SchedulingSupport.scheduleMessageNonRepeating;
 import static cs371m.hermes.futuremessenger.support.SchedulingSupport.showOrUpdateSentNotificationForMessage;
 
+/**
+ * Queries for all scheduled messages and either declares them failed due to the time being passed,
+ * or reschedules their alarms.
+ */
 public class RescheduleMessagesAfterBoot extends AsyncTask<Void, Void, Void> {
 
     private Context mContext;

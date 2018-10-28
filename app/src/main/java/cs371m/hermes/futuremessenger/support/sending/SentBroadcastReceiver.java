@@ -36,11 +36,10 @@ public class SentBroadcastReceiver extends BroadcastReceiver {
 
         PendingResult pendingResult = goAsync();
         AppDatabase db = AppDatabase.getInstance(context);
-        Resources resources = context.getApplicationContext().getResources();
 
         UpdateMessageStatusWithResultCodeOfMessagePart updateMessageStatusTask =
                 new UpdateMessageStatusWithResultCodeOfMessagePart();
-        updateMessageStatusTask.setArguments(context, pendingResult, resources, db, messageID,
+        updateMessageStatusTask.setArguments(context, pendingResult, db, messageID,
                 recipient, messagePartIndex, sentResultCode);
         updateMessageStatusTask.execute();
     }

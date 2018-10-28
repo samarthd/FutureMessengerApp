@@ -53,7 +53,7 @@ public class QueryForMessagesWithRecipients
         this.mMessageDao = mDb.messageDao();
         this.mJoinDao = mDb.messageRecipientJoinDao();
 
-        Callable<List<MessageWithRecipients>> queryRunner = () -> {
+        return mDb.runInTransaction(() -> {
             List<Message> messages = new ArrayList<>();
             if (mMessageStatus.equals(SCHEDULED)) {
                 messages = mMessageDao.findAllMessagesWithStatusCodeSortAscending(mMessageStatus);
@@ -63,11 +63,7 @@ public class QueryForMessagesWithRecipients
                 messages = mMessageDao.findAllMessagesWithStatusCodeSortDescending(mMessageStatus);
             }
             return mapFromMessagesToMessagesWithRecipients(messages);
-        };
-
-        List<MessageWithRecipients> result = mDb.runInTransaction(queryRunner);
-
-        return result;
+        });
     }
 
     @Override

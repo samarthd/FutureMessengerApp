@@ -11,7 +11,7 @@ import lombok.Setter;
 
 /**
  * A convenience POJO that holds a {@link Message} and its list of {@link Recipient Recipients}.
- *
+ * <p>
  * Note that this isn't persisted - it's merely a DTO used to hold all the relevant information
  * when processing a message.
  */

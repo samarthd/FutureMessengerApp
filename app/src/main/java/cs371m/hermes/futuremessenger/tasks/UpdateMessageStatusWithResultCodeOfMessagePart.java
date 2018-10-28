@@ -3,7 +3,6 @@ package cs371m.hermes.futuremessenger.tasks;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.res.Resources;
 import android.os.AsyncTask;
 
 import org.apache.commons.lang3.ObjectUtils;

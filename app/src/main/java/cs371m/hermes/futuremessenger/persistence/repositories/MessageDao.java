@@ -10,6 +10,9 @@ import java.util.List;
 
 import cs371m.hermes.futuremessenger.persistence.entities.Message;
 
+/**
+ * Repository to manage {@link Message Messages}.
+ */
 @Dao
 public interface MessageDao {
 
@@ -34,7 +37,7 @@ public interface MessageDao {
     /**
      * Finds the message with the given ID.
      *
-     * @param messageID
+     * @param messageID the ID of the message to find
      * @return The message object that was found (if any).
      */
     @Query("SELECT * FROM messages WHERE id = :messageID")
@@ -83,9 +86,5 @@ public interface MessageDao {
      */
     @Query("DELETE FROM messages WHERE id = :messageID")
     int deleteMessageByID(Long messageID);
-
-
-    @Query("DELETE FROM messages WHERE messages.status_code = :statusCode")
-    int deleteAllMessagesWithStatusCode(String statusCode);
 
 }

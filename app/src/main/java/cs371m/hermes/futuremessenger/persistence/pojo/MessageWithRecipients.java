@@ -10,7 +10,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * POJO that holds a message and a list of recipients.
+ * A convenience POJO that holds a {@link Message} and its list of {@link Recipient Recipients}.
+ *
+ * Note that this isn't persisted - it's merely a DTO used to hold all the relevant information
+ * when processing a message.
  */
 @EqualsAndHashCode
 @Getter

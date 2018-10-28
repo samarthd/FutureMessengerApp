@@ -16,7 +16,7 @@ import cs371m.hermes.futuremessenger.persistence.typeconverters.CalendarConverte
 import cs371m.hermes.futuremessenger.persistence.typeconverters.StatusDetailsConverter;
 
 /**
- * @author samarthd
+ * Database for the application.
  */
 @Database(version = 1, entities = {Message.class, Recipient.class, MessageRecipientJoin.class},
         exportSchema = false)

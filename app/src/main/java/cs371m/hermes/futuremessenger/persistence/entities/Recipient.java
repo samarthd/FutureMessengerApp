@@ -15,6 +15,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * Holds information about a particular recipient.
+ *
+ * Recipients remain in the database so long as there is at least one message
+ * associated with them. Once the last message is deleted, the recipient is
+ * cleared along with it.
+ */
 @Getter
 @Setter
 @ToString

@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import cs371m.hermes.futuremessenger.persistence.pojo.StatusDetails;
 
 /**
+ * @see cs371m.hermes.futuremessenger.persistence.entities.Message#status
  * @see StatusDetails
  */
 public class StatusDetailsConverter {

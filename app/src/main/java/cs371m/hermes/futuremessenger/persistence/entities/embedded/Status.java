@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 
+import cs371m.hermes.futuremessenger.persistence.entities.Message;
 import cs371m.hermes.futuremessenger.persistence.pojo.StatusDetails;
 import cs371m.hermes.futuremessenger.persistence.typeconverters.StatusDetailsConverter;
 import lombok.EqualsAndHashCode;
@@ -15,7 +16,7 @@ import lombok.ToString;
 
 /**
  * Object representing the status information of a message. These columns are embedded into
- * the messages table. See {@link cs371m.hermes.futuremessenger.persistence.entities.Message}.
+ * the messages table. See {@link Message}.
  */
 @Getter
 @Setter
@@ -35,12 +36,18 @@ public class Status implements Serializable {
     public static final String FAILED = "FAILED";
 
 
+    /**
+     * @see #SCHEDULED
+     * @see #SENT
+     * @see #FAILED
+     */
     @ColumnInfo(name = "code")
     @NonNull
     private String code;
 
     /**
      * @see StatusDetailsConverter
+     * @see StatusDetails
      */
     @ColumnInfo(name = "details", typeAffinity = ColumnInfo.BLOB)
     @NonNull

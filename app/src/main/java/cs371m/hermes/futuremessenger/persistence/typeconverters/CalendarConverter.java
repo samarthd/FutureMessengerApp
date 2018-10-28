@@ -6,6 +6,7 @@ import java.util.Calendar;
 
 /**
  * Converts between a Calendar object and its value in milliseconds.
+ * @see cs371m.hermes.futuremessenger.persistence.entities.Message#scheduledDateTime
  */
 public class CalendarConverter {
     @TypeConverter

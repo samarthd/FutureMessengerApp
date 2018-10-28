@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.SortedMap;
 
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
+import cs371m.hermes.futuremessenger.persistence.entities.embedded.Status;
 import cs371m.hermes.futuremessenger.persistence.typeconverters.StatusDetailsConverter;
 import lombok.Data;
 
@@ -27,16 +28,21 @@ import lombok.Data;
  * for sending -- thus we will only use it in that manner.
  *
  * @see StatusDetailsConverter
+ * @see Status#details
  */
 @Data
 public class StatusDetails implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    // A map of <Recipient, SortedMap<MessagePartIndex, SentResultCode>>
+    /**
+     * A map of <Recipient, SortedMap<MessagePartIndex, SentResultCode>>
+     */
     private SortedMap<Recipient, SortedMap<Integer, Integer>> detailsMap;
 
-    // The total number of message parts that will be sent to any one recipient
+    /**
+     * The total number of message parts that will be sent to any one recipient
+     */
     private int totalMessagePartCountForEachRecipient;
 
 }

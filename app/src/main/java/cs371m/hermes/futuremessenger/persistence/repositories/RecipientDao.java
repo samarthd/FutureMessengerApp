@@ -10,6 +10,9 @@ import java.util.List;
 
 import cs371m.hermes.futuremessenger.persistence.entities.Recipient;
 
+/**
+ * Repository to manage {@link Recipient}.
+ */
 @Dao
 public interface RecipientDao {
 

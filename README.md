@@ -1,5 +1,5 @@
 # Future Messenger
- **An free, open source, ad-free app for Android that allows you to schedule SMS messages ahead of time! Just schedule a message and it'll be sent automatically at the requested time!**
+ **A free, open source, ad-free app for Android that allows you to schedule SMS messages ahead of time! Just schedule a message and it'll be sent automatically at the requested time!**
  ## Version History & Downloads 
  | Version        | Developers           | Release Date  | Notes | Download | Android Version Requirements |
 | ------------- |:-------------:| :-----:| :-----| :-----:| :-----: |
